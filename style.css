@@ -240,3 +240,139 @@ footer{
 @media(prefers-reduced-motion:reduce){
   *{scroll-behavior:auto!important;transition:none!important}
 }
+
+
+/* Wonder Hall 3.5 — static museum experience */
+*{
+  animation:none !important;
+  transition:none !important;
+}
+
+.gallery-card:hover,
+.gallery-card:focus-visible,
+.resource-card:hover,
+.resource-card:focus-visible{
+  transform:none !important;
+}
+
+.gallery-room{
+  min-height:360px;
+  margin:22px 0 28px;
+  padding:42px;
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  position:relative;
+  overflow:hidden;
+  color:white;
+  background-color:var(--navy);
+  background-image:var(--room-art);
+  background-size:cover;
+  background-position:center;
+  border:3px solid var(--gold);
+  border-radius:28px;
+  box-shadow:var(--shadow);
+}
+.gallery-room-shade{
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg,rgba(4,17,29,.90),rgba(4,17,29,.58) 56%,rgba(4,17,29,.18));
+}
+.gallery-room-copy{
+  position:relative;
+  z-index:1;
+  max-width:720px;
+}
+.gallery-room h2{
+  margin:0;
+  font-size:4.3rem;
+  line-height:.9;
+}
+.gallery-room p{
+  color:#f4ead5;
+  line-height:1.6;
+}
+.room-name{
+  margin:8px 0;
+  color:var(--gold-light)!important;
+  font:700 1.35rem "Cormorant Garamond",serif;
+  text-transform:capitalize;
+}
+.stamp-button{
+  margin-top:10px;
+  padding:11px 18px;
+  color:var(--gold-light);
+  background:var(--navy);
+  border:2px solid var(--gold);
+  border-radius:999px;
+  font-weight:700;
+}
+.exhibits-grid .resource-card{
+  position:relative;
+  border-width:3px;
+}
+.favorite-toggle{
+  margin-top:12px;
+  padding:9px 12px;
+  border:1px solid var(--gold);
+  border-radius:999px;
+  color:var(--navy);
+  background:#fff5db;
+  font-weight:700;
+}
+.favorite-toggle.is-favorite{
+  color:#fff2c8;
+  background:var(--navy);
+}
+.collection-page{
+  padding:34px 26px 60px;
+}
+.passport-cover{
+  margin:22px 0 28px;
+  padding:34px;
+  color:white;
+  background:linear-gradient(145deg,#0a2c44,#061a2b);
+  border:3px solid var(--gold);
+  border-radius:26px;
+  box-shadow:var(--shadow);
+}
+.passport-cover h2{
+  margin:0;
+  font-size:3.6rem;
+}
+.passport-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:18px;
+}
+.passport-stamp{
+  min-height:180px;
+  padding:24px;
+  text-align:center;
+  background:var(--paper);
+  border:3px double var(--gold);
+  border-radius:50% 50% 20px 20px;
+  box-shadow:0 8px 20px rgba(0,0,0,.08);
+}
+.passport-stamp .stamp-icon{
+  font-size:2.8rem;
+}
+.passport-stamp h3{
+  margin:10px 0 5px;
+  font-size:1.55rem;
+}
+.passport-stamp p{
+  color:var(--muted);
+  font-size:.84rem;
+}
+@media(max-width:900px){
+  .passport-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:650px){
+  .passport-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .gallery-room{padding:28px;min-height:330px}
+  .gallery-room h2{font-size:3rem}
+}
+@media(max-width:430px){
+  .passport-grid{grid-template-columns:1fr}
+}

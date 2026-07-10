@@ -5,154 +5,198 @@
       "name": "Reading & Literature",
       "icon": "\ud83d\udcda",
       "description": "Books, literature, comprehension, and writing.",
-      "artwork": "assets/gallery-art-v3/reading.jpg"
+      "artwork": "assets/gallery-art-v35/reading.jpg",
+      "roomName": "library",
+      "themeColor": "#6d3c24"
     },
     {
       "id": "read-alouds",
       "name": "Read Alouds",
       "icon": "\ud83d\udcd6",
       "description": "Stories and audiobooks to enjoy together or independently.",
-      "artwork": "assets/gallery-art-v3/read-alouds.jpg"
+      "artwork": "assets/gallery-art-v35/read-alouds.jpg",
+      "roomName": "reading nook",
+      "themeColor": "#7b4b63"
     },
     {
       "id": "math",
       "name": "Math",
       "icon": "\u2797",
       "description": "Numbers, puzzles, problem-solving, and mathematical thinking.",
-      "artwork": "assets/gallery-art-v3/math.jpg"
+      "artwork": "assets/gallery-art-v35/math.jpg",
+      "roomName": "geometry room",
+      "themeColor": "#2e5f50"
     },
     {
       "id": "science",
       "name": "Science",
       "icon": "\ud83d\udd2c",
       "description": "Experiments, simulations, biology, chemistry, and physics.",
-      "artwork": "assets/gallery-art-v3/science.jpg"
+      "artwork": "assets/gallery-art-v35/science.jpg",
+      "roomName": "laboratory",
+      "themeColor": "#1c5361"
     },
     {
       "id": "history",
       "name": "History",
       "icon": "\ud83c\udfdb\ufe0f",
       "description": "People, places, documents, and stories from the past.",
-      "artwork": "assets/gallery-art-v3/history.jpg"
+      "artwork": "assets/gallery-art-v35/history.jpg",
+      "roomName": "history hall",
+      "themeColor": "#735035"
     },
     {
       "id": "geography",
       "name": "Geography",
       "icon": "\ud83c\udf0e",
       "description": "Maps, countries, cultures, and the world around us.",
-      "artwork": "assets/gallery-art-v3/geography.jpg"
+      "artwork": "assets/gallery-art-v35/geography.jpg",
+      "roomName": "map room",
+      "themeColor": "#31736b"
     },
     {
       "id": "space",
       "name": "Space",
       "icon": "\ud83d\ude80",
       "description": "Planets, stars, missions, and the wider universe.",
-      "artwork": "assets/gallery-art-v3/space.jpg"
+      "artwork": "assets/gallery-art-v35/space.jpg",
+      "roomName": "observatory",
+      "themeColor": "#1d2e62"
     },
     {
       "id": "animals",
       "name": "Animals",
       "icon": "\ud83d\udc18",
       "description": "Wildlife, habitats, live cams, and animal science.",
-      "artwork": "assets/gallery-art-v3/animals.jpg"
+      "artwork": "assets/gallery-art-v35/animals.jpg",
+      "roomName": "animal pavilion",
+      "themeColor": "#526d3e"
     },
     {
       "id": "nature",
       "name": "Nature",
       "icon": "\ud83c\udf32",
       "description": "Birds, plants, ecosystems, and outdoor discovery.",
-      "artwork": "assets/gallery-art-v3/nature.jpg"
+      "artwork": "assets/gallery-art-v35/nature.jpg",
+      "roomName": "conservatory",
+      "themeColor": "#356e4a"
     },
     {
       "id": "engineering",
       "name": "Engineering",
       "icon": "\ud83c\udfd7\ufe0f",
       "description": "Design, build, invent, test, and improve.",
-      "artwork": "assets/gallery-art-v3/engineering.jpg"
+      "artwork": "assets/gallery-art-v35/engineering.jpg",
+      "roomName": "inventor workshop",
+      "themeColor": "#6b5136"
     },
     {
       "id": "coding",
       "name": "Coding & Technology",
       "icon": "\ud83d\udcbb",
       "description": "Programming, computer skills, and digital creativity.",
-      "artwork": "assets/gallery-art-v3/coding.jpg"
+      "artwork": "assets/gallery-art-v35/coding.jpg",
+      "roomName": "technology lab",
+      "themeColor": "#28496c"
     },
     {
       "id": "languages",
       "name": "Languages",
       "icon": "\ud83d\udde3\ufe0f",
       "description": "Learn new languages and explore communication.",
-      "artwork": "assets/gallery-art-v3/languages.jpg"
+      "artwork": "assets/gallery-art-v35/languages.jpg",
+      "roomName": "world language room",
+      "themeColor": "#7b4c59"
     },
     {
       "id": "art",
       "name": "Art",
       "icon": "\ud83c\udfa8",
       "description": "Drawing, museums, techniques, and creative expression.",
-      "artwork": "assets/gallery-art-v3/art.jpg"
+      "artwork": "assets/gallery-art-v35/art.jpg",
+      "roomName": "artist studio",
+      "themeColor": "#874f43"
     },
     {
       "id": "music",
       "name": "Music",
       "icon": "\ud83c\udfbc",
       "description": "Music theory, sound, rhythm, and composition.",
-      "artwork": "assets/gallery-art-v3/music.jpg"
+      "artwork": "assets/gallery-art-v35/music.jpg",
+      "roomName": "music hall",
+      "themeColor": "#594474"
     },
     {
       "id": "typing",
       "name": "Typing",
       "icon": "\u2328\ufe0f",
       "description": "Build speed, accuracy, and keyboard confidence.",
-      "artwork": "assets/gallery-art-v3/typing.jpg"
+      "artwork": "assets/gallery-art-v35/typing.jpg",
+      "roomName": "typing studio",
+      "themeColor": "#455e6c"
     },
     {
       "id": "logic",
       "name": "Logic & Critical Thinking",
       "icon": "\ud83e\udde0",
       "description": "Chess, reasoning, strategy, and brain challenges.",
-      "artwork": "assets/gallery-art-v3/logic.jpg"
+      "artwork": "assets/gallery-art-v35/logic.jpg",
+      "roomName": "strategy room",
+      "themeColor": "#5a6942"
     },
     {
       "id": "finance",
       "name": "Economics & Finance",
       "icon": "\ud83d\udcb0",
       "description": "Money, markets, budgeting, and financial literacy.",
-      "artwork": "assets/gallery-art-v3/finance.jpg"
+      "artwork": "assets/gallery-art-v35/finance.jpg",
+      "roomName": "finance gallery",
+      "themeColor": "#75652f"
     },
     {
       "id": "life-skills",
       "name": "Life Skills",
       "icon": "\ud83d\udee0\ufe0f",
       "description": "Everyday knowledge, career skills, and practical learning.",
-      "artwork": "assets/gallery-art-v3/life-skills.jpg"
+      "artwork": "assets/gallery-art-v35/life-skills.jpg",
+      "roomName": "practical skills room",
+      "themeColor": "#557261"
     },
     {
       "id": "college",
       "name": "College-Level Learning",
       "icon": "\ud83c\udf93",
       "description": "Free courses and textbooks for advanced learners.",
-      "artwork": "assets/gallery-art-v3/college.jpg"
+      "artwork": "assets/gallery-art-v35/college.jpg",
+      "roomName": "scholars hall",
+      "themeColor": "#455678"
     },
     {
       "id": "videos",
       "name": "Educational Videos",
       "icon": "\ud83d\udcfa",
       "description": "Curated channels that make complex ideas understandable.",
-      "artwork": "assets/gallery-art-v3/videos.jpg"
+      "artwork": "assets/gallery-art-v35/videos.jpg",
+      "roomName": "screening room",
+      "themeColor": "#73464d"
     },
     {
       "id": "heart-studies",
       "name": "Heart Studies",
       "icon": "\u2764\ufe0f",
       "description": "Thoughtful studies and resources for the heart and home.",
-      "artwork": "assets/gallery-art-v3/heart-studies.jpg"
+      "artwork": "assets/gallery-art-v35/heart-studies.jpg",
+      "roomName": "quiet reflection room",
+      "themeColor": "#85545b"
     },
     {
       "id": "futurescape",
       "name": "Futurescape",
       "icon": "\ud83c\udf05",
       "description": "A space for future-focused exploration and discovery.",
-      "artwork": "assets/gallery-art-v3/futurescape.jpg"
+      "artwork": "assets/gallery-art-v35/futurescape.jpg",
+      "roomName": "future studies gallery",
+      "themeColor": "#3f517b"
     }
   ],
   "resources": [

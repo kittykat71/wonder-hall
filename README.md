@@ -1,13 +1,12 @@
-# Wonder Hall 3.0 — Museum of Discovery
+# Wonder Hall 3.5 — Illustrated Museum Rooms
 
-A clean rebuild based on the approved Museum of Discovery layout.
+## Included
+- Distinct artwork treatment for all 22 galleries
+- Themed gallery-room pages
+- Favorite resources saved in browser storage
+- Explorer’s Passport with gallery stamps
+- Improved search across galleries, rooms, and resources
+- Fully static interface: no animated light, dust, lamps, or hover motion
+- Existing GitHub Pages and resources.json workflow preserved
 
-## Improvements
-- Clean text-free rotunda entrance
-- Full-sized navy and gold museum header
-- Illustrated artwork for every gallery
-- Five-column desktop museum directory
-- Integrated Featured Exhibit panel
-- Working search, galleries, and resource links
-- Responsive desktop, landscape tablet, and phone layouts
-- Versioned assets to prevent stale browser caching
+Favorites and passport stamps are stored on the device/browser being used.
