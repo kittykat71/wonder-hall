@@ -4,142 +4,112 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Wonder Hall — a family museum of lifelong learning." />
-  <meta name="theme-color" content="#123f45" />
+  <meta name="theme-color" content="#061c2d" />
   <title>Wonder Hall</title>
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <a class="skip-link" href="#mainContent">Skip to content</a>
 
-  <header class="site-header">
-    <nav class="topbar" aria-label="Main navigation">
-      <a class="wordmark" href="#" id="brandHome" aria-label="Wonder Hall home">
-        <span class="mini-seal" aria-hidden="true">WH</span>
-        <span>Wonder Hall</span>
+  <header class="museum-header">
+    <nav class="topbar">
+      <button class="menu-button" type="button" aria-label="Open menu">☰ <span>Menu</span></button>
+
+      <a href="#" id="brandHome" class="brand">
+        <span class="brand-seal">WH</span>
+        <span class="brand-copy">
+          <strong>Wonder Hall</strong>
+          <small>Explore · Learn · Create · Together</small>
+        </span>
       </a>
 
-      <button id="homeButton" class="topbar-button" type="button">Museum Home</button>
-    </nav>
-
-    <div class="entrance">
-      <div class="entrance-ornament entrance-ornament-left" aria-hidden="true"></div>
-
-      <div class="museum-seal" aria-label="Wonder Hall museum seal">
-        <div class="museum-seal-ring">
-          <span class="seal-star">✦</span>
-          <span class="seal-initials">WH</span>
-          <span class="seal-book">⌁</span>
-        </div>
-      </div>
-
-      <p class="entrance-kicker">A family museum of lifelong learning</p>
-      <h1>Wonder Hall</h1>
-      <p class="entrance-motto">Discover · Explore · Create · Grow</p>
-
       <label class="search-box" for="searchInput">
-        <span class="search-icon" aria-hidden="true">⌕</span>
-        <input
-          id="searchInput"
-          type="search"
-          placeholder="Search galleries and resources…"
-          autocomplete="off"
-        />
+        <span aria-hidden="true">⌕</span>
+        <input id="searchInput" type="search" placeholder="Search galleries and resources…" autocomplete="off">
       </label>
 
-      <div class="entrance-ornament entrance-ornament-right" aria-hidden="true"></div>
-    </div>
+      <button id="homeButton" class="tools-button" type="button">Museum Home</button>
+    </nav>
   </header>
 
   <main id="mainContent">
-    <section id="homeView" class="view">
-      <section class="featured-exhibit" aria-labelledby="featuredTitle">
-        <div class="featured-plaque">
-          <p class="section-kicker">Today’s featured exhibit</p>
-          <h2 id="featuredTitle">Follow your curiosity</h2>
-          <p>
-            Choose one gallery, linger for a while, and discover something
-            that makes you want to learn more.
-          </p>
-          <button id="featuredButton" class="primary-button" type="button">
-            Begin with Science
-          </button>
-        </div>
-
-        <div class="featured-art" aria-hidden="true">
-          <span class="featured-orbit orbit-one"></span>
-          <span class="featured-orbit orbit-two"></span>
-          <span class="featured-star star-one">✦</span>
-          <span class="featured-star star-two">✧</span>
-          <span class="featured-book">⌁</span>
+    <section id="homeView">
+      <section class="rotunda">
+        <div class="rotunda-copy">
+          <p class="eyebrow">Welcome to</p>
+          <h1>Wonder Hall</h1>
+          <p class="museum-subtitle">A Museum of Lifelong Learning</p>
+          <p class="museum-invitation">Step inside. Your next adventure is waiting.</p>
         </div>
       </section>
 
-      <section id="searchResultsSection" class="search-results-section" hidden aria-labelledby="searchResultsHeading">
-        <div class="section-heading">
-          <div>
-            <p class="section-kicker">Search results</p>
-            <h2 id="searchResultsHeading">Resources and galleries</h2>
+      <section class="museum-layout">
+        <section class="directory-panel">
+          <section id="searchResultsSection" hidden>
+            <div class="section-heading">
+              <div>
+                <p class="section-kicker">Search results</p>
+                <h2 id="searchResultsHeading">Resources and galleries</h2>
+              </div>
+              <p id="searchResultCount" class="result-count"></p>
+            </div>
+            <div id="searchResultsGrid" class="resource-grid"></div>
+            <p id="searchEmptyState" class="empty-state" hidden>No matching galleries or resources were found.</p>
+          </section>
+
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">Museum directory</p>
+              <h2>Choose a gallery</h2>
+            </div>
+            <p id="resultCount" class="result-count"></p>
           </div>
-          <p id="searchResultCount" class="result-count"></p>
-        </div>
 
-        <div id="searchResultsGrid" class="resource-grid"></div>
-        <p id="searchEmptyState" class="empty-state" hidden>
-          No matching galleries or resources were found.
-        </p>
-      </section>
+          <div id="galleryGrid" class="gallery-grid"></div>
+          <p id="emptyState" class="empty-state" hidden>No galleries are available.</p>
+        </section>
 
-      <section class="gallery-section" aria-labelledby="galleryHeading">
-        <div class="section-heading">
-          <div>
-            <p class="section-kicker">Museum directory</p>
-            <h2 id="galleryHeading">Choose your next gallery</h2>
+        <aside class="featured-panel">
+          <div class="featured-ribbon">Today’s Featured Exhibit</div>
+          <div class="featured-illustration" aria-hidden="true">
+            <span class="planet p1"></span>
+            <span class="planet p2"></span>
+            <span class="planet p3"></span>
+            <span class="rocket">🚀</span>
+            <span class="telescope">🔭</span>
           </div>
-          <p id="resultCount" class="result-count"></p>
-        </div>
-
-        <div id="galleryGrid" class="gallery-grid"></div>
-        <p id="emptyState" class="empty-state" hidden>No galleries are available.</p>
+          <div class="featured-copy">
+            <h2>Journey Through the Solar System</h2>
+            <p>Explore NASA resources, watch planets in motion, visit the ISS, and discover the wonders beyond Earth.</p>
+            <button id="featuredButton" class="featured-button" type="button">Enter Exhibit →</button>
+          </div>
+        </aside>
       </section>
     </section>
 
-    <section id="galleryView" class="view" hidden>
-      <button id="backButton" class="back-button" type="button">← Return to the museum directory</button>
+    <section id="galleryView" class="gallery-view" hidden>
+      <button id="backButton" class="back-button" type="button">← Back to the museum</button>
 
       <section class="gallery-hero">
-        <div class="gallery-hero-copy">
+        <div>
           <p class="section-kicker">Wonder Hall gallery</p>
           <h2 id="galleryTitle"></h2>
-          <p id="galleryDescription" class="gallery-description"></p>
+          <p id="galleryDescription"></p>
         </div>
-        <div id="galleryIcon" class="gallery-large-icon" aria-hidden="true"></div>
+        <div id="galleryIcon" class="gallery-large-icon"></div>
       </section>
 
-      <section aria-labelledby="resourceHeading">
-        <div class="section-heading">
-          <div>
-            <p class="section-kicker">Curated resources</p>
-            <h2 id="resourceHeading">Explore this gallery</h2>
-          </div>
-        </div>
-
-        <div id="resourceGrid" class="resource-grid"></div>
-        <p id="resourceEmptyState" class="empty-state" hidden>
-          Resources for this gallery are coming soon.
-        </p>
-      </section>
+      <div id="resourceGrid" class="resource-grid"></div>
+      <p id="resourceEmptyState" class="empty-state" hidden>Resources for this gallery are coming soon.</p>
     </section>
   </main>
 
-  <footer class="museum-footer">
-    <div class="footer-rule" aria-hidden="true"></div>
-    <p class="footer-title">Wonder Hall</p>
-    <p>Curated for curious minds.</p>
+  <footer>
+    <strong>Wonder Hall</strong>
+    <span>Curated for curious minds.</span>
   </footer>
 
   <script src="app.js"></script>

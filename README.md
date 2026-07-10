@@ -1,18 +1,12 @@
-# Wonder Hall v1.0 — Grand Entrance
+# Wonder Hall v1.1 — Museum of Discovery
 
-A family museum of lifelong learning.
+This release uses the approved Museum of Discovery mockup as its visual direction.
 
-## Included in this release
-- Redesigned Grand Entrance
-- Museum seal and refined visual identity
-- Museum-style featured exhibit
-- Framed gallery cards ready for future artwork
-- Improved gallery pages and resource cards
-- Responsive desktop, tablet, and phone layouts
-- Working search across galleries and resources
-
-## Files
-- `index.html`
-- `style.css`
-- `app.js`
-- `resources.json`
+## Included
+- Navy-and-gold museum header
+- Bright rotunda-style entrance
+- Arched museum gallery cards
+- Large Featured Exhibit panel
+- Responsive desktop and tablet layouts
+- Existing search and resource links
+- Approved design reference saved in `assets/`
