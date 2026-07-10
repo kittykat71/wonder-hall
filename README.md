@@ -1,10 +1,13 @@
-# Wonder Hall v1.2 — Illustrated Galleries
+# Wonder Hall 2.0 — Museum of Discovery
+
+A full homepage rebuild based directly on the approved Museum of Discovery concept.
 
 ## Included
-- Approved Museum of Discovery artwork integrated into the live site
-- Illustrated Reading, Math, Science, History, Geography, Space, Animals, Nature, Engineering, and Art cards
-- Rotunda artwork in the entrance
-- Illustrated Featured Exhibit
-- Existing search, gallery navigation, and resource links remain functional
-
-The remaining galleries continue to use the existing style until their matching artwork is created in a later release.
+- Grand rotunda hero
+- Navy and gold museum header
+- Fully illustrated gallery directory
+- Featured Space exhibit
+- Working search
+- Working gallery navigation
+- Existing resources database
+- Responsive desktop, tablet, and phone layouts

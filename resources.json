@@ -5,142 +5,154 @@
       "name": "Reading & Literature",
       "icon": "\ud83d\udcda",
       "description": "Books, literature, comprehension, and writing.",
-      "artwork": "assets/galleries/reading.png"
+      "artwork": "assets/galleries/reading.jpg"
     },
     {
       "id": "read-alouds",
       "name": "Read Alouds",
       "icon": "\ud83d\udcd6",
-      "description": "Stories and audiobooks to enjoy together or independently."
+      "description": "Stories and audiobooks to enjoy together or independently.",
+      "artwork": "assets/galleries/read-alouds.jpg"
     },
     {
       "id": "math",
       "name": "Math",
       "icon": "\u2797",
       "description": "Numbers, puzzles, problem-solving, and mathematical thinking.",
-      "artwork": "assets/galleries/math.png"
+      "artwork": "assets/galleries/math.jpg"
     },
     {
       "id": "science",
       "name": "Science",
       "icon": "\ud83d\udd2c",
       "description": "Experiments, simulations, biology, chemistry, and physics.",
-      "artwork": "assets/galleries/science.png"
+      "artwork": "assets/galleries/science.jpg"
     },
     {
       "id": "history",
       "name": "History",
       "icon": "\ud83c\udfdb\ufe0f",
       "description": "People, places, documents, and stories from the past.",
-      "artwork": "assets/galleries/history.png"
+      "artwork": "assets/galleries/history.jpg"
     },
     {
       "id": "geography",
       "name": "Geography",
       "icon": "\ud83c\udf0e",
       "description": "Maps, countries, cultures, and the world around us.",
-      "artwork": "assets/galleries/geography.png"
+      "artwork": "assets/galleries/geography.jpg"
     },
     {
       "id": "space",
       "name": "Space",
       "icon": "\ud83d\ude80",
       "description": "Planets, stars, missions, and the wider universe.",
-      "artwork": "assets/galleries/space.png"
+      "artwork": "assets/galleries/space.jpg"
     },
     {
       "id": "animals",
       "name": "Animals",
       "icon": "\ud83d\udc18",
       "description": "Wildlife, habitats, live cams, and animal science.",
-      "artwork": "assets/galleries/animals.png"
+      "artwork": "assets/galleries/animals.jpg"
     },
     {
       "id": "nature",
       "name": "Nature",
       "icon": "\ud83c\udf32",
       "description": "Birds, plants, ecosystems, and outdoor discovery.",
-      "artwork": "assets/galleries/nature.png"
+      "artwork": "assets/galleries/nature.jpg"
     },
     {
       "id": "engineering",
       "name": "Engineering",
       "icon": "\ud83c\udfd7\ufe0f",
       "description": "Design, build, invent, test, and improve.",
-      "artwork": "assets/galleries/engineering.png"
+      "artwork": "assets/galleries/engineering.jpg"
     },
     {
       "id": "coding",
       "name": "Coding & Technology",
       "icon": "\ud83d\udcbb",
-      "description": "Programming, computer skills, and digital creativity."
+      "description": "Programming, computer skills, and digital creativity.",
+      "artwork": "assets/galleries/coding.jpg"
     },
     {
       "id": "languages",
       "name": "Languages",
       "icon": "\ud83d\udde3\ufe0f",
-      "description": "Learn new languages and explore communication."
+      "description": "Learn new languages and explore communication.",
+      "artwork": "assets/galleries/languages.jpg"
     },
     {
       "id": "art",
       "name": "Art",
       "icon": "\ud83c\udfa8",
       "description": "Drawing, museums, techniques, and creative expression.",
-      "artwork": "assets/galleries/art.png"
+      "artwork": "assets/galleries/art.jpg"
     },
     {
       "id": "music",
       "name": "Music",
       "icon": "\ud83c\udfbc",
-      "description": "Music theory, sound, rhythm, and composition."
+      "description": "Music theory, sound, rhythm, and composition.",
+      "artwork": "assets/galleries/music.jpg"
     },
     {
       "id": "typing",
       "name": "Typing",
       "icon": "\u2328\ufe0f",
-      "description": "Build speed, accuracy, and keyboard confidence."
+      "description": "Build speed, accuracy, and keyboard confidence.",
+      "artwork": "assets/galleries/typing.jpg"
     },
     {
       "id": "logic",
       "name": "Logic & Critical Thinking",
       "icon": "\ud83e\udde0",
-      "description": "Chess, reasoning, strategy, and brain challenges."
+      "description": "Chess, reasoning, strategy, and brain challenges.",
+      "artwork": "assets/galleries/logic.jpg"
     },
     {
       "id": "finance",
       "name": "Economics & Finance",
       "icon": "\ud83d\udcb0",
-      "description": "Money, markets, budgeting, and financial literacy."
+      "description": "Money, markets, budgeting, and financial literacy.",
+      "artwork": "assets/galleries/finance.jpg"
     },
     {
       "id": "life-skills",
       "name": "Life Skills",
       "icon": "\ud83d\udee0\ufe0f",
-      "description": "Everyday knowledge, career skills, and practical learning."
+      "description": "Everyday knowledge, career skills, and practical learning.",
+      "artwork": "assets/galleries/life-skills.jpg"
     },
     {
       "id": "college",
       "name": "College-Level Learning",
       "icon": "\ud83c\udf93",
-      "description": "Free courses and textbooks for advanced learners."
+      "description": "Free courses and textbooks for advanced learners.",
+      "artwork": "assets/galleries/college.jpg"
     },
     {
       "id": "videos",
       "name": "Educational Videos",
       "icon": "\ud83d\udcfa",
-      "description": "Curated channels that make complex ideas understandable."
+      "description": "Curated channels that make complex ideas understandable.",
+      "artwork": "assets/galleries/videos.jpg"
     },
     {
       "id": "heart-studies",
       "name": "Heart Studies",
       "icon": "\u2764\ufe0f",
-      "description": "Thoughtful studies and resources for the heart and home."
+      "description": "Thoughtful studies and resources for the heart and home.",
+      "artwork": "assets/galleries/heart-studies.jpg"
     },
     {
       "id": "futurescape",
       "name": "Futurescape",
       "icon": "\ud83c\udf05",
-      "description": "A space for future-focused exploration and discovery."
+      "description": "A space for future-focused exploration and discovery.",
+      "artwork": "assets/galleries/futurescape.jpg"
     }
   ],
   "resources": [

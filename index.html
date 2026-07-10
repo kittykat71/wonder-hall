@@ -1,54 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Wonder Hall — a family museum of lifelong learning." />
-  <meta name="theme-color" content="#061c2d" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Wonder Hall — a family museum of lifelong learning.">
+  <meta name="theme-color" content="#061a2b">
   <title>Wonder Hall</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <a class="skip-link" href="#mainContent">Skip to content</a>
 
   <header class="museum-header">
-    <nav class="topbar">
-      <button class="menu-button" type="button" aria-label="Open menu">☰ <span>Menu</span></button>
+    <button class="nav-pill menu-pill" type="button" aria-label="Open menu">
+      <span aria-hidden="true">☰</span>
+      <span>Menu</span>
+    </button>
 
-      <a href="#" id="brandHome" class="brand">
-        <span class="brand-seal">WH</span>
-        <span class="brand-copy">
-          <strong>Wonder Hall</strong>
-          <small>Explore · Learn · Create · Together</small>
-        </span>
-      </a>
+    <a href="#" class="brand" id="brandHome" aria-label="Wonder Hall home">
+      <span class="brand-seal">WH</span>
+      <span class="brand-text">
+        <strong>Wonder Hall</strong>
+        <small>A Museum of Lifelong Learning</small>
+      </span>
+    </a>
 
-      <label class="search-box" for="searchInput">
-        <span aria-hidden="true">⌕</span>
-        <input id="searchInput" type="search" placeholder="Search galleries and resources…" autocomplete="off">
-      </label>
+    <label class="header-search" for="searchInput">
+      <span aria-hidden="true">⌕</span>
+      <input id="searchInput" type="search" placeholder="Search galleries and resources…" autocomplete="off">
+    </label>
 
-      <button id="homeButton" class="tools-button" type="button">Museum Home</button>
-    </nav>
+    <button id="homeButton" class="nav-pill" type="button">Museum Home</button>
   </header>
 
   <main id="mainContent">
     <section id="homeView">
-      <section class="rotunda">
-        <div class="rotunda-copy">
-          <p class="eyebrow">Welcome to</p>
+      <section class="hero">
+        <div class="hero-overlay">
+          <p class="welcome-line">Welcome to</p>
           <h1>Wonder Hall</h1>
-          <p class="museum-subtitle">A Museum of Lifelong Learning</p>
-          <p class="museum-invitation">Step inside. Your next adventure is waiting.</p>
+          <p class="hero-subtitle">Step inside. Your next adventure is waiting.</p>
         </div>
       </section>
 
-      <section class="museum-layout">
-        <section class="directory-panel">
-          <section id="searchResultsSection" hidden>
+      <section class="museum-shell">
+        <section class="directory">
+          <section id="searchResultsSection" class="search-results" hidden>
             <div class="section-heading">
               <div>
                 <p class="section-kicker">Search results</p>
@@ -63,7 +63,7 @@
           <div class="section-heading">
             <div>
               <p class="section-kicker">Museum directory</p>
-              <h2>Choose a gallery</h2>
+              <h2>Choose your next gallery</h2>
             </div>
             <p id="resultCount" class="result-count"></p>
           </div>
@@ -72,34 +72,28 @@
           <p id="emptyState" class="empty-state" hidden>No galleries are available.</p>
         </section>
 
-        <aside class="featured-panel">
+        <aside class="featured">
           <div class="featured-ribbon">Today’s Featured Exhibit</div>
-          <div class="featured-illustration" aria-hidden="true">
-            <span class="planet p1"></span>
-            <span class="planet p2"></span>
-            <span class="planet p3"></span>
-            <span class="rocket">🚀</span>
-            <span class="telescope">🔭</span>
-          </div>
+          <img src="assets/featured-space.jpg" alt="">
           <div class="featured-copy">
             <h2>Journey Through the Solar System</h2>
             <p>Explore NASA resources, watch planets in motion, visit the ISS, and discover the wonders beyond Earth.</p>
-            <button id="featuredButton" class="featured-button" type="button">Enter Exhibit →</button>
+            <button id="featuredButton" type="button">Enter Exhibit →</button>
           </div>
         </aside>
       </section>
     </section>
 
-    <section id="galleryView" class="gallery-view" hidden>
-      <button id="backButton" class="back-button" type="button">← Back to the museum</button>
+    <section id="galleryView" class="gallery-page" hidden>
+      <button id="backButton" class="back-button" type="button">← Back to Wonder Hall</button>
 
-      <section class="gallery-hero">
+      <section class="gallery-banner">
         <div>
           <p class="section-kicker">Wonder Hall gallery</p>
           <h2 id="galleryTitle"></h2>
           <p id="galleryDescription"></p>
         </div>
-        <div id="galleryIcon" class="gallery-large-icon"></div>
+        <div id="galleryIcon" class="gallery-large-icon" aria-hidden="true"></div>
       </section>
 
       <div id="resourceGrid" class="resource-grid"></div>
