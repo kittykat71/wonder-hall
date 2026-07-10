@@ -8,6 +8,8 @@ const emptyState = document.getElementById("emptyState");
 const resourceEmptyState = document.getElementById("resourceEmptyState");
 const backButton = document.getElementById("backButton");
 const homeButton = document.getElementById("homeButton");
+const brandHome = document.getElementById("brandHome");
+const featuredButton = document.getElementById("featuredButton");
 
 const searchResultsSection = document.getElementById("searchResultsSection");
 const searchResultsGrid = document.getElementById("searchResultsGrid");
@@ -19,7 +21,10 @@ let data = { galleries: [], resources: [] };
 async function loadData() {
   try {
     const response = await fetch("resources.json", { cache: "no-store" });
-    if (!response.ok) throw new Error(`Could not load resources.json (${response.status})`);
+    if (!response.ok) {
+      throw new Error(`Could not load resources.json (${response.status})`);
+    }
+
     data = await response.json();
     renderGalleries(data.galleries);
   } catch (error) {
@@ -35,7 +40,8 @@ async function loadData() {
 function renderGalleries(galleries) {
   galleryGrid.innerHTML = "";
   emptyState.hidden = galleries.length !== 0;
-  resultCount.textContent = `${galleries.length} ${galleries.length === 1 ? "gallery" : "galleries"}`;
+  resultCount.textContent =
+    `${galleries.length} ${galleries.length === 1 ? "gallery" : "galleries"}`;
 
   galleries.forEach((gallery) => {
     const card = document.createElement("button");
@@ -55,7 +61,6 @@ function renderGalleries(galleries) {
 function renderSearchResults(term) {
   const normalized = term.trim().toLowerCase();
 
-  // Always keep the complete museum directory visible.
   renderGalleries(data.galleries);
 
   if (!normalized) {
@@ -70,7 +75,8 @@ function renderSearchResults(term) {
 
   const matchingResources = data.resources.filter((resource) => {
     const gallery = data.galleries.find((item) => item.id === resource.category);
-    const haystack = `${resource.name} ${resource.description} ${gallery?.name || ""}`;
+    const haystack =
+      `${resource.name} ${resource.description} ${gallery?.name || ""}`;
     return haystack.toLowerCase().includes(normalized);
   });
 
@@ -79,7 +85,8 @@ function renderSearchResults(term) {
   searchResultsGrid.innerHTML = "";
   searchResultsSection.hidden = false;
   searchEmptyState.hidden = total !== 0;
-  searchResultCount.textContent = `${total} ${total === 1 ? "result" : "results"}`;
+  searchResultCount.textContent =
+    `${total} ${total === 1 ? "result" : "results"}`;
 
   matchingGalleries.forEach((gallery) => {
     const card = document.createElement("article");
@@ -92,7 +99,11 @@ function renderSearchResults(term) {
         <span>Enter gallery →</span>
       </button>
     `;
-    card.querySelector("button").addEventListener("click", () => openGallery(gallery.id));
+
+    card
+      .querySelector("button")
+      .addEventListener("click", () => openGallery(gallery.id));
+
     searchResultsGrid.appendChild(card);
   });
 
@@ -122,7 +133,8 @@ function openGallery(galleryId) {
   );
 
   document.getElementById("galleryTitle").textContent = gallery.name;
-  document.getElementById("galleryDescription").textContent = gallery.description;
+  document.getElementById("galleryDescription").textContent =
+    gallery.description;
   document.getElementById("galleryIcon").textContent = gallery.icon;
 
   resourceGrid.innerHTML = "";
@@ -163,10 +175,16 @@ searchInput.addEventListener("input", (event) => {
     galleryView.hidden = true;
     homeView.hidden = false;
   }
+
   renderSearchResults(event.target.value);
 });
 
 backButton.addEventListener("click", showHome);
 homeButton.addEventListener("click", showHome);
+brandHome.addEventListener("click", (event) => {
+  event.preventDefault();
+  showHome();
+});
+featuredButton.addEventListener("click", () => openGallery("science"));
 
 loadData();
