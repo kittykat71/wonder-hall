@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=35">
+  <link rel="stylesheet" href="style.css?v=353">
 </head>
 <body>
   <a class="skip-link" href="#mainContent">Skip to content</a>
@@ -31,6 +31,7 @@
     </label>
 
     <button id="favoritesButton" class="nav-pill" type="button">Favorites</button>
+    <button id="parentWingButton" class="nav-pill parent-wing-button" type="button">Parent Wing</button>
   </header>
 
   <main id="mainContent">
@@ -124,6 +125,122 @@
       <div id="passportGrid" class="passport-grid"></div>
       <p id="passportEmpty" class="empty-state">Visit a gallery and add your first stamp.</p>
     </section>
+
+    <section id="parentWingView" class="collection-page parent-wing" hidden>
+      <div class="parent-wing-header">
+        <button class="back-button parent-back" type="button">← Back to Wonder Hall</button>
+        <button id="lockParentWingButton" class="nav-pill" type="button">Lock Parent Wing</button>
+      </div>
+
+      <div class="parent-wing-title">
+        <p class="section-kicker">Private curator tools</p>
+        <h2>Parent Wing</h2>
+        <p>Changes are saved on this device. Export <code>resources.json</code> when you are ready to publish them through GitHub Desktop.</p>
+      </div>
+
+      <nav class="parent-tabs" aria-label="Parent Wing sections">
+        <button class="parent-tab active" data-parent-tab="resources" type="button">Edit Resources</button>
+        <button class="parent-tab" data-parent-tab="galleries" type="button">Add Galleries</button>
+        <button class="parent-tab" data-parent-tab="bookmarks" type="button">Bookmarks</button>
+        <button class="parent-tab" data-parent-tab="maintenance" type="button">Maintenance</button>
+      </nav>
+
+      <section id="parentResourcesPanel" class="parent-panel">
+        <div class="parent-form-card">
+          <h3>Add or Edit a Resource</h3>
+          <form id="resourceEditorForm">
+            <input id="resourceEditIndex" type="hidden">
+            <label>Name <input id="resourceNameInput" required></label>
+            <label>Website address <input id="resourceUrlInput" type="url" required></label>
+            <label>Gallery
+              <select id="resourceCategoryInput" required></select>
+            </label>
+            <label>Description <textarea id="resourceDescriptionInput" rows="4" required></textarea></label>
+            <div class="form-actions">
+              <button class="primary-parent-button" type="submit">Save Resource</button>
+              <button id="cancelResourceEdit" type="button">Clear Form</button>
+            </div>
+          </form>
+        </div>
+        <div>
+          <h3>Current Resources</h3>
+          <div id="parentResourceList" class="parent-list"></div>
+        </div>
+      </section>
+
+      <section id="parentGalleriesPanel" class="parent-panel" hidden>
+        <div class="parent-form-card">
+          <h3>Add a Gallery</h3>
+          <form id="galleryEditorForm">
+            <label>Gallery name <input id="galleryNameInput" required></label>
+            <label>Icon or emoji <input id="galleryIconInput" value="✨" required></label>
+            <label>Description <textarea id="galleryDescriptionInput" rows="4" required></textarea></label>
+            <label>Room name <input id="galleryRoomNameInput" placeholder="Example: Discovery Room"></label>
+            <button class="primary-parent-button" type="submit">Add Gallery</button>
+          </form>
+        </div>
+        <div>
+          <h3>Current Galleries</h3>
+          <div id="parentGalleryList" class="parent-list"></div>
+        </div>
+      </section>
+
+      <section id="parentBookmarksPanel" class="parent-panel" hidden>
+        <h3>Saved Bookmarks</h3>
+        <div id="parentBookmarksList" class="parent-list"></div>
+        <p id="parentBookmarksEmpty" class="empty-state">No bookmarks are saved on this device.</p>
+      </section>
+
+      <section id="parentMaintenancePanel" class="parent-panel" hidden>
+        <div class="maintenance-grid">
+          <article class="maintenance-card">
+            <h3>Publish Resource Changes</h3>
+            <p>Download the updated resource file, replace the existing file in your Wonder Hall folder, then commit and push with GitHub Desktop.</p>
+            <button id="exportResourcesButton" class="primary-parent-button" type="button">Download resources.json</button>
+          </article>
+          <article class="maintenance-card">
+            <h3>Backup Parent Data</h3>
+            <p>Download galleries, resources, bookmarks, passport stamps, and Parent Wing settings.</p>
+            <button id="exportBackupButton" type="button">Download Full Backup</button>
+          </article>
+          <article class="maintenance-card">
+            <h3>Import Resources</h3>
+            <p>Load a previously exported resources file into the Parent Wing.</p>
+            <label class="file-button">Choose resources.json
+              <input id="importResourcesInput" type="file" accept=".json,application/json">
+            </label>
+          </article>
+          <article class="maintenance-card">
+            <h3>Maintenance Status</h3>
+            <p id="maintenanceStatus"></p>
+            <button id="validateDataButton" type="button">Check Data</button>
+          </article>
+          <article class="maintenance-card danger-card">
+            <h3>Reset Device Data</h3>
+            <p>Clear local Parent Wing edits, favorites, and passport stamps. This does not change the published GitHub site.</p>
+            <button id="resetDeviceDataButton" type="button">Reset Local Data</button>
+          </article>
+        </div>
+      </section>
+    </section>
+
+    <div id="parentPasswordModal" class="password-modal" hidden>
+      <div class="password-dialog">
+        <p class="section-kicker">Parent Wing</p>
+        <h2 id="passwordModalTitle">Unlock Parent Wing</h2>
+        <p id="passwordModalHelp"></p>
+        <form id="parentPasswordForm">
+          <label>Password <input id="parentPasswordInput" type="password" required autocomplete="current-password"></label>
+          <label id="confirmPasswordLabel" hidden>Confirm password <input id="parentPasswordConfirm" type="password"></label>
+          <p id="passwordError" class="password-error" hidden></p>
+          <div class="form-actions">
+            <button class="primary-parent-button" type="submit">Continue</button>
+            <button id="cancelPasswordButton" type="button">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
   </main>
 
   <footer>
@@ -131,6 +248,6 @@
     <span>Curated for curious minds.</span>
   </footer>
 
-  <script src="app.js?v=35"></script>
+  <script src="app.js?v=353"></script>
 </body>
 </html>
