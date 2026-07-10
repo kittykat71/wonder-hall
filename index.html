@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=355">
+  <link rel="stylesheet" href="style.css?v=356">
 </head>
 <body>
   <a class="skip-link" href="#mainContent">Skip to content</a>
@@ -150,12 +150,43 @@
           <h3>Add or Edit a Resource</h3>
           <form id="resourceEditorForm">
             <input id="resourceEditIndex" type="hidden">
-            <label>Name <input id="resourceNameInput" required></label>
-            <label>Website address <input id="resourceUrlInput" type="url" required></label>
-            <label>Gallery
+
+            <label>
+              Name
+              <input id="resourceNameInput" required>
+            </label>
+
+            <label>
+              Website address
+              <input id="resourceUrlInput" type="url" required>
+            </label>
+
+            <label>
+              Gallery
               <select id="resourceCategoryInput" required></select>
             </label>
-            <label>Description <textarea id="resourceDescriptionInput" rows="4" required></textarea></label>
+
+            <label>
+              Description
+              <textarea id="resourceDescriptionInput" rows="4" required></textarea>
+            </label>
+
+            <label>
+              Add or replace resource image
+              <input id="resourceImageInput" type="file" accept="image/png,image/jpeg,image/webp">
+            </label>
+
+            <div id="resourceImagePreviewWrap" class="resource-image-preview-wrap" hidden>
+              <p>Current resource image</p>
+              <img id="resourceImagePreview" class="resource-image-preview" alt="Resource image preview">
+              <button id="removeResourceImageButton" type="button">Remove Image</button>
+            </div>
+
+            <p class="parent-form-note">
+              Uploaded images are resized and saved inside the exported
+              <code>resources.json</code> file.
+            </p>
+
             <div class="form-actions">
               <button class="primary-parent-button" type="submit">Save Resource</button>
               <button id="cancelResourceEdit" type="button">Clear Form</button>
@@ -286,6 +317,6 @@
     <span>Curated for curious minds.</span>
   </footer>
 
-  <script src="app.js?v=355"></script>
+  <script src="app.js?v=356"></script>
 </body>
 </html>

@@ -1,9 +1,24 @@
-# Wonder Hall 3.55 — Grand Rotunda Header
+# Wonder Hall 3.56 — Resource Image Manager
 
-## Included
-- New text-free grand museum rotunda header artwork
-- Wonder Hall title and controls remain live HTML, not part of the image
-- Improved title readability on desktop and tablet
-- Existing Parent Wing and Gallery Manager preserved
-- Existing search, favorites, passport, gallery pages, and resources preserved
-- Versioned assets to prevent browser cache problems
+## New Parent Wing resource controls
+- Add an image to a resource
+- Replace an existing resource image
+- Remove a resource image
+- Preview images before saving
+- See image thumbnails in the Parent Wing resource list
+
+## Where resource images appear
+- Gallery resource cards
+- Search results
+- Favorites
+- Any other view using Wonder Hall resource cards
+
+## Image handling
+Uploaded images are resized in the browser and saved as compressed data URLs inside the exported resources.json file.
+
+## Publishing
+After editing resources:
+1. Open Parent Wing → Maintenance
+2. Download resources.json
+3. Replace the existing resources.json in your Wonder Hall repository folder
+4. Commit and push with GitHub Desktop

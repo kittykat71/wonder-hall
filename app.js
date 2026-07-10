@@ -43,6 +43,10 @@ const resourceNameInput = document.getElementById("resourceNameInput");
 const resourceUrlInput = document.getElementById("resourceUrlInput");
 const resourceCategoryInput = document.getElementById("resourceCategoryInput");
 const resourceDescriptionInput = document.getElementById("resourceDescriptionInput");
+const resourceImageInput = document.getElementById("resourceImageInput");
+const resourceImagePreviewWrap = document.getElementById("resourceImagePreviewWrap");
+const resourceImagePreview = document.getElementById("resourceImagePreview");
+const removeResourceImageButton = document.getElementById("removeResourceImageButton");
 const cancelResourceEdit = document.getElementById("cancelResourceEdit");
 const parentResourceList = document.getElementById("parentResourceList");
 
@@ -75,6 +79,8 @@ let currentGalleryId = null;
 let parentUnlocked = false;
 let pendingGalleryImage = null;
 let removeCurrentGalleryImage = false;
+let pendingResourceImage = null;
+let removeCurrentResourceImage = false;
 
 const FAVORITES_KEY = "wonderHallFavorites";
 const PASSPORT_KEY = "wonderHallPassport";
@@ -167,6 +173,72 @@ function readAndResizeGalleryImage(file) {
   });
 }
 
+
+function getResourceImage(resource) {
+  return resource?.image || "";
+}
+
+function clearResourceEditor() {
+  resourceEditorForm.reset();
+  resourceEditIndex.value = "";
+  pendingResourceImage = null;
+  removeCurrentResourceImage = false;
+  resourceImageInput.value = "";
+  resourceImagePreview.removeAttribute("src");
+  resourceImagePreviewWrap.hidden = true;
+}
+
+function showResourceImagePreview(source) {
+  if (!source) {
+    resourceImagePreview.removeAttribute("src");
+    resourceImagePreviewWrap.hidden = true;
+    return;
+  }
+
+  resourceImagePreview.src = source;
+  resourceImagePreviewWrap.hidden = false;
+}
+
+function readAndResizeResourceImage(file) {
+  return new Promise((resolve, reject) => {
+    if (!file || !file.type.startsWith("image/")) {
+      reject(new Error("Choose a PNG, JPEG, or WebP image."));
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onerror = () => reject(new Error("The image could not be read."));
+
+    reader.onload = () => {
+      const image = new Image();
+
+      image.onerror = () => reject(new Error("The image could not be opened."));
+
+      image.onload = () => {
+        const maxWidth = 900;
+        const maxHeight = 650;
+        const scale = Math.min(1, maxWidth / image.width, maxHeight / image.height);
+        const width = Math.max(1, Math.round(image.width * scale));
+        const height = Math.max(1, Math.round(image.height * scale));
+
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+
+        const context = canvas.getContext("2d");
+        context.drawImage(image, 0, 0, width, height);
+
+        resolve(canvas.toDataURL("image/jpeg", 0.84));
+      };
+
+      image.src = reader.result;
+    };
+
+    reader.readAsDataURL(file);
+  });
+}
+
 async function loadData() {
   try {
     const custom = localStorage.getItem(CUSTOM_DATA_KEY);
@@ -202,7 +274,7 @@ function renderGalleries(galleries) {
     card.className = "gallery-card";
     card.type = "button";
     if (gallery.artwork) {
-      card.style.setProperty("--gallery-art", `url("${gallery.artwork}?v=354")`);
+      card.style.setProperty("--gallery-art", `url("${gallery.artwork}?v=356")`);
     }
     card.innerHTML = `
       <span class="gallery-card-icon" aria-hidden="true">${gallery.icon}</span>
@@ -223,22 +295,45 @@ function createResourceCard(resource) {
   link.href = resource.url;
   link.target = "_blank";
   link.rel = "noopener noreferrer";
-  link.innerHTML = `<h3>${resource.name}</h3><p>${resource.description}</p><span>Visit resource ↗</span>`;
   link.style.color = "inherit";
   link.style.textDecoration = "none";
+
+  if (resource.image) {
+    const image = document.createElement("img");
+    image.className = "resource-card-image";
+    image.src = resource.image;
+    image.alt = "";
+    link.appendChild(image);
+  }
+
+  const content = document.createElement("div");
+  content.className = "resource-card-content";
+  content.innerHTML = `
+    <h3>${resource.name}</h3>
+    <p>${resource.description}</p>
+    <span>Visit resource ↗</span>
+  `;
+
+  link.appendChild(content);
 
   const favorite = document.createElement("button");
   favorite.type = "button";
   favorite.className = "favorite-toggle";
+
   const key = resource.url;
+
   const update = () => {
     const active = favorites.has(key);
     favorite.classList.toggle("is-favorite", active);
     favorite.textContent = active ? "★ Saved to Favorites" : "☆ Add to Favorites";
   };
+
   update();
+
   favorite.addEventListener("click", () => {
-    if (favorites.has(key)) favorites.delete(key); else favorites.add(key);
+    if (favorites.has(key)) favorites.delete(key);
+    else favorites.add(key);
+
     saveStoredSet(FAVORITES_KEY, favorites);
     update();
   });
@@ -293,7 +388,7 @@ function openGallery(id) {
   document.getElementById("galleryDescription").textContent = gallery.description;
   document.getElementById("galleryRoomName").textContent = gallery.roomName || "Gallery Room";
   document.getElementById("galleryIcon").textContent = gallery.icon;
-  galleryRoom.style.setProperty("--room-art", `url("${gallery.artwork}?v=354")`);
+  galleryRoom.style.setProperty("--room-art", `url("${gallery.artwork}?v=356")`);
 
   const passport = getStoredSet(PASSPORT_KEY);
   stampButton.textContent = passport.has(id) ? "✓ Passport Stamp Added" : "Add Passport Stamp";
@@ -369,16 +464,38 @@ function populateParentWing() {
     .map(g => `<option value="${g.id}">${g.name}</option>`).join("");
 
   parentResourceList.innerHTML = "";
+  parentResourceList.classList.add("parent-resource-list");
+
   data.resources.forEach((resource,index) => {
     const gallery = data.galleries.find(g => g.id === resource.category);
     const row = document.createElement("article");
     row.className = "parent-list-item";
-    row.innerHTML = `<div><h4>${resource.name}</h4>
-      <p>${gallery?.name || resource.category} · ${resource.url}</p></div>
-      <div class="parent-list-actions">
-        <button type="button" data-edit-resource="${index}">Edit</button>
-        <button type="button" data-delete-resource="${index}">Delete</button>
-      </div>`;
+
+    let preview;
+
+    if (resource.image) {
+      preview = document.createElement("img");
+      preview.className = "parent-resource-thumbnail";
+      preview.src = resource.image;
+      preview.alt = "";
+    } else {
+      preview = document.createElement("div");
+      preview.className = "parent-resource-placeholder";
+      preview.textContent = "No image";
+    }
+
+    const information = document.createElement("div");
+    information.innerHTML = `<h4>${resource.name}</h4>
+      <p>${gallery?.name || resource.category} · ${resource.url}</p>`;
+
+    const actions = document.createElement("div");
+    actions.className = "parent-list-actions";
+    actions.innerHTML = `
+      <button type="button" data-edit-resource="${index}">Edit</button>
+      <button type="button" data-delete-resource="${index}">Delete</button>
+    `;
+
+    row.append(preview, information, actions);
     parentResourceList.appendChild(row);
   });
 
@@ -493,19 +610,39 @@ document.querySelectorAll(".parent-tab").forEach(button => {
 
 resourceEditorForm.addEventListener("submit", event => {
   event.preventDefault();
+
+  const index = resourceEditIndex.value === "" ? null : Number(resourceEditIndex.value);
+  const existingResource = index === null ? null : data.resources[index];
+
+  let image = existingResource?.image || "";
+
+  if (removeCurrentResourceImage) {
+    image = "";
+  }
+
+  if (pendingResourceImage) {
+    image = pendingResourceImage;
+  }
+
   const resource = {
+    ...existingResource,
     name: resourceNameInput.value.trim(),
     url: resourceUrlInput.value.trim(),
     category: resourceCategoryInput.value,
-    description: resourceDescriptionInput.value.trim()
+    description: resourceDescriptionInput.value.trim(),
+    image
   };
-  const index = resourceEditIndex.value;
-  if (index === "") data.resources.push(resource);
-  else data.resources[Number(index)] = resource;
+
+  if (index === null) data.resources.push(resource);
+  else data.resources[index] = resource;
+
   saveCustomData();
-  resourceEditorForm.reset();
-  resourceEditIndex.value = "";
+  clearResourceEditor();
   populateParentWing();
+
+  if (!homeView.hidden) {
+    renderGalleries(data.galleries);
+  }
 });
 
 parentResourceList.addEventListener("click", event => {
@@ -518,6 +655,12 @@ parentResourceList.addEventListener("click", event => {
     resourceUrlInput.value = resource.url;
     resourceCategoryInput.value = resource.category;
     resourceDescriptionInput.value = resource.description;
+
+    pendingResourceImage = null;
+    removeCurrentResourceImage = false;
+    resourceImageInput.value = "";
+    showResourceImagePreview(getResourceImage(resource));
+
     window.scrollTo({top:0,behavior:"auto"});
   }
   if (del !== undefined && confirm("Delete this resource from the local Parent Wing data?")) {
@@ -526,10 +669,28 @@ parentResourceList.addEventListener("click", event => {
     populateParentWing();
   }
 });
-cancelResourceEdit.addEventListener("click", () => {
-  resourceEditorForm.reset();
-  resourceEditIndex.value = "";
+resourceImageInput.addEventListener("change", async event => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  try {
+    pendingResourceImage = await readAndResizeResourceImage(file);
+    removeCurrentResourceImage = false;
+    showResourceImagePreview(pendingResourceImage);
+  } catch (error) {
+    alert(error.message);
+    event.target.value = "";
+  }
 });
+
+removeResourceImageButton.addEventListener("click", () => {
+  pendingResourceImage = null;
+  removeCurrentResourceImage = true;
+  resourceImageInput.value = "";
+  showResourceImagePreview(null);
+});
+
+cancelResourceEdit.addEventListener("click", clearResourceEditor);
 
 galleryEditorForm.addEventListener("submit", event => {
   event.preventDefault();
