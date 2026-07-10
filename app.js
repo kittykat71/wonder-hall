@@ -9,6 +9,11 @@ const resourceEmptyState = document.getElementById("resourceEmptyState");
 const backButton = document.getElementById("backButton");
 const homeButton = document.getElementById("homeButton");
 
+const searchResultsSection = document.getElementById("searchResultsSection");
+const searchResultsGrid = document.getElementById("searchResultsGrid");
+const searchResultCount = document.getElementById("searchResultCount");
+const searchEmptyState = document.getElementById("searchEmptyState");
+
 let data = { galleries: [], resources: [] };
 
 async function loadData() {
@@ -47,6 +52,67 @@ function renderGalleries(galleries) {
   });
 }
 
+function renderSearchResults(term) {
+  const normalized = term.trim().toLowerCase();
+
+  if (!normalized) {
+    searchResultsSection.hidden = true;
+    searchResultsGrid.innerHTML = "";
+    renderGalleries(data.galleries);
+    return;
+  }
+
+  const matchingGalleries = data.galleries.filter((gallery) =>
+    `${gallery.name} ${gallery.description}`.toLowerCase().includes(normalized)
+  );
+
+  const matchingResources = data.resources.filter((resource) => {
+    const gallery = data.galleries.find((item) => item.id === resource.category);
+    const haystack = `${resource.name} ${resource.description} ${gallery?.name || ""}`;
+    return haystack.toLowerCase().includes(normalized);
+  });
+
+  searchResultsGrid.innerHTML = "";
+  searchResultsSection.hidden = false;
+  searchEmptyState.hidden = matchingGalleries.length + matchingResources.length !== 0;
+  searchResultCount.textContent =
+    `${matchingGalleries.length + matchingResources.length} result` +
+    `${matchingGalleries.length + matchingResources.length === 1 ? "" : "s"}`;
+
+  matchingGalleries.forEach((gallery) => {
+    const card = document.createElement("article");
+    card.className = "resource-card search-result-card";
+    card.innerHTML = `
+      <span class="search-result-type">Gallery</span>
+      <button type="button" aria-label="Open ${gallery.name}">
+        <h3>${gallery.icon} ${gallery.name}</h3>
+        <p>${gallery.description}</p>
+        <span>Enter gallery →</span>
+      </button>
+    `;
+    card.querySelector("button").addEventListener("click", () => openGallery(gallery.id));
+    searchResultsGrid.appendChild(card);
+  });
+
+  matchingResources.forEach((resource) => {
+    const gallery = data.galleries.find((item) => item.id === resource.category);
+    const card = document.createElement("a");
+    card.className = "resource-card search-result-card";
+    card.href = resource.url;
+    card.target = "_blank";
+    card.rel = "noopener noreferrer";
+    card.innerHTML = `
+      <span class="search-result-type">${gallery?.name || "Resource"}</span>
+      <h3>${resource.name}</h3>
+      <p>${resource.description}</p>
+      <span>Visit resource ↗</span>
+    `;
+    searchResultsGrid.appendChild(card);
+  });
+
+  renderGalleries(matchingGalleries);
+}
+
 function openGallery(galleryId) {
   const gallery = data.galleries.find((item) => item.id === galleryId);
   if (!gallery) return;
@@ -79,6 +145,7 @@ function openGallery(galleryId) {
   homeView.hidden = true;
   galleryView.hidden = false;
   searchInput.value = "";
+  searchResultsSection.hidden = true;
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
@@ -86,19 +153,14 @@ function showHome() {
   galleryView.hidden = true;
   homeView.hidden = false;
   searchInput.value = "";
+  searchResultsSection.hidden = true;
   renderGalleries(data.galleries);
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 searchInput.addEventListener("input", (event) => {
-  const term = event.target.value.trim().toLowerCase();
-
-  if (!homeView.hidden) {
-    const filtered = data.galleries.filter((gallery) =>
-      `${gallery.name} ${gallery.description}`.toLowerCase().includes(term)
-    );
-    renderGalleries(filtered);
-  }
+  if (homeView.hidden) showHome();
+  renderSearchResults(event.target.value);
 });
 
 backButton.addEventListener("click", showHome);

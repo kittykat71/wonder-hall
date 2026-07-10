@@ -411,3 +411,35 @@ footer {
     transition: none !important;
   }
 }
+
+
+.search-results-section {
+  padding-top: 54px;
+}
+
+.search-result-card {
+  position: relative;
+}
+
+.search-result-type {
+  display: inline-flex;
+  width: fit-content;
+  margin-bottom: 12px;
+  padding: 5px 9px;
+  color: var(--teal-dark);
+  background: #eef5f3;
+  border-radius: 999px;
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.search-result-card button {
+  width: 100%;
+  padding: 0;
+  text-align: left;
+  color: inherit;
+  background: transparent;
+  border: 0;
+}
