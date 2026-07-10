@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=353">
+  <link rel="stylesheet" href="style.css?v=354">
 </head>
 <body>
   <a class="skip-link" href="#mainContent">Skip to content</a>
@@ -170,18 +170,56 @@
 
       <section id="parentGalleriesPanel" class="parent-panel" hidden>
         <div class="parent-form-card">
-          <h3>Add a Gallery</h3>
+          <h3 id="galleryEditorHeading">Create a Gallery</h3>
           <form id="galleryEditorForm">
-            <label>Gallery name <input id="galleryNameInput" required></label>
-            <label>Icon or emoji <input id="galleryIconInput" value="✨" required></label>
-            <label>Description <textarea id="galleryDescriptionInput" rows="4" required></textarea></label>
-            <label>Room name <input id="galleryRoomNameInput" placeholder="Example: Discovery Room"></label>
-            <button class="primary-parent-button" type="submit">Add Gallery</button>
+            <input id="galleryEditIndex" type="hidden">
+
+            <label>
+              Gallery name
+              <input id="galleryNameInput" required>
+            </label>
+
+            <label>
+              Icon or emoji
+              <input id="galleryIconInput" value="✨" required>
+            </label>
+
+            <label>
+              Description
+              <textarea id="galleryDescriptionInput" rows="4" required></textarea>
+            </label>
+
+            <label>
+              Room name
+              <input id="galleryRoomNameInput" placeholder="Example: Discovery Room">
+            </label>
+
+            <label>
+              Replace card image
+              <input id="galleryImageInput" type="file" accept="image/png,image/jpeg,image/webp">
+            </label>
+
+            <div id="galleryImagePreviewWrap" class="gallery-image-preview-wrap" hidden>
+              <p>Current card image</p>
+              <img id="galleryImagePreview" class="gallery-image-preview" alt="Gallery card preview">
+              <button id="removeGalleryImageButton" type="button">Remove Custom Image</button>
+            </div>
+
+            <p class="parent-form-note">
+              Uploaded images are resized and saved inside the exported
+              <code>resources.json</code> file.
+            </p>
+
+            <div class="form-actions">
+              <button id="saveGalleryButton" class="primary-parent-button" type="submit">Create Gallery</button>
+              <button id="cancelGalleryEdit" type="button">Clear Form</button>
+            </div>
           </form>
         </div>
+
         <div>
           <h3>Current Galleries</h3>
-          <div id="parentGalleryList" class="parent-list"></div>
+          <div id="parentGalleryList" class="parent-list gallery-manager-list"></div>
         </div>
       </section>
 
@@ -248,6 +286,6 @@
     <span>Curated for curious minds.</span>
   </footer>
 
-  <script src="app.js?v=353"></script>
+  <script src="app.js?v=354"></script>
 </body>
 </html>

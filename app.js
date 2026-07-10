@@ -47,10 +47,18 @@ const cancelResourceEdit = document.getElementById("cancelResourceEdit");
 const parentResourceList = document.getElementById("parentResourceList");
 
 const galleryEditorForm = document.getElementById("galleryEditorForm");
+const galleryEditIndex = document.getElementById("galleryEditIndex");
+const galleryEditorHeading = document.getElementById("galleryEditorHeading");
+const saveGalleryButton = document.getElementById("saveGalleryButton");
 const galleryNameInput = document.getElementById("galleryNameInput");
 const galleryIconInput = document.getElementById("galleryIconInput");
 const galleryDescriptionInput = document.getElementById("galleryDescriptionInput");
 const galleryRoomNameInput = document.getElementById("galleryRoomNameInput");
+const galleryImageInput = document.getElementById("galleryImageInput");
+const galleryImagePreviewWrap = document.getElementById("galleryImagePreviewWrap");
+const galleryImagePreview = document.getElementById("galleryImagePreview");
+const removeGalleryImageButton = document.getElementById("removeGalleryImageButton");
+const cancelGalleryEdit = document.getElementById("cancelGalleryEdit");
 const parentGalleryList = document.getElementById("parentGalleryList");
 
 const parentBookmarksList = document.getElementById("parentBookmarksList");
@@ -65,6 +73,8 @@ const resetDeviceDataButton = document.getElementById("resetDeviceDataButton");
 let data = { galleries: [], resources: [] };
 let currentGalleryId = null;
 let parentUnlocked = false;
+let pendingGalleryImage = null;
+let removeCurrentGalleryImage = false;
 
 const FAVORITES_KEY = "wonderHallFavorites";
 const PASSPORT_KEY = "wonderHallPassport";
@@ -92,13 +102,78 @@ async function hashPassword(value) {
   return [...new Uint8Array(digest)].map(b => b.toString(16).padStart(2,"0")).join("");
 }
 
+
+function isDataImage(value) {
+  return typeof value === "string" && value.startsWith("data:image/");
+}
+
+function getGalleryArtwork(gallery) {
+  return gallery?.artwork || "assets/gallery-art-v353/futurescape.jpg";
+}
+
+function clearGalleryEditor() {
+  galleryEditorForm.reset();
+  galleryEditIndex.value = "";
+  galleryIconInput.value = "✨";
+  pendingGalleryImage = null;
+  removeCurrentGalleryImage = false;
+  galleryImageInput.value = "";
+  galleryImagePreview.removeAttribute("src");
+  galleryImagePreviewWrap.hidden = true;
+  galleryEditorHeading.textContent = "Create a Gallery";
+  saveGalleryButton.textContent = "Create Gallery";
+}
+
+function showGalleryImagePreview(source) {
+  if (!source) {
+    galleryImagePreview.removeAttribute("src");
+    galleryImagePreviewWrap.hidden = true;
+    return;
+  }
+  galleryImagePreview.src = source;
+  galleryImagePreviewWrap.hidden = false;
+}
+
+function readAndResizeGalleryImage(file) {
+  return new Promise((resolve, reject) => {
+    if (!file || !file.type.startsWith("image/")) {
+      reject(new Error("Choose a PNG, JPEG, or WebP image."));
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error("The image could not be read."));
+    reader.onload = () => {
+      const image = new Image();
+      image.onerror = () => reject(new Error("The image could not be opened."));
+      image.onload = () => {
+        const maxWidth = 900;
+        const maxHeight = 650;
+        const scale = Math.min(1, maxWidth / image.width, maxHeight / image.height);
+        const width = Math.max(1, Math.round(image.width * scale));
+        const height = Math.max(1, Math.round(image.height * scale));
+
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const context = canvas.getContext("2d");
+        context.drawImage(image, 0, 0, width, height);
+
+        resolve(canvas.toDataURL("image/jpeg", 0.84));
+      };
+      image.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
 async function loadData() {
   try {
     const custom = localStorage.getItem(CUSTOM_DATA_KEY);
     if (custom) {
       data = JSON.parse(custom);
     } else {
-      const response = await fetch("resources.json?v=353", { cache:"no-store" });
+      const response = await fetch("resources.json?v=354", { cache:"no-store" });
       if (!response.ok) throw new Error(`Could not load resources.json (${response.status})`);
       data = await response.json();
     }
@@ -127,7 +202,7 @@ function renderGalleries(galleries) {
     card.className = "gallery-card";
     card.type = "button";
     if (gallery.artwork) {
-      card.style.setProperty("--gallery-art", `url("${gallery.artwork}?v=353")`);
+      card.style.setProperty("--gallery-art", `url("${gallery.artwork}?v=354")`);
     }
     card.innerHTML = `
       <span class="gallery-card-icon" aria-hidden="true">${gallery.icon}</span>
@@ -218,7 +293,7 @@ function openGallery(id) {
   document.getElementById("galleryDescription").textContent = gallery.description;
   document.getElementById("galleryRoomName").textContent = gallery.roomName || "Gallery Room";
   document.getElementById("galleryIcon").textContent = gallery.icon;
-  galleryRoom.style.setProperty("--room-art", `url("${gallery.artwork}?v=353")`);
+  galleryRoom.style.setProperty("--room-art", `url("${gallery.artwork}?v=354")`);
 
   const passport = getStoredSet(PASSPORT_KEY);
   stampButton.textContent = passport.has(id) ? "✓ Passport Stamp Added" : "Add Passport Stamp";
@@ -308,12 +383,27 @@ function populateParentWing() {
   });
 
   parentGalleryList.innerHTML = "";
-  data.galleries.forEach(gallery => {
+  data.galleries.forEach((gallery, index) => {
     const count = data.resources.filter(r => r.category === gallery.id).length;
     const row = document.createElement("article");
     row.className = "parent-list-item";
-    row.innerHTML = `<div><h4>${gallery.icon} ${gallery.name}</h4>
-      <p>${count} resources · ID: ${gallery.id}</p></div>`;
+
+    const image = document.createElement("img");
+    image.className = "parent-gallery-thumbnail";
+    image.src = getGalleryArtwork(gallery);
+    image.alt = "";
+
+    const information = document.createElement("div");
+    information.innerHTML = `<h4>${gallery.icon} ${gallery.name}</h4>
+      <p>${count} resources · ID: ${gallery.id}</p>`;
+
+    const actions = document.createElement("div");
+    actions.className = "parent-list-actions";
+    actions.innerHTML = `
+      <button type="button" data-edit-gallery="${index}">Edit</button>
+      <button class="danger-action" type="button" data-delete-gallery="${index}">Delete</button>`;
+
+    row.append(image, information, actions);
     parentGalleryList.appendChild(row);
   });
 
@@ -443,23 +533,112 @@ cancelResourceEdit.addEventListener("click", () => {
 
 galleryEditorForm.addEventListener("submit", event => {
   event.preventDefault();
-  let id = slugify(galleryNameInput.value);
-  let suffix = 2;
-  const original = id;
-  while (data.galleries.some(g => g.id === id)) id = `${original}-${suffix++}`;
 
-  data.galleries.push({
+  const editIndex = galleryEditIndex.value === "" ? null : Number(galleryEditIndex.value);
+  const existingGallery = editIndex === null ? null : data.galleries[editIndex];
+
+  let id = existingGallery?.id || slugify(galleryNameInput.value);
+  if (!existingGallery) {
+    let suffix = 2;
+    const original = id;
+    while (data.galleries.some(g => g.id === id)) id = `${original}-${suffix++}`;
+  }
+
+  let artwork = existingGallery?.artwork || "assets/gallery-art-v353/futurescape.jpg";
+  if (removeCurrentGalleryImage) {
+    artwork = "assets/gallery-art-v353/futurescape.jpg";
+  }
+  if (pendingGalleryImage) {
+    artwork = pendingGalleryImage;
+  }
+
+  const gallery = {
+    ...existingGallery,
     id,
     name: galleryNameInput.value.trim(),
     icon: galleryIconInput.value.trim() || "✨",
     description: galleryDescriptionInput.value.trim(),
     roomName: galleryRoomNameInput.value.trim() || "Discovery Room",
-    artwork: "assets/gallery-art-v353/futurescape.jpg"
-  });
+    artwork
+  };
+
+  if (editIndex === null) data.galleries.push(gallery);
+  else data.galleries[editIndex] = gallery;
+
   saveCustomData();
-  galleryEditorForm.reset();
-  galleryIconInput.value = "✨";
+  clearGalleryEditor();
   populateParentWing();
+  renderGalleries(data.galleries);
+});
+
+
+galleryImageInput.addEventListener("change", async event => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  try {
+    pendingGalleryImage = await readAndResizeGalleryImage(file);
+    removeCurrentGalleryImage = false;
+    showGalleryImagePreview(pendingGalleryImage);
+  } catch (error) {
+    alert(error.message);
+    event.target.value = "";
+  }
+});
+
+removeGalleryImageButton.addEventListener("click", () => {
+  pendingGalleryImage = null;
+  removeCurrentGalleryImage = true;
+  galleryImageInput.value = "";
+  showGalleryImagePreview(null);
+});
+
+cancelGalleryEdit.addEventListener("click", clearGalleryEditor);
+
+parentGalleryList.addEventListener("click", event => {
+  const editValue = event.target.dataset.editGallery;
+  const deleteValue = event.target.dataset.deleteGallery;
+
+  if (editValue !== undefined) {
+    const index = Number(editValue);
+    const gallery = data.galleries[index];
+    if (!gallery) return;
+
+    galleryEditIndex.value = String(index);
+    galleryNameInput.value = gallery.name;
+    galleryIconInput.value = gallery.icon || "✨";
+    galleryDescriptionInput.value = gallery.description || "";
+    galleryRoomNameInput.value = gallery.roomName || "";
+
+    pendingGalleryImage = null;
+    removeCurrentGalleryImage = false;
+    galleryImageInput.value = "";
+    showGalleryImagePreview(getGalleryArtwork(gallery));
+
+    galleryEditorHeading.textContent = "Edit Gallery";
+    saveGalleryButton.textContent = "Save Gallery Changes";
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }
+
+  if (deleteValue !== undefined) {
+    const index = Number(deleteValue);
+    const gallery = data.galleries[index];
+    if (!gallery) return;
+
+    const resourceCount = data.resources.filter(resource => resource.category === gallery.id).length;
+    const message = resourceCount
+      ? `Delete "${gallery.name}" and its ${resourceCount} linked resources from the local Parent Wing data?`
+      : `Delete "${gallery.name}" from the local Parent Wing data?`;
+
+    if (!confirm(message)) return;
+
+    data.galleries.splice(index, 1);
+    data.resources = data.resources.filter(resource => resource.category !== gallery.id);
+    saveCustomData();
+    clearGalleryEditor();
+    populateParentWing();
+    renderGalleries(data.galleries);
+  }
 });
 
 exportResourcesButton.addEventListener("click", () => downloadJson("resources.json", data));

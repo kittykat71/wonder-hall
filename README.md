@@ -1,16 +1,16 @@
-# Wonder Hall 3.53 — Parent Wing
+# Wonder Hall 3.54 — Gallery Manager
 
-## Included
-- Unique text-free artwork for all 22 gallery cards
-- Removed awkward corner words from gallery images
-- Password-gated Parent Wing
-- Edit and delete resources
-- Add galleries
-- View bookmarks
-- Export updated resources.json
-- Import resources.json
-- Full local-data backup
-- Data validation and reset tools
+## Parent Wing gallery controls
+- Edit an existing gallery
+- Delete a gallery
+- Create a new gallery
+- Replace a gallery card image
+- Remove a custom gallery image
+- Gallery edits are saved locally on the current browser/device
+- Export the updated resources.json from Maintenance to publish changes
 
-## Important security note
-Wonder Hall is hosted on public GitHub Pages. The Parent Wing password protects the local curator interface on a device, but it is not server-grade authentication. Parent Wing changes cannot alter the live website by themselves. To publish changes, export resources.json, replace the repository file, then commit and push with GitHub Desktop.
+## Image handling
+Uploaded gallery images are resized in the browser and stored as compressed data URLs inside resources.json. This keeps the gallery image attached to the gallery when the JSON file is exported.
+
+## Deleting galleries
+Deleting a gallery also deletes resources assigned to that gallery from the local Parent Wing data. Export and publish resources.json only after reviewing the change.
