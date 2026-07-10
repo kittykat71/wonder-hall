@@ -1,12 +1,10 @@
-# Wonder Hall v1.1 — Museum of Discovery
-
-This release uses the approved Museum of Discovery mockup as its visual direction.
+# Wonder Hall v1.2 — Illustrated Galleries
 
 ## Included
-- Navy-and-gold museum header
-- Bright rotunda-style entrance
-- Arched museum gallery cards
-- Large Featured Exhibit panel
-- Responsive desktop and tablet layouts
-- Existing search and resource links
-- Approved design reference saved in `assets/`
+- Approved Museum of Discovery artwork integrated into the live site
+- Illustrated Reading, Math, Science, History, Geography, Space, Animals, Nature, Engineering, and Art cards
+- Rotunda artwork in the entrance
+- Illustrated Featured Exhibit
+- Existing search, gallery navigation, and resource links remain functional
+
+The remaining galleries continue to use the existing style until their matching artwork is created in a later release.

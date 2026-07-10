@@ -47,6 +47,11 @@ function renderGalleries(galleries) {
     const card = document.createElement("button");
     card.className = "gallery-card";
     card.type = "button";
+    if (gallery.artwork) {
+      card.style.setProperty("--gallery-art", `url("${gallery.artwork}")`);
+      card.classList.add("has-artwork");
+    }
+
     card.innerHTML = `
       <span class="gallery-card-icon" aria-hidden="true">${gallery.icon}</span>
       <h3>${gallery.name}</h3>

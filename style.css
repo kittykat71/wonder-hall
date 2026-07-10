@@ -62,8 +62,8 @@ main{width:min(1440px,calc(100% - 24px));margin:auto}
   display:grid;place-items:center;text-align:center;
   border:1px solid #e3d6b9;border-radius:28px 28px 0 0;
   background:
-    radial-gradient(circle at 50% 12%,rgba(255,255,255,.95),rgba(255,255,255,.55) 36%,transparent 64%),
-    linear-gradient(90deg,rgba(205,180,132,.45),transparent 18%,transparent 82%,rgba(205,180,132,.45)),
+    linear-gradient(rgba(255,255,255,.20),rgba(255,255,255,.20)),
+    url("assets/rotunda.png") center/cover no-repeat,
     linear-gradient(180deg,#fffdf6,#f0dfbc);
   box-shadow:var(--shadow);
   position:relative;overflow:hidden;
@@ -98,11 +98,21 @@ h1{font-size:clamp(4rem,9vw,7rem);line-height:.85;margin:0;color:#092c43}
 }
 .gallery-card:hover,.gallery-card:focus-visible{transform:translateY(-6px);box-shadow:var(--shadow);outline:none}
 .gallery-card:before{
-  content:"";height:130px;display:block;
+  content:"";height:150px;display:block;
   background:
     radial-gradient(circle at 50% 25%,rgba(255,255,255,.8),transparent 35%),
     linear-gradient(145deg,#d8eef0,#85b4bf 55%,#456b7a);
   border-bottom:2px solid var(--gold);
+}
+.gallery-card.has-artwork:before{
+  background-image:
+    linear-gradient(to bottom, rgba(0,0,0,0) 55%, rgba(6,28,45,.18)),
+    var(--gallery-art);
+  background-size:cover;
+  background-position:center 42%;
+}
+.gallery-card.has-artwork .gallery-card-icon{
+  display:none;
 }
 .gallery-card:nth-child(5n+2):before{background:linear-gradient(145deg,#f8e9ba,#e5a747 55%,#9d6328)}
 .gallery-card:nth-child(5n+3):before{background:linear-gradient(145deg,#dcead2,#7fb385 55%,#386850)}
@@ -132,13 +142,11 @@ h1{font-size:clamp(4rem,9vw,7rem);line-height:.85;margin:0;color:#092c43}
   border-radius:999px;font-family:"Cormorant Garamond",serif;font-weight:700;
 }
 .featured-illustration{
-  height:260px;position:relative;overflow:hidden;
+  height:300px;position:relative;overflow:hidden;
   background:
-    radial-gradient(circle at 20% 20%,white 0 2px,transparent 3px),
-    radial-gradient(circle at 75% 15%,#ffd86b 0 2px,transparent 3px),
-    radial-gradient(circle at 55% 42%,white 0 2px,transparent 3px),
+    linear-gradient(rgba(0,0,0,.06),rgba(0,0,0,.06)),
+    url("assets/featured-space.png") center/cover no-repeat,
     linear-gradient(#07152e,#0c3762);
-  background-size:70px 70px,90px 90px,110px 110px,auto;
 }
 .planet{position:absolute;border-radius:50%}
 .p1{width:78px;height:78px;right:52px;top:44px;background:radial-gradient(circle at 35% 30%,#7ed3ee,#2f71b8 55%,#163e70)}
@@ -173,3 +181,9 @@ footer{padding:25px;text-align:center;background:var(--navy);color:white;display
 @media(max-width:650px){.gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.resource-grid{grid-template-columns:1fr}.gallery-card{min-height:230px}.section-heading{align-items:start}}
 @media(max-width:430px){.gallery-grid{grid-template-columns:1fr}.tools-button span,.menu-button span{display:none}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+.featured-illustration .planet,
+.featured-illustration .rocket,
+.featured-illustration .telescope{
+  display:none;
+}

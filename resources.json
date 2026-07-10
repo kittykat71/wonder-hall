@@ -4,7 +4,8 @@
       "id": "reading",
       "name": "Reading & Literature",
       "icon": "\ud83d\udcda",
-      "description": "Books, literature, comprehension, and writing."
+      "description": "Books, literature, comprehension, and writing.",
+      "artwork": "assets/galleries/reading.png"
     },
     {
       "id": "read-alouds",
@@ -16,49 +17,57 @@
       "id": "math",
       "name": "Math",
       "icon": "\u2797",
-      "description": "Numbers, puzzles, problem-solving, and mathematical thinking."
+      "description": "Numbers, puzzles, problem-solving, and mathematical thinking.",
+      "artwork": "assets/galleries/math.png"
     },
     {
       "id": "science",
       "name": "Science",
       "icon": "\ud83d\udd2c",
-      "description": "Experiments, simulations, biology, chemistry, and physics."
+      "description": "Experiments, simulations, biology, chemistry, and physics.",
+      "artwork": "assets/galleries/science.png"
     },
     {
       "id": "history",
       "name": "History",
       "icon": "\ud83c\udfdb\ufe0f",
-      "description": "People, places, documents, and stories from the past."
+      "description": "People, places, documents, and stories from the past.",
+      "artwork": "assets/galleries/history.png"
     },
     {
       "id": "geography",
       "name": "Geography",
       "icon": "\ud83c\udf0e",
-      "description": "Maps, countries, cultures, and the world around us."
+      "description": "Maps, countries, cultures, and the world around us.",
+      "artwork": "assets/galleries/geography.png"
     },
     {
       "id": "space",
       "name": "Space",
       "icon": "\ud83d\ude80",
-      "description": "Planets, stars, missions, and the wider universe."
+      "description": "Planets, stars, missions, and the wider universe.",
+      "artwork": "assets/galleries/space.png"
     },
     {
       "id": "animals",
       "name": "Animals",
       "icon": "\ud83d\udc18",
-      "description": "Wildlife, habitats, live cams, and animal science."
+      "description": "Wildlife, habitats, live cams, and animal science.",
+      "artwork": "assets/galleries/animals.png"
     },
     {
       "id": "nature",
       "name": "Nature",
       "icon": "\ud83c\udf32",
-      "description": "Birds, plants, ecosystems, and outdoor discovery."
+      "description": "Birds, plants, ecosystems, and outdoor discovery.",
+      "artwork": "assets/galleries/nature.png"
     },
     {
       "id": "engineering",
       "name": "Engineering",
       "icon": "\ud83c\udfd7\ufe0f",
-      "description": "Design, build, invent, test, and improve."
+      "description": "Design, build, invent, test, and improve.",
+      "artwork": "assets/galleries/engineering.png"
     },
     {
       "id": "coding",
@@ -76,7 +85,8 @@
       "id": "art",
       "name": "Art",
       "icon": "\ud83c\udfa8",
-      "description": "Drawing, museums, techniques, and creative expression."
+      "description": "Drawing, museums, techniques, and creative expression.",
+      "artwork": "assets/galleries/art.png"
     },
     {
       "id": "music",
