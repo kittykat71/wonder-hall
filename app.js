@@ -19,7 +19,7 @@ let data = { galleries: [], resources: [] };
 
 async function loadData() {
   try {
-    const response = await fetch("resources.json", { cache: "no-store" });
+    const response = await fetch("resources.json?v=30", { cache: "no-store" });
     if (!response.ok) throw new Error(`Could not load resources.json (${response.status})`);
     data = await response.json();
     renderGalleries(data.galleries);
@@ -38,19 +38,15 @@ function renderGalleries(galleries) {
     const card = document.createElement("button");
     card.className = "gallery-card";
     card.type = "button";
-
     if (gallery.artwork) {
-      card.style.setProperty("--gallery-art", `url("${gallery.artwork}?v=25")`);
-      card.classList.add("has-artwork");
+      card.style.setProperty("--gallery-art", `url("${gallery.artwork}?v=30")`);
     }
-
     card.innerHTML = `
       <span class="gallery-card-icon" aria-hidden="true">${gallery.icon}</span>
       <h3>${gallery.name}</h3>
       <p>${gallery.description}</p>
       <span class="enter-label">Enter Gallery →</span>
     `;
-
     card.addEventListener("click", () => openGallery(gallery.id));
     galleryGrid.appendChild(card);
   });
