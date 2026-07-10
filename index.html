@@ -1,1 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Wonder Hall — a family museum of lifelong learning." />
+  <title>Wonder Hall</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="hero">
+    <nav class="topbar" aria-label="Main navigation">
+      <a class="brand" href="#" aria-label="Wonder Hall home">
+        <span class="brand-mark">WH</span>
+        <span>Wonder Hall</span>
+      </a>
+      <button id="homeButton" class="nav-button" type="button">Home</button>
+    </nav>
 
+    <div class="hero-content">
+      <p class="eyebrow">A family museum of lifelong learning</p>
+      <h1>Wonder Hall</h1>
+      <p class="tagline">Discover. Explore. Create. Grow.</p>
+
+      <label class="search-box" for="searchInput">
+        <span aria-hidden="true">⌕</span>
+        <input id="searchInput" type="search" placeholder="Search the galleries…" autocomplete="off" />
+      </label>
+    </div>
+  </header>
+
+  <main>
+    <section id="homeView" class="view">
+      <div class="featured">
+        <div>
+          <p class="section-kicker">Today’s featured exhibit</p>
+          <h2>Follow your curiosity</h2>
+          <p>Choose any gallery and spend a little time discovering something new.</p>
+        </div>
+        <div class="featured-symbol" aria-hidden="true">✦</div>
+      </div>
+
+      <section class="gallery-section" aria-labelledby="galleryHeading">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Museum directory</p>
+            <h2 id="galleryHeading">Explore the galleries</h2>
+          </div>
+          <p id="resultCount" class="result-count"></p>
+        </div>
+
+        <div id="galleryGrid" class="gallery-grid"></div>
+        <p id="emptyState" class="empty-state" hidden>No galleries match that search.</p>
+      </section>
+    </section>
+
+    <section id="galleryView" class="view" hidden>
+      <button id="backButton" class="back-button" type="button">← Back to all galleries</button>
+
+      <div class="gallery-title-row">
+        <div>
+          <p id="galleryEyebrow" class="section-kicker">Wonder Hall gallery</p>
+          <h2 id="galleryTitle"></h2>
+          <p id="galleryDescription" class="gallery-description"></p>
+        </div>
+        <div id="galleryIcon" class="gallery-large-icon" aria-hidden="true"></div>
+      </div>
+
+      <div id="resourceGrid" class="resource-grid"></div>
+      <p id="resourceEmptyState" class="empty-state" hidden>Resources for this gallery are coming soon.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>Wonder Hall · Curated for curious minds</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
