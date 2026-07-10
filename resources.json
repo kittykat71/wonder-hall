@@ -7,7 +7,12 @@
       "description": "Books, literature, comprehension, and writing.",
       "artwork": "assets/gallery-art-v353/reading.jpg",
       "roomName": "library",
-      "themeColor": "#6d3c24"
+      "themeColor": "#6d3c24",
+      "quotes": [
+        "Every book is a doorway, and imagination is the key.",
+        "A story can take you farther than any road.",
+        "The more you read, the larger your world becomes."
+      ]
     },
     {
       "id": "read-alouds",
@@ -16,7 +21,12 @@
       "description": "Stories and audiobooks to enjoy together or independently.",
       "artwork": "assets/gallery-art-v353/read-alouds.jpg",
       "roomName": "reading nook",
-      "themeColor": "#7b4b63"
+      "themeColor": "#7b4b63",
+      "quotes": [
+        "A story shared aloud becomes a memory shared together.",
+        "Listening closely is another way of learning to see.",
+        "Words come alive when a voice gives them wings."
+      ]
     },
     {
       "id": "math",
@@ -25,7 +35,12 @@
       "description": "Numbers, puzzles, problem-solving, and mathematical thinking.",
       "artwork": "assets/gallery-art-v353/math.jpg",
       "roomName": "geometry room",
-      "themeColor": "#2e5f50"
+      "themeColor": "#2e5f50",
+      "quotes": [
+        "Every puzzle becomes clearer one step at a time.",
+        "Patterns are the quiet language of the universe.",
+        "A difficult problem is an invitation to think differently."
+      ]
     },
     {
       "id": "science",
@@ -34,7 +49,12 @@
       "description": "Experiments, simulations, biology, chemistry, and physics.",
       "artwork": "assets/gallery-art-v353/science.jpg",
       "roomName": "laboratory",
-      "themeColor": "#1c5361"
+      "themeColor": "#1c5361",
+      "quotes": [
+        "Curiosity begins with a question and grows through discovery.",
+        "Look closely; the smallest detail may hold the biggest wonder.",
+        "Every experiment teaches us something, even when it surprises us."
+      ]
     },
     {
       "id": "history",
@@ -43,7 +63,12 @@
       "description": "People, places, documents, and stories from the past.",
       "artwork": "assets/gallery-art-v353/history.jpg",
       "roomName": "history hall",
-      "themeColor": "#735035"
+      "themeColor": "#735035",
+      "quotes": [
+        "The past leaves clues for those willing to look.",
+        "Understanding yesterday helps us choose tomorrow wisely.",
+        "Every ordinary life is part of a larger story."
+      ]
     },
     {
       "id": "geography",
@@ -52,7 +77,12 @@
       "description": "Maps, countries, cultures, and the world around us.",
       "artwork": "assets/gallery-art-v353/geography.jpg",
       "roomName": "map room",
-      "themeColor": "#31736b"
+      "themeColor": "#31736b",
+      "quotes": [
+        "The world grows smaller when we learn how others live.",
+        "Every map is an invitation to explore.",
+        "A new place can teach us a new way to see."
+      ]
     },
     {
       "id": "space",
@@ -61,7 +91,12 @@
       "description": "Planets, stars, missions, and the wider universe.",
       "artwork": "assets/gallery-art-v353/space.jpg",
       "roomName": "observatory",
-      "themeColor": "#1d2e62"
+      "themeColor": "#1d2e62",
+      "quotes": [
+        "Wonder begins wherever the known world ends.",
+        "The night sky reminds us how much remains to discover.",
+        "Big questions often begin by looking up."
+      ]
     },
     {
       "id": "animals",
@@ -70,7 +105,12 @@
       "description": "Wildlife, habitats, live cams, and animal science.",
       "artwork": "assets/gallery-art-v353/animals.jpg",
       "roomName": "animal pavilion",
-      "themeColor": "#526d3e"
+      "themeColor": "#526d3e",
+      "quotes": [
+        "Every creature has something to teach the careful observer.",
+        "The wild world is full of stories without words.",
+        "Respect grows when we learn how other lives unfold."
+      ]
     },
     {
       "id": "nature",
@@ -79,7 +119,12 @@
       "description": "Birds, plants, ecosystems, and outdoor discovery.",
       "artwork": "assets/gallery-art-v353/nature.jpg",
       "roomName": "conservatory",
-      "themeColor": "#356e4a"
+      "themeColor": "#356e4a",
+      "quotes": [
+        "Nature rewards the person who slows down enough to notice.",
+        "Small changes, given time, can shape an entire landscape.",
+        "There is always something new beneath an old tree."
+      ]
     },
     {
       "id": "engineering",
@@ -88,7 +133,12 @@
       "description": "Design, build, invent, test, and improve.",
       "artwork": "assets/gallery-art-v353/engineering.jpg",
       "roomName": "inventor workshop",
-      "themeColor": "#6b5136"
+      "themeColor": "#6b5136",
+      "quotes": [
+        "Ideas become useful when we give them shape.",
+        "Build, test, adjust, and try again.",
+        "Every invention begins with someone imagining a better way."
+      ]
     },
     {
       "id": "coding",
@@ -97,7 +147,12 @@
       "description": "Programming, computer skills, and digital creativity.",
       "artwork": "assets/gallery-art-v353/coding.jpg",
       "roomName": "technology lab",
-      "themeColor": "#28496c"
+      "themeColor": "#28496c",
+      "quotes": [
+        "A large creation is often built one small instruction at a time.",
+        "Mistakes are clues that help us improve the design.",
+        "Code turns careful thinking into something others can use."
+      ]
     },
     {
       "id": "languages",
@@ -106,7 +161,12 @@
       "description": "Learn new languages and explore communication.",
       "artwork": "assets/gallery-art-v353/languages.jpg",
       "roomName": "world language room",
-      "themeColor": "#7b4c59"
+      "themeColor": "#7b4c59",
+      "quotes": [
+        "Every language offers another window into the human world.",
+        "New words make room for new ideas.",
+        "Understanding grows when we learn how others express themselves."
+      ]
     },
     {
       "id": "art",
@@ -115,7 +175,12 @@
       "description": "Drawing, museums, techniques, and creative expression.",
       "artwork": "assets/gallery-art-v353/art.jpg",
       "roomName": "artist studio",
-      "themeColor": "#874f43"
+      "themeColor": "#874f43",
+      "quotes": [
+        "Art begins when you notice something worth expressing.",
+        "There is no single right way to make something meaningful.",
+        "Your imagination deserves a place in the world."
+      ]
     },
     {
       "id": "music",
@@ -124,7 +189,12 @@
       "description": "Music theory, sound, rhythm, and composition.",
       "artwork": "assets/gallery-art-v353/music.jpg",
       "roomName": "music hall",
-      "themeColor": "#594474"
+      "themeColor": "#594474",
+      "quotes": [
+        "Music can say what ordinary words cannot.",
+        "A single note matters because of what surrounds it.",
+        "Listening is where music truly begins."
+      ]
     },
     {
       "id": "typing",
@@ -133,7 +203,12 @@
       "description": "Build speed, accuracy, and keyboard confidence.",
       "artwork": "assets/gallery-art-v353/typing.jpg",
       "roomName": "typing studio",
-      "themeColor": "#455e6c"
+      "themeColor": "#455e6c",
+      "quotes": [
+        "Confidence grows through patient practice.",
+        "Accuracy first; speed follows.",
+        "Every skill becomes easier through steady repetition."
+      ]
     },
     {
       "id": "logic",
@@ -142,7 +217,12 @@
       "description": "Chess, reasoning, strategy, and brain challenges.",
       "artwork": "assets/gallery-art-v353/logic.jpg",
       "roomName": "strategy room",
-      "themeColor": "#5a6942"
+      "themeColor": "#5a6942",
+      "quotes": [
+        "Clear thinking begins with careful questions.",
+        "A puzzle is a path that has not yet revealed itself.",
+        "Reasoning helps us separate what seems true from what is true."
+      ]
     },
     {
       "id": "finance",
@@ -151,7 +231,12 @@
       "description": "Money, markets, budgeting, and financial literacy.",
       "artwork": "assets/gallery-art-v353/finance.jpg",
       "roomName": "finance gallery",
-      "themeColor": "#75652f"
+      "themeColor": "#75652f",
+      "quotes": [
+        "Small choices repeated over time can create lasting change.",
+        "Wise planning gives future possibilities room to grow.",
+        "Money is a tool; understanding helps us use it well."
+      ]
     },
     {
       "id": "life-skills",
@@ -160,7 +245,12 @@
       "description": "Everyday knowledge, career skills, and practical learning.",
       "artwork": "assets/gallery-art-v353/life-skills.jpg",
       "roomName": "practical skills room",
-      "themeColor": "#557261"
+      "themeColor": "#557261",
+      "quotes": [
+        "Independence is built through many small acts of practice.",
+        "Useful knowledge becomes confidence in action.",
+        "Learning how to care for daily life is a form of wisdom."
+      ]
     },
     {
       "id": "college",
@@ -169,7 +259,12 @@
       "description": "Free courses and textbooks for advanced learners.",
       "artwork": "assets/gallery-art-v353/college.jpg",
       "roomName": "scholars hall",
-      "themeColor": "#455678"
+      "themeColor": "#455678",
+      "quotes": [
+        "Serious study begins with the courage to remain curious.",
+        "Knowledge deepens when we connect ideas across subjects.",
+        "The goal of learning is not only to know more, but to understand better."
+      ]
     },
     {
       "id": "videos",
@@ -178,7 +273,12 @@
       "description": "Curated channels that make complex ideas understandable.",
       "artwork": "assets/gallery-art-v353/videos.jpg",
       "roomName": "screening room",
-      "themeColor": "#73464d"
+      "themeColor": "#73464d",
+      "quotes": [
+        "A good explanation can turn confusion into possibility.",
+        "Watch actively, pause thoughtfully, and follow your questions.",
+        "Seeing an idea in motion can help it settle in the mind."
+      ]
     },
     {
       "id": "heart-studies",
@@ -187,7 +287,12 @@
       "description": "Thoughtful studies and resources for the heart and home.",
       "artwork": "assets/gallery-art-v353/heart-studies.jpg",
       "roomName": "quiet reflection room",
-      "themeColor": "#85545b"
+      "themeColor": "#85545b",
+      "quotes": [
+        "A thoughtful life is built from what we choose to value.",
+        "Character grows through the choices no one else sees.",
+        "The heart learns through reflection, practice, and care."
+      ]
     },
     {
       "id": "futurescape",
@@ -196,7 +301,12 @@
       "description": "A space for future-focused exploration and discovery.",
       "artwork": "assets/gallery-art-v353/futurescape.jpg",
       "roomName": "future studies gallery",
-      "themeColor": "#3f517b"
+      "themeColor": "#3f517b",
+      "quotes": [
+        "The future is shaped by the questions we are brave enough to ask.",
+        "Imagination helps us prepare for possibilities that do not yet exist.",
+        "Tomorrow begins in the ideas we explore today."
+      ]
     }
   ],
   "resources": [

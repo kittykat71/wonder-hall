@@ -874,3 +874,72 @@ footer{
     grid-column:1/-1;
   }
 }
+
+
+/* Wonder Hall 3.57 — Words of Wonder */
+.entrance-quote{
+  width:min(900px,calc(100% - 36px));
+  margin:-22px auto 30px;
+  padding:17px 26px;
+  position:relative;
+  z-index:4;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:16px;
+  color:#3f3425;
+  text-align:center;
+  background:rgba(255,249,237,.97);
+  border:1px solid var(--gold);
+  border-radius:999px;
+  box-shadow:0 10px 25px rgba(31,24,13,.13);
+}
+
+.entrance-quote p{
+  margin:0;
+  font:700 1.2rem "Cormorant Garamond",Georgia,serif;
+  line-height:1.35;
+}
+
+.quote-ornament{
+  color:var(--gold);
+  flex:0 0 auto;
+}
+
+.gallery-quote{
+  max-width:660px;
+  margin:20px 0 18px;
+  padding:17px 20px 17px 48px;
+  position:relative;
+  color:#fff5dc;
+  background:rgba(5,20,32,.58);
+  border-left:3px solid var(--gold);
+  border-radius:0 14px 14px 0;
+}
+
+.gallery-quote > span{
+  position:absolute;
+  top:4px;
+  left:14px;
+  color:var(--gold-light);
+  font:700 3rem "Cormorant Garamond",Georgia,serif;
+}
+
+.gallery-quote p{
+  margin:0;
+  color:#fff5dc;
+  font:600 1.22rem "Cormorant Garamond",Georgia,serif;
+  line-height:1.45;
+}
+
+@media(max-width:650px){
+  .entrance-quote{
+    width:calc(100% - 24px);
+    padding:14px 18px;
+    border-radius:20px;
+  }
+
+  .entrance-quote p{
+    font-size:1.05rem;
+  }
+}

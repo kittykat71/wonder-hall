@@ -1,24 +1,18 @@
-# Wonder Hall 3.56 — Resource Image Manager
+# Wonder Hall 3.57 — Words of Wonder
 
-## New Parent Wing resource controls
-- Add an image to a resource
-- Replace an existing resource image
-- Remove a resource image
-- Preview images before saving
-- See image thumbnails in the Parent Wing resource list
+## New quote feature
+- A quiet inspirational quote appears beneath the museum entrance
+- Every gallery has subject-specific inspirational quotes
+- Quotes change when the homepage or a gallery is opened again
+- The immediately previous quote is avoided when another is available
+- Quotes do not animate or change while someone is reading
 
-## Where resource images appear
-- Gallery resource cards
-- Search results
+## Existing features preserved
+- Grand Rotunda header
+- Parent Wing
+- Gallery Manager
+- Resource Image Manager
+- Search
 - Favorites
-- Any other view using Wonder Hall resource cards
-
-## Image handling
-Uploaded images are resized in the browser and saved as compressed data URLs inside the exported resources.json file.
-
-## Publishing
-After editing resources:
-1. Open Parent Wing → Maintenance
-2. Download resources.json
-3. Replace the existing resources.json in your Wonder Hall repository folder
-4. Commit and push with GitHub Desktop
+- Explorer's Passport
+- Gallery rooms and resource links

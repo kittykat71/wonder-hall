@@ -26,6 +26,8 @@ const searchResultsSection = document.getElementById("searchResultsSection");
 const searchResultsGrid = document.getElementById("searchResultsGrid");
 const searchResultCount = document.getElementById("searchResultCount");
 const searchEmptyState = document.getElementById("searchEmptyState");
+const entranceQuoteText = document.getElementById("entranceQuoteText");
+const galleryQuoteText = document.getElementById("galleryQuoteText");
 
 const parentPasswordModal = document.getElementById("parentPasswordModal");
 const parentPasswordForm = document.getElementById("parentPasswordForm");
@@ -239,6 +241,47 @@ function readAndResizeResourceImage(file) {
   });
 }
 
+
+const ENTRANCE_QUOTES = [
+  "Curiosity is the beginning of every great journey.",
+  "There is always another room of knowledge waiting to be entered.",
+  "The world becomes more interesting when we learn to ask better questions.",
+  "A few minutes of wonder can open an entirely new path.",
+  "Learning is not a race; it is a lifelong act of discovery.",
+  "Today’s small question may become tomorrow’s great adventure.",
+  "Every subject becomes fascinating when we look closely enough.",
+  "A curious mind can find a doorway almost anywhere."
+];
+
+function chooseDifferentQuote(quotes, storageKey) {
+  if (!Array.isArray(quotes) || quotes.length === 0) {
+    return "Curiosity turns an ordinary moment into a discovery.";
+  }
+
+  const previous = sessionStorage.getItem(storageKey);
+  let choices = quotes.filter(quote => quote !== previous);
+
+  if (choices.length === 0) choices = quotes;
+
+  const selected = choices[Math.floor(Math.random() * choices.length)];
+  sessionStorage.setItem(storageKey, selected);
+  return selected;
+}
+
+function showEntranceQuote() {
+  entranceQuoteText.textContent = chooseDifferentQuote(
+    ENTRANCE_QUOTES,
+    "wonderHallEntranceQuote"
+  );
+}
+
+function showGalleryQuote(gallery) {
+  galleryQuoteText.textContent = chooseDifferentQuote(
+    gallery?.quotes || [],
+    `wonderHallQuote-${gallery?.id || "gallery"}`
+  );
+}
+
 async function loadData() {
   try {
     const custom = localStorage.getItem(CUSTOM_DATA_KEY);
@@ -250,6 +293,7 @@ async function loadData() {
       data = await response.json();
     }
     renderGalleries(data.galleries);
+    showEntranceQuote();
   } catch (error) {
     console.error(error);
     galleryGrid.innerHTML = `<p class="empty-state">Wonder Hall could not load its resource list.</p>`;
@@ -274,7 +318,7 @@ function renderGalleries(galleries) {
     card.className = "gallery-card";
     card.type = "button";
     if (gallery.artwork) {
-      card.style.setProperty("--gallery-art", `url("${gallery.artwork}?v=356")`);
+      card.style.setProperty("--gallery-art", `url("${gallery.artwork}?v=357")`);
     }
     card.innerHTML = `
       <span class="gallery-card-icon" aria-hidden="true">${gallery.icon}</span>
@@ -388,7 +432,8 @@ function openGallery(id) {
   document.getElementById("galleryDescription").textContent = gallery.description;
   document.getElementById("galleryRoomName").textContent = gallery.roomName || "Gallery Room";
   document.getElementById("galleryIcon").textContent = gallery.icon;
-  galleryRoom.style.setProperty("--room-art", `url("${gallery.artwork}?v=356")`);
+  showGalleryQuote(gallery);
+  galleryRoom.style.setProperty("--room-art", `url("${gallery.artwork}?v=357")`);
 
   const passport = getStoredSet(PASSPORT_KEY);
   stampButton.textContent = passport.has(id) ? "✓ Passport Stamp Added" : "Add Passport Stamp";
@@ -408,6 +453,7 @@ function showHome() {
   searchInput.value = "";
   searchResultsSection.hidden = true;
   renderGalleries(data.galleries);
+  showEntranceQuote();
   window.scrollTo({top:0,behavior:"auto"});
 }
 function showFavorites() {

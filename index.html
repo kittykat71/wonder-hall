@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=356">
+  <link rel="stylesheet" href="style.css?v=357">
 </head>
 <body>
   <a class="skip-link" href="#mainContent">Skip to content</a>
@@ -45,6 +45,12 @@
           <a href="#museumDirectory" class="hero-button">Explore the Galleries ↓</a>
         </div>
       </section>
+
+      <aside id="entranceQuote" class="entrance-quote" aria-label="A thought for today">
+        <span class="quote-ornament" aria-hidden="true">✦</span>
+        <p id="entranceQuoteText"></p>
+        <span class="quote-ornament" aria-hidden="true">✦</span>
+      </aside>
 
       <section class="museum-stage">
         <section class="directory" id="museumDirectory">
@@ -94,6 +100,12 @@
           <h2 id="galleryTitle"></h2>
           <p id="galleryRoomName" class="room-name"></p>
           <p id="galleryDescription"></p>
+
+          <blockquote id="galleryQuote" class="gallery-quote">
+            <span aria-hidden="true">“</span>
+            <p id="galleryQuoteText"></p>
+          </blockquote>
+
           <button id="stampButton" class="stamp-button" type="button">Add Passport Stamp</button>
         </div>
         <div id="galleryIcon" class="gallery-large-icon" aria-hidden="true"></div>
@@ -317,6 +329,6 @@
     <span>Curated for curious minds.</span>
   </footer>
 
-  <script src="app.js?v=356"></script>
+  <script src="app.js?v=357"></script>
 </body>
 </html>
