@@ -1,13 +1,11 @@
-# Wonder Hall 2.0 — Museum of Discovery
+# Wonder Hall 2.5 — Grand Museum Experience
 
-A full homepage rebuild based directly on the approved Museum of Discovery concept.
-
-## Included
-- Grand rotunda hero
-- Navy and gold museum header
-- Fully illustrated gallery directory
-- Featured Space exhibit
-- Working search
-- Working gallery navigation
-- Existing resources database
-- Responsive desktop, tablet, and phone layouts
+## Improvements
+- Clean rotunda entrance with no overlapping background text
+- Larger four-column exhibit cards
+- Artwork on every gallery card
+- Simplified card labels for easier scanning
+- Integrated Featured Exhibit
+- Improved landscape-tablet layout
+- Cache-busted assets to prevent old card images from appearing
+- Existing search, galleries, and resources remain functional

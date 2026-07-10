@@ -9,15 +9,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=25">
 </head>
 <body>
   <a class="skip-link" href="#mainContent">Skip to content</a>
 
   <header class="museum-header">
     <button class="nav-pill menu-pill" type="button" aria-label="Open menu">
-      <span aria-hidden="true">☰</span>
-      <span>Menu</span>
+      <span aria-hidden="true">☰</span><span>Menu</span>
     </button>
 
     <a href="#" class="brand" id="brandHome" aria-label="Wonder Hall home">
@@ -38,49 +37,53 @@
 
   <main id="mainContent">
     <section id="homeView">
-      <section class="hero">
-        <div class="hero-overlay">
+      <section class="rotunda-hero" aria-labelledby="heroTitle">
+        <div class="column column-left" aria-hidden="true"></div>
+        <div class="hero-center">
+          <div class="hero-seal" aria-hidden="true">WH</div>
           <p class="welcome-line">Welcome to</p>
-          <h1>Wonder Hall</h1>
+          <h1 id="heroTitle">Wonder Hall</h1>
           <p class="hero-subtitle">Step inside. Your next adventure is waiting.</p>
+          <a class="enter-museum" href="#museumDirectory">Explore the Galleries ↓</a>
+        </div>
+        <div class="column column-right" aria-hidden="true"></div>
+      </section>
+
+      <section class="feature-strip">
+        <div class="feature-art">
+          <img src="assets/featured-space.jpg" alt="">
+        </div>
+        <div class="feature-copy">
+          <p class="section-kicker">Today’s featured exhibit</p>
+          <h2>Journey Through the Solar System</h2>
+          <p>Explore NASA resources, watch planets in motion, visit the ISS, and discover the wonders beyond Earth.</p>
+          <button id="featuredButton" type="button">Enter the Space Exhibit →</button>
         </div>
       </section>
 
-      <section class="museum-shell">
-        <section class="directory">
-          <section id="searchResultsSection" class="search-results" hidden>
-            <div class="section-heading">
-              <div>
-                <p class="section-kicker">Search results</p>
-                <h2 id="searchResultsHeading">Resources and galleries</h2>
-              </div>
-              <p id="searchResultCount" class="result-count"></p>
-            </div>
-            <div id="searchResultsGrid" class="resource-grid"></div>
-            <p id="searchEmptyState" class="empty-state" hidden>No matching galleries or resources were found.</p>
-          </section>
-
+      <section id="museumDirectory" class="directory">
+        <section id="searchResultsSection" class="search-results" hidden>
           <div class="section-heading">
             <div>
-              <p class="section-kicker">Museum directory</p>
-              <h2>Choose your next gallery</h2>
+              <p class="section-kicker">Search results</p>
+              <h2 id="searchResultsHeading">Resources and galleries</h2>
             </div>
-            <p id="resultCount" class="result-count"></p>
+            <p id="searchResultCount" class="result-count"></p>
           </div>
-
-          <div id="galleryGrid" class="gallery-grid"></div>
-          <p id="emptyState" class="empty-state" hidden>No galleries are available.</p>
+          <div id="searchResultsGrid" class="resource-grid"></div>
+          <p id="searchEmptyState" class="empty-state" hidden>No matching galleries or resources were found.</p>
         </section>
 
-        <aside class="featured">
-          <div class="featured-ribbon">Today’s Featured Exhibit</div>
-          <img src="assets/featured-space.jpg" alt="">
-          <div class="featured-copy">
-            <h2>Journey Through the Solar System</h2>
-            <p>Explore NASA resources, watch planets in motion, visit the ISS, and discover the wonders beyond Earth.</p>
-            <button id="featuredButton" type="button">Enter Exhibit →</button>
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Museum directory</p>
+            <h2>Choose your next gallery</h2>
           </div>
-        </aside>
+          <p id="resultCount" class="result-count"></p>
+        </div>
+
+        <div id="galleryGrid" class="gallery-grid"></div>
+        <p id="emptyState" class="empty-state" hidden>No galleries are available.</p>
       </section>
     </section>
 
@@ -106,6 +109,6 @@
     <span>Curated for curious minds.</span>
   </footer>
 
-  <script src="app.js"></script>
+  <script src="app.js?v=25"></script>
 </body>
 </html>

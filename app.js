@@ -40,7 +40,7 @@ function renderGalleries(galleries) {
     card.type = "button";
 
     if (gallery.artwork) {
-      card.style.setProperty("--gallery-art", `url("${gallery.artwork}")`);
+      card.style.setProperty("--gallery-art", `url("${gallery.artwork}?v=25")`);
       card.classList.add("has-artwork");
     }
 
