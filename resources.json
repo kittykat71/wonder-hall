@@ -3,7 +3,7 @@
     {
       "id": "reading",
       "name": "Reading & Literature",
-      "icon": "\ud83d\udcda",
+      "icon": "📚",
       "description": "Books, literature, comprehension, and writing.",
       "artwork": "assets/gallery-art-v353/reading.jpg",
       "roomName": "library",
@@ -17,7 +17,7 @@
     {
       "id": "read-alouds",
       "name": "Read Alouds",
-      "icon": "\ud83d\udcd6",
+      "icon": "📖",
       "description": "Stories and audiobooks to enjoy together or independently.",
       "artwork": "assets/gallery-art-v353/read-alouds.jpg",
       "roomName": "reading nook",
@@ -31,7 +31,7 @@
     {
       "id": "math",
       "name": "Math",
-      "icon": "\u2797",
+      "icon": "➗",
       "description": "Numbers, puzzles, problem-solving, and mathematical thinking.",
       "artwork": "assets/gallery-art-v353/math.jpg",
       "roomName": "geometry room",
@@ -45,7 +45,7 @@
     {
       "id": "science",
       "name": "Science",
-      "icon": "\ud83d\udd2c",
+      "icon": "🔬",
       "description": "Experiments, simulations, biology, chemistry, and physics.",
       "artwork": "assets/gallery-art-v353/science.jpg",
       "roomName": "laboratory",
@@ -59,7 +59,7 @@
     {
       "id": "history",
       "name": "History",
-      "icon": "\ud83c\udfdb\ufe0f",
+      "icon": "🏛️",
       "description": "People, places, documents, and stories from the past.",
       "artwork": "assets/gallery-art-v353/history.jpg",
       "roomName": "history hall",
@@ -73,7 +73,7 @@
     {
       "id": "geography",
       "name": "Geography",
-      "icon": "\ud83c\udf0e",
+      "icon": "🌎",
       "description": "Maps, countries, cultures, and the world around us.",
       "artwork": "assets/gallery-art-v353/geography.jpg",
       "roomName": "map room",
@@ -87,7 +87,7 @@
     {
       "id": "space",
       "name": "Space",
-      "icon": "\ud83d\ude80",
+      "icon": "🚀",
       "description": "Planets, stars, missions, and the wider universe.",
       "artwork": "assets/gallery-art-v353/space.jpg",
       "roomName": "observatory",
@@ -101,7 +101,7 @@
     {
       "id": "animals",
       "name": "Animals",
-      "icon": "\ud83d\udc18",
+      "icon": "🐘",
       "description": "Wildlife, habitats, live cams, and animal science.",
       "artwork": "assets/gallery-art-v353/animals.jpg",
       "roomName": "animal pavilion",
@@ -115,7 +115,7 @@
     {
       "id": "nature",
       "name": "Nature",
-      "icon": "\ud83c\udf32",
+      "icon": "🌲",
       "description": "Birds, plants, ecosystems, and outdoor discovery.",
       "artwork": "assets/gallery-art-v353/nature.jpg",
       "roomName": "conservatory",
@@ -129,7 +129,7 @@
     {
       "id": "engineering",
       "name": "Engineering",
-      "icon": "\ud83c\udfd7\ufe0f",
+      "icon": "🏗️",
       "description": "Design, build, invent, test, and improve.",
       "artwork": "assets/gallery-art-v353/engineering.jpg",
       "roomName": "inventor workshop",
@@ -143,7 +143,7 @@
     {
       "id": "coding",
       "name": "Coding & Technology",
-      "icon": "\ud83d\udcbb",
+      "icon": "💻",
       "description": "Programming, computer skills, and digital creativity.",
       "artwork": "assets/gallery-art-v353/coding.jpg",
       "roomName": "technology lab",
@@ -157,7 +157,7 @@
     {
       "id": "languages",
       "name": "Languages",
-      "icon": "\ud83d\udde3\ufe0f",
+      "icon": "🗣️",
       "description": "Learn new languages and explore communication.",
       "artwork": "assets/gallery-art-v353/languages.jpg",
       "roomName": "world language room",
@@ -171,7 +171,7 @@
     {
       "id": "art",
       "name": "Art",
-      "icon": "\ud83c\udfa8",
+      "icon": "🎨",
       "description": "Drawing, museums, techniques, and creative expression.",
       "artwork": "assets/gallery-art-v353/art.jpg",
       "roomName": "artist studio",
@@ -185,7 +185,7 @@
     {
       "id": "music",
       "name": "Music",
-      "icon": "\ud83c\udfbc",
+      "icon": "🎼",
       "description": "Music theory, sound, rhythm, and composition.",
       "artwork": "assets/gallery-art-v353/music.jpg",
       "roomName": "music hall",
@@ -199,7 +199,7 @@
     {
       "id": "typing",
       "name": "Typing",
-      "icon": "\u2328\ufe0f",
+      "icon": "⌨️",
       "description": "Build speed, accuracy, and keyboard confidence.",
       "artwork": "assets/gallery-art-v353/typing.jpg",
       "roomName": "typing studio",
@@ -213,7 +213,7 @@
     {
       "id": "logic",
       "name": "Logic & Critical Thinking",
-      "icon": "\ud83e\udde0",
+      "icon": "🧠",
       "description": "Chess, reasoning, strategy, and brain challenges.",
       "artwork": "assets/gallery-art-v353/logic.jpg",
       "roomName": "strategy room",
@@ -227,7 +227,7 @@
     {
       "id": "finance",
       "name": "Economics & Finance",
-      "icon": "\ud83d\udcb0",
+      "icon": "💰",
       "description": "Money, markets, budgeting, and financial literacy.",
       "artwork": "assets/gallery-art-v353/finance.jpg",
       "roomName": "finance gallery",
@@ -241,7 +241,7 @@
     {
       "id": "life-skills",
       "name": "Life Skills",
-      "icon": "\ud83d\udee0\ufe0f",
+      "icon": "🛠️",
       "description": "Everyday knowledge, career skills, and practical learning.",
       "artwork": "assets/gallery-art-v353/life-skills.jpg",
       "roomName": "practical skills room",
@@ -255,7 +255,7 @@
     {
       "id": "college",
       "name": "College-Level Learning",
-      "icon": "\ud83c\udf93",
+      "icon": "🎓",
       "description": "Free courses and textbooks for advanced learners.",
       "artwork": "assets/gallery-art-v353/college.jpg",
       "roomName": "scholars hall",
@@ -269,7 +269,7 @@
     {
       "id": "videos",
       "name": "Educational Videos",
-      "icon": "\ud83d\udcfa",
+      "icon": "📺",
       "description": "Curated channels that make complex ideas understandable.",
       "artwork": "assets/gallery-art-v353/videos.jpg",
       "roomName": "screening room",
@@ -283,7 +283,7 @@
     {
       "id": "heart-studies",
       "name": "Heart Studies",
-      "icon": "\u2764\ufe0f",
+      "icon": "❤️",
       "description": "Thoughtful studies and resources for the heart and home.",
       "artwork": "assets/gallery-art-v353/heart-studies.jpg",
       "roomName": "quiet reflection room",
@@ -297,7 +297,7 @@
     {
       "id": "futurescape",
       "name": "Futurescape",
-      "icon": "\ud83c\udf05",
+      "icon": "🌅",
       "description": "A space for future-focused exploration and discovery.",
       "artwork": "assets/gallery-art-v353/futurescape.jpg",
       "roomName": "future studies gallery",
@@ -314,91 +314,106 @@
       "name": "NASA STEM Engagement",
       "category": "science",
       "description": "Hands-on STEM activities, lessons, and challenges from NASA.",
-      "url": "https://www.nasa.gov/stem/"
+      "url": "https://www.nasa.gov/stem/",
+      "image": ""
     },
     {
       "name": "Smithsonian Learning Lab",
       "category": "science",
       "description": "Explore millions of Smithsonian resources and learning collections.",
-      "url": "https://learninglab.si.edu/"
+      "url": "https://learninglab.si.edu/",
+      "image": ""
     },
     {
       "name": "PhET Interactive Simulations",
       "category": "science",
       "description": "Interactive math and science simulations from the University of Colorado Boulder.",
-      "url": "https://phet.colorado.edu/"
+      "url": "https://phet.colorado.edu/",
+      "image": ""
     },
     {
       "name": "Mystery Science",
       "category": "science",
       "description": "Engaging science lessons and activities for children.",
-      "url": "https://mysteryscience.com/"
+      "url": "https://mysteryscience.com/",
+      "image": ""
     },
     {
       "name": "CK-12 Science",
       "category": "science",
       "description": "Free digital textbooks, simulations, and adaptive practice.",
-      "url": "https://www.ck12.org/student/"
+      "url": "https://www.ck12.org/student/",
+      "image": ""
     },
     {
       "name": "Storyline Online",
       "category": "read-alouds",
       "description": "Children's books read aloud by celebrated actors.",
-      "url": "https://storylineonline.net/"
+      "url": "https://storylineonline.net/",
+      "image": ""
     },
     {
       "name": "Unite for Literacy",
       "category": "read-alouds",
       "description": "A colorful digital library with narration in many languages.",
-      "url": "https://www.uniteforliteracy.com/"
+      "url": "https://www.uniteforliteracy.com/",
+      "image": ""
     },
     {
       "name": "LibriVox",
       "category": "read-alouds",
       "description": "Free public-domain audiobooks read by volunteers.",
-      "url": "https://librivox.org/"
+      "url": "https://librivox.org/",
+      "image": ""
     },
     {
       "name": "San Diego Zoo Kids",
       "category": "animals",
       "description": "Animal facts, videos, stories, and activities.",
-      "url": "https://sdzwildlifeexplorers.org/"
+      "url": "https://sdzwildlifeexplorers.org/",
+      "image": ""
     },
     {
       "name": "Monterey Bay Aquarium Live Cams",
       "category": "animals",
       "description": "Watch sea otters, jellyfish, sharks, and other ocean life live.",
-      "url": "https://www.montereybayaquarium.org/animals/live-cams"
+      "url": "https://www.montereybayaquarium.org/animals/live-cams",
+      "image": ""
     },
     {
       "name": "Explore.org Live Nature Cams",
       "category": "animals",
       "description": "Live wildlife and nature cameras from around the world.",
-      "url": "https://explore.org/livecams"
+      "url": "https://explore.org/livecams",
+      "image": ""
     },
     {
       "name": "NASA STEM",
       "category": "space",
       "description": "Space science activities, missions, and learning resources.",
-      "url": "https://www.nasa.gov/stem/"
+      "url": "https://www.nasa.gov/stem/",
+      "image": ""
     },
     {
       "name": "NASA Eyes",
       "category": "space",
       "description": "Interactive 3D visualizations of planets, spacecraft, and Earth.",
-      "url": "https://eyes.nasa.gov/"
+      "url": "https://eyes.nasa.gov/",
+      "image": ""
     },
     {
       "name": "ESA Kids",
       "category": "space",
       "description": "Space news, games, and learning from the European Space Agency.",
-      "url": "https://www.esa.int/kids/en/home"
+      "url": "https://www.esa.int/kids/en/home",
+      "image": ""
     },
     {
       "name": "iNaturalist",
       "category": "nature",
       "description": "Identify plants and animals and contribute to citizen science.",
-      "url": "https://www.inaturalist.org/"
+      "url": "https://www.inaturalist.org/",
+      "image": ""
     },
     {
       "name": "Merlin Bird ID",
@@ -416,7 +431,8 @@
       "name": "Tinkercad",
       "category": "engineering",
       "description": "Create 3D designs, circuits, and beginner-friendly engineering projects.",
-      "url": "https://www.tinkercad.com/"
+      "url": "https://www.tinkercad.com/",
+      "image": ""
     },
     {
       "name": "Math Learning Center Bridges",
@@ -448,5 +464,13 @@
       "description": "A rotating collection of heart-centered studies.",
       "url": "https://www.fcbelmonde.com/rotation"
     }
-  ]
+  ],
+  "siteSettings": {
+    "welcome": "Welcome to",
+    "title": "Wonder Hall",
+    "tagline": "Step inside. Your next adventure is waiting.",
+    "featuredGallery": "reading",
+    "featuredTitle": "Journey Through the Solar System",
+    "featuredDescription": "Explore a featured gallery from Wonder Hall."
+  }
 }
