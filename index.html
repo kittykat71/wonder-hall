@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=360">
+  <link rel="stylesheet" href="style.css?v=361">
 </head>
 <body>
   <a class="skip-link" href="#mainContent">Skip to content</a>
@@ -146,18 +146,22 @@
 
       <div class="parent-wing-title">
         <p class="section-kicker">Private curator tools</p>
-        <h2>Parent Wing</h2>
-        <p>Changes are saved on this device. Export <code>resources.json</code> when you are ready to publish them through GitHub Desktop.</p>
+        <h2>Curator Studio</h2>
+        <p>Design and manage Wonder Hall here. When you are finished, use Publish Wonder Hall to create one ready-to-use package.</p>
       </div>
 
-      <nav class="parent-tabs" aria-label="Parent Wing sections">
-        <button class="parent-tab active" data-parent-tab="resources" type="button">Edit Resources</button>
-        <button class="parent-tab" data-parent-tab="galleries" type="button">Add Galleries</button>
-        <button class="parent-tab" data-parent-tab="bookmarks" type="button">Bookmarks</button>
-        <button class="parent-tab" data-parent-tab="maintenance" type="button">Maintenance</button>
+      <nav class="parent-tabs curator-tabs" aria-label="Curator Studio sections">
+        <button class="parent-tab active" data-parent-tab="galleries" type="button">Galleries</button>
+        <button class="parent-tab" data-parent-tab="resources" type="button">Resources</button>
+        <button class="parent-tab" data-parent-tab="images" type="button">Images</button>
+        <button class="parent-tab" data-parent-tab="quotes" type="button">Quotes</button>
+        <button class="parent-tab" data-parent-tab="featured" type="button">Featured Exhibit</button>
+        <button class="parent-tab" data-parent-tab="homepage" type="button">Homepage</button>
+        <button class="parent-tab" data-parent-tab="bookmarks" type="button">Favorites</button>
+        <button class="parent-tab publish-tab" data-parent-tab="publish" type="button">Publish Wonder Hall</button>
       </nav>
 
-      <section id="parentResourcesPanel" class="parent-panel">
+      <section id="parentResourcesPanel" class="parent-panel" hidden>
         <div class="parent-form-card">
           <h3>Add or Edit a Resource</h3>
           <form id="resourceEditorForm">
@@ -211,7 +215,7 @@
         </div>
       </section>
 
-      <section id="parentGalleriesPanel" class="parent-panel" hidden>
+      <section id="parentGalleriesPanel" class="parent-panel">
         <div class="parent-form-card">
           <h3 id="galleryEditorHeading">Create a Gallery</h3>
           <form id="galleryEditorForm">
@@ -272,7 +276,103 @@
         <p id="parentBookmarksEmpty" class="empty-state">No bookmarks are saved on this device.</p>
       </section>
 
-      <section id="parentMaintenancePanel" class="parent-panel" hidden>
+      
+      <section id="parentImagesPanel" class="parent-panel curator-single-panel" hidden>
+        <div class="curator-overview-card">
+          <p class="section-kicker">Visual collection</p>
+          <h3>Images</h3>
+          <p>Gallery and resource images are managed inside their editors. This overview shows which items currently have custom artwork.</p>
+        </div>
+        <div id="imageOverviewGrid" class="image-overview-grid"></div>
+      </section>
+
+      <section id="parentQuotesPanel" class="parent-panel curator-single-panel" hidden>
+        <div class="parent-form-card curator-wide-form">
+          <h3>Edit Gallery Quotes</h3>
+          <form id="quoteEditorForm">
+            <label>
+              Gallery
+              <select id="quoteGallerySelect"></select>
+            </label>
+            <label>
+              Quote 1
+              <textarea id="quoteOneInput" rows="3"></textarea>
+            </label>
+            <label>
+              Quote 2
+              <textarea id="quoteTwoInput" rows="3"></textarea>
+            </label>
+            <label>
+              Quote 3
+              <textarea id="quoteThreeInput" rows="3"></textarea>
+            </label>
+            <button class="primary-parent-button" type="submit">Save Quotes</button>
+          </form>
+        </div>
+      </section>
+
+      <section id="parentFeaturedPanel" class="parent-panel curator-single-panel" hidden>
+        <div class="parent-form-card curator-wide-form">
+          <h3>Featured Exhibit</h3>
+          <form id="featuredEditorForm">
+            <label>
+              Featured gallery
+              <select id="featuredGallerySelect"></select>
+            </label>
+            <label>
+              Exhibit title
+              <input id="featuredTitleInput">
+            </label>
+            <label>
+              Description
+              <textarea id="featuredDescriptionInput" rows="4"></textarea>
+            </label>
+            <button class="primary-parent-button" type="submit">Save Featured Exhibit</button>
+          </form>
+        </div>
+      </section>
+
+      <section id="parentHomepagePanel" class="parent-panel curator-single-panel" hidden>
+        <div class="parent-form-card curator-wide-form">
+          <h3>Homepage</h3>
+          <form id="homepageEditorForm">
+            <label>
+              Welcome line
+              <input id="homepageWelcomeInput">
+            </label>
+            <label>
+              Main title
+              <input id="homepageTitleInput">
+            </label>
+            <label>
+              Tagline
+              <input id="homepageTaglineInput">
+            </label>
+            <button class="primary-parent-button" type="submit">Save Homepage</button>
+          </form>
+        </div>
+      </section>
+
+      <section id="parentPublishPanel" class="parent-panel curator-single-panel publish-panel" hidden>
+        <div class="publish-card">
+          <p class="section-kicker">Ready to update every device</p>
+          <h2>Publish Wonder Hall</h2>
+          <p>This creates one ZIP file containing the updated <code>resources.json</code> plus simple instructions. You do not need to open the JSON file.</p>
+
+          <div class="publish-summary" id="publishSummary"></div>
+
+          <button id="publishWonderHallButton" class="publish-wonder-hall-button" type="button">
+            📦 Create Publish Package
+          </button>
+
+          <div id="publishSuccessMessage" class="publish-success" hidden>
+            <h3>Your package is ready</h3>
+            <p>Extract the downloaded ZIP, copy <code>resources.json</code> into your Wonder Hall folder, then commit and push with GitHub Desktop.</p>
+          </div>
+        </div>
+      </section>
+
+<section id="parentMaintenancePanel" class="parent-panel" hidden>
         <div class="maintenance-grid">
           <article class="maintenance-card">
             <h3>Publish Resource Changes</h3>
@@ -329,6 +429,7 @@
     <span>Curated for curious minds.</span>
   </footer>
 
-  <script src="app.js?v=360"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <script src="app.js?v=361"></script>
 </body>
 </html>

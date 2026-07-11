@@ -1,36 +1,27 @@
-# Wonder Hall 3.60 — Responsive Edition
+# Wonder Hall 3.61 — Curator Studio
 
-## Optimized devices
-- Phones
-- Large phones
-- Portrait tablets
-- Landscape tablets
-- Laptops
-- Desktop computers
-- Large monitors
-- Fullscreen and kiosk browsers
+## New Parent Wing experience
+- Galleries
+- Resources
+- Images overview
+- Gallery quote editor
+- Featured Exhibit editor
+- Homepage editor
+- Favorites
+- Publish Wonder Hall
 
-## Improvements
-- Responsive navigation and search
-- One to five gallery columns depending on screen width
-- Responsive Featured Exhibit placement
-- Phone-friendly single-column cards
-- Tablet-friendly two- and three-column resource layouts
-- Desktop-friendly multi-column layouts
-- Larger touch controls on touch devices
-- Better Parent Wing forms and lists on small screens
-- Improved image scaling and overflow protection
-- Safe-area support for modern devices
-- Better landscape-phone handling
-- Cache version 360 for reliable updates
+## Publish Wonder Hall
+The large Publish Wonder Hall button creates a ZIP package containing:
+- resources.json
+- simple step-by-step publishing instructions
+
+The user does not need to open or edit resources.json.
 
 ## Existing features preserved
-- Grand Rotunda header
-- Words of Wonder quotes
-- Parent Wing
-- Gallery Manager
-- Resource Image Manager
+- Responsive phone, tablet, laptop, and desktop layouts
+- Gallery and resource image uploads
 - Uploaded image repair
-- Search
+- Words of Wonder quotes
 - Favorites
 - Explorer's Passport
+- Search

@@ -76,6 +76,24 @@ const validateDataButton = document.getElementById("validateDataButton");
 const maintenanceStatus = document.getElementById("maintenanceStatus");
 const resetDeviceDataButton = document.getElementById("resetDeviceDataButton");
 
+const imageOverviewGrid = document.getElementById("imageOverviewGrid");
+const quoteEditorForm = document.getElementById("quoteEditorForm");
+const quoteGallerySelect = document.getElementById("quoteGallerySelect");
+const quoteOneInput = document.getElementById("quoteOneInput");
+const quoteTwoInput = document.getElementById("quoteTwoInput");
+const quoteThreeInput = document.getElementById("quoteThreeInput");
+const featuredEditorForm = document.getElementById("featuredEditorForm");
+const featuredGallerySelect = document.getElementById("featuredGallerySelect");
+const featuredTitleInput = document.getElementById("featuredTitleInput");
+const featuredDescriptionInput = document.getElementById("featuredDescriptionInput");
+const homepageEditorForm = document.getElementById("homepageEditorForm");
+const homepageWelcomeInput = document.getElementById("homepageWelcomeInput");
+const homepageTitleInput = document.getElementById("homepageTitleInput");
+const homepageTaglineInput = document.getElementById("homepageTaglineInput");
+const publishSummary = document.getElementById("publishSummary");
+const publishWonderHallButton = document.getElementById("publishWonderHallButton");
+const publishSuccessMessage = document.getElementById("publishSuccessMessage");
+
 let data = { galleries: [], resources: [] };
 let currentGalleryId = null;
 let parentUnlocked = false;
@@ -309,10 +327,12 @@ async function loadData() {
     if (custom) {
       data = JSON.parse(custom);
     } else {
-      const response = await fetch("resources.json?v=360", { cache:"no-store" });
+      const response = await fetch("resources.json?v=361", { cache:"no-store" });
       if (!response.ok) throw new Error(`Could not load resources.json (${response.status})`);
       data = await response.json();
     }
+    ensureSiteSettings();
+    applySiteSettingsToPage();
     renderGalleries(data.galleries);
     showEntranceQuote();
   } catch (error) {
@@ -526,6 +546,103 @@ function showParentWing() {
   window.scrollTo({top:0,behavior:"auto"});
 }
 
+
+function ensureSiteSettings() {
+  if (!data.siteSettings) {
+    data.siteSettings = {
+      welcome: "Welcome to",
+      title: "Wonder Hall",
+      tagline: "Step inside. Your next adventure is waiting.",
+      featuredGallery: "space",
+      featuredTitle: "Journey Through the Solar System",
+      featuredDescription: "Explore NASA resources, watch planets in motion, visit the ISS, and discover the wonders beyond Earth."
+    };
+  }
+}
+
+function populateImageOverview() {
+  if (!imageOverviewGrid) return;
+  imageOverviewGrid.innerHTML = "";
+
+  data.galleries.forEach(gallery => {
+    const card = document.createElement("article");
+    card.className = "image-overview-card";
+    const art = safeAssetUrl(getGalleryArtwork(gallery));
+
+    card.innerHTML = `
+      <img src="${art}" alt="">
+      <div>
+        <h4>${gallery.icon || "✨"} ${gallery.name}</h4>
+        <p>${gallery.artwork?.startsWith("data:") ? "Custom uploaded image" : "Built-in image"}</p>
+      </div>
+    `;
+    imageOverviewGrid.appendChild(card);
+  });
+}
+
+function populateQuoteEditor() {
+  if (!quoteGallerySelect) return;
+  quoteGallerySelect.innerHTML = data.galleries
+    .map(g => `<option value="${g.id}">${g.name}</option>`)
+    .join("");
+
+  loadSelectedQuotes();
+}
+
+function loadSelectedQuotes() {
+  const gallery = data.galleries.find(g => g.id === quoteGallerySelect.value) || data.galleries[0];
+  const quotes = gallery?.quotes || [];
+  quoteOneInput.value = quotes[0] || "";
+  quoteTwoInput.value = quotes[1] || "";
+  quoteThreeInput.value = quotes[2] || "";
+}
+
+function populateFeaturedEditor() {
+  ensureSiteSettings();
+  featuredGallerySelect.innerHTML = data.galleries
+    .map(g => `<option value="${g.id}">${g.name}</option>`)
+    .join("");
+  featuredGallerySelect.value = data.siteSettings.featuredGallery || data.galleries[0]?.id || "";
+  featuredTitleInput.value = data.siteSettings.featuredTitle || "";
+  featuredDescriptionInput.value = data.siteSettings.featuredDescription || "";
+}
+
+function populateHomepageEditor() {
+  ensureSiteSettings();
+  homepageWelcomeInput.value = data.siteSettings.welcome || "Welcome to";
+  homepageTitleInput.value = data.siteSettings.title || "Wonder Hall";
+  homepageTaglineInput.value = data.siteSettings.tagline || "";
+}
+
+function populatePublishSummary() {
+  if (!publishSummary) return;
+  const customGalleryImages = data.galleries.filter(g => g.artwork?.startsWith("data:")).length;
+  const resourceImages = data.resources.filter(r => r.image).length;
+
+  publishSummary.innerHTML = `
+    <div class="publish-summary-item"><strong>${data.galleries.length}</strong><span>Galleries</span></div>
+    <div class="publish-summary-item"><strong>${data.resources.length}</strong><span>Resources</span></div>
+    <div class="publish-summary-item"><strong>${customGalleryImages}</strong><span>Custom Gallery Images</span></div>
+    <div class="publish-summary-item"><strong>${resourceImages}</strong><span>Resource Images</span></div>
+  `;
+}
+
+function applySiteSettingsToPage() {
+  ensureSiteSettings();
+
+  const welcome = document.querySelector(".welcome");
+  const title = document.querySelector(".hero h1");
+  const tagline = document.querySelector(".hero-tagline");
+  const featuredHeading = document.querySelector(".featured-copy h2");
+  const featuredDescription = document.querySelector(".featured-copy p");
+
+  if (welcome) welcome.textContent = data.siteSettings.welcome;
+  if (title) title.textContent = data.siteSettings.title;
+  if (tagline) tagline.textContent = data.siteSettings.tagline;
+  if (featuredHeading) featuredHeading.textContent = data.siteSettings.featuredTitle;
+  if (featuredDescription) featuredDescription.textContent = data.siteSettings.featuredDescription;
+}
+
 function populateParentWing() {
   resourceCategoryInput.innerHTML = data.galleries
     .map(g => `<option value="${g.id}">${g.name}</option>`).join("");
@@ -592,6 +709,11 @@ function populateParentWing() {
   });
 
   renderParentBookmarks();
+  populateImageOverview();
+  populateQuoteEditor();
+  populateFeaturedEditor();
+  populateHomepageEditor();
+  populatePublishSummary();
   updateMaintenanceStatus();
 }
 
@@ -665,15 +787,110 @@ document.querySelectorAll(".parent-tab").forEach(button => {
   button.addEventListener("click", () => {
     document.querySelectorAll(".parent-tab").forEach(b => b.classList.remove("active"));
     button.classList.add("active");
+
     const target = button.dataset.parentTab;
-    document.getElementById("parentResourcesPanel").hidden = target !== "resources";
-    document.getElementById("parentGalleriesPanel").hidden = target !== "galleries";
-    document.getElementById("parentBookmarksPanel").hidden = target !== "bookmarks";
-    document.getElementById("parentMaintenancePanel").hidden = target !== "maintenance";
+    const panels = {
+      resources: document.getElementById("parentResourcesPanel"),
+      galleries: document.getElementById("parentGalleriesPanel"),
+      images: document.getElementById("parentImagesPanel"),
+      quotes: document.getElementById("parentQuotesPanel"),
+      featured: document.getElementById("parentFeaturedPanel"),
+      homepage: document.getElementById("parentHomepagePanel"),
+      bookmarks: document.getElementById("parentBookmarksPanel"),
+      maintenance: document.getElementById("parentMaintenancePanel"),
+      publish: document.getElementById("parentPublishPanel")
+    };
+
+    Object.entries(panels).forEach(([name, panel]) => {
+      if (panel) panel.hidden = name !== target;
+    });
+
     if (target === "bookmarks") renderParentBookmarks();
-    if (target === "maintenance") updateMaintenanceStatus();
+    if (target === "images") populateImageOverview();
+    if (target === "quotes") populateQuoteEditor();
+    if (target === "featured") populateFeaturedEditor();
+    if (target === "homepage") populateHomepageEditor();
+    if (target === "publish") populatePublishSummary();
   });
 });
+
+quoteGallerySelect?.addEventListener("change", loadSelectedQuotes);
+
+quoteEditorForm?.addEventListener("submit", event => {
+  event.preventDefault();
+  const gallery = data.galleries.find(g => g.id === quoteGallerySelect.value);
+  if (!gallery) return;
+
+  gallery.quotes = [
+    quoteOneInput.value.trim(),
+    quoteTwoInput.value.trim(),
+    quoteThreeInput.value.trim()
+  ].filter(Boolean);
+
+  saveCustomData();
+  alert("Quotes saved.");
+});
+
+featuredEditorForm?.addEventListener("submit", event => {
+  event.preventDefault();
+  ensureSiteSettings();
+
+  data.siteSettings.featuredGallery = featuredGallerySelect.value;
+  data.siteSettings.featuredTitle = featuredTitleInput.value.trim();
+  data.siteSettings.featuredDescription = featuredDescriptionInput.value.trim();
+
+  saveCustomData();
+  applySiteSettingsToPage();
+  alert("Featured Exhibit saved.");
+});
+
+homepageEditorForm?.addEventListener("submit", event => {
+  event.preventDefault();
+  ensureSiteSettings();
+
+  data.siteSettings.welcome = homepageWelcomeInput.value.trim();
+  data.siteSettings.title = homepageTitleInput.value.trim();
+  data.siteSettings.tagline = homepageTaglineInput.value.trim();
+
+  saveCustomData();
+  applySiteSettingsToPage();
+  alert("Homepage saved.");
+});
+
+publishWonderHallButton?.addEventListener("click", async () => {
+  ensureSiteSettings();
+
+  const instructions = `WONDER HALL PUBLISH INSTRUCTIONS
+
+1. Extract this ZIP file.
+2. Copy resources.json.
+3. Open Documents\\GitHub\\wonder-hall.
+4. Paste resources.json into that folder.
+5. Choose Replace the file in the destination.
+6. Open GitHub Desktop.
+7. Enter: Publish Wonder Hall updates
+8. Click Commit to main.
+9. Click Push origin.
+10. Wait about one minute, then refresh Wonder Hall on your devices.
+
+You do not need to open resources.json.
+`;
+
+  const zip = new JSZip();
+  zip.file("resources.json", JSON.stringify(data, null, 2));
+  zip.file("PUBLISH-INSTRUCTIONS.txt", instructions);
+
+  const blob = await zip.generateAsync({ type: "blob" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "wonder-hall-publish-package.zip";
+  link.click();
+
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  publishSuccessMessage.hidden = false;
+});
+
 
 resourceEditorForm.addEventListener("submit", event => {
   event.preventDefault();
@@ -914,7 +1131,7 @@ searchInput.addEventListener("input", event => {
 backButton.addEventListener("click", showHome);
 document.querySelectorAll(".collection-back").forEach(button => button.addEventListener("click", showHome));
 brandHome.addEventListener("click", event => { event.preventDefault(); showHome(); });
-featuredButton.addEventListener("click", () => openGallery("space"));
+featuredButton.addEventListener("click", () => { ensureSiteSettings(); openGallery(data.siteSettings.featuredGallery || "space"); });
 favoritesButton.addEventListener("click", showFavorites);
 passportButton.addEventListener("click", showPassport);
 stampButton.addEventListener("click", () => {
