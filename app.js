@@ -115,6 +115,22 @@ const directPublishError = document.getElementById("directPublishError");
 const directPublishErrorText = document.getElementById("directPublishErrorText");
 const publishedCommitLink = document.getElementById("publishedCommitLink");
 
+const visualGalleryBuilder = document.getElementById("visualGalleryBuilder");
+const saveGalleryOrderButton = document.getElementById("saveGalleryOrderButton");
+const uploadGallerySelect = document.getElementById("uploadGallerySelect");
+const resourceDropZone = document.getElementById("resourceDropZone");
+const resourceFilesInput = document.getElementById("resourceFilesInput");
+const addResourceLinkButton = document.getElementById("addResourceLinkButton");
+const pendingUploadsPanel = document.getElementById("pendingUploadsPanel");
+const pendingUploadsCount = document.getElementById("pendingUploadsCount");
+const pendingUploadsList = document.getElementById("pendingUploadsList");
+const resourceLinkDialog = document.getElementById("resourceLinkDialog");
+const resourceLinkForm = document.getElementById("resourceLinkForm");
+const resourceLinkNameInput = document.getElementById("resourceLinkNameInput");
+const resourceLinkUrlInput = document.getElementById("resourceLinkUrlInput");
+const resourceLinkDescriptionInput = document.getElementById("resourceLinkDescriptionInput");
+const cancelResourceLinkButton = document.getElementById("cancelResourceLinkButton");
+
 let data = { galleries: [], resources: [] };
 let currentGalleryId = null;
 let parentUnlocked = false;
@@ -126,6 +142,8 @@ let githubConnected = false;
 let githubConnectionFileSha = null;
 let handlingBrowserHistory = false;
 let currentViewName = "home";
+let galleryBuilderSortable = null;
+let pendingUploads = [];
 
 const FAVORITES_KEY = "wonderHallFavorites";
 const PASSPORT_KEY = "wonderHallPassport";
@@ -354,7 +372,7 @@ async function loadData() {
     if (custom) {
       data = JSON.parse(custom);
     } else {
-      const response = await fetch("resources.json?v=410", { cache:"no-store" });
+      const response = await fetch("resources.json?v=420", { cache:"no-store" });
       if (!response.ok) throw new Error(`Could not load resources.json (${response.status})`);
       data = await response.json();
     }
@@ -425,9 +443,13 @@ function createResourceCard(resource) {
   wrapper.className = "resource-card";
 
   const link = document.createElement("a");
-  link.href = resource.url;
+  link.href = safeAssetUrl(resource.url);
   link.target = "_blank";
   link.rel = "noopener noreferrer";
+
+  if (resource.downloadable) {
+    link.setAttribute("download", "");
+  }
   link.style.color = "inherit";
   link.style.textDecoration = "none";
 
@@ -776,6 +798,10 @@ async function publishDataDirectlyToGithub() {
   const settings = saveGithubSettings();
   const contentUrl = buildGithubContentsUrl(settings);
 
+  if (pendingUploads.length) {
+    await publishPendingUploadsToGithub(settings);
+  }
+
   directPublishProgressText.textContent = "Checking the latest GitHub version…";
   const currentFile = await githubRequest(contentUrl);
   githubConnectionFileSha = currentFile.sha;
@@ -915,6 +941,255 @@ function applySiteSettingsToPage() {
   if (featuredDescription) featuredDescription.textContent = data.siteSettings.featuredDescription;
 }
 
+
+function populateVisualGalleryBuilder() {
+  if (!visualGalleryBuilder) return;
+
+  visualGalleryBuilder.innerHTML = "";
+
+  data.galleries.forEach((gallery, index) => {
+    const item = document.createElement("article");
+    item.className = "visual-gallery-item";
+    item.dataset.galleryId = gallery.id;
+
+    item.innerHTML = `
+      <img class="visual-gallery-art" src="${safeAssetUrl(getGalleryArtwork(gallery))}" alt="">
+      <div class="visual-gallery-body">
+        <h4>${gallery.icon || "✨"} ${gallery.name}</h4>
+        <div class="visual-gallery-order">Position ${index + 1}</div>
+      </div>
+      <div class="visual-gallery-controls">
+        <button type="button" data-move-gallery-up="${gallery.id}" aria-label="Move ${gallery.name} earlier">↑</button>
+        <button type="button" data-move-gallery-down="${gallery.id}" aria-label="Move ${gallery.name} later">↓</button>
+      </div>
+    `;
+
+    visualGalleryBuilder.appendChild(item);
+  });
+
+  if (galleryBuilderSortable) {
+    galleryBuilderSortable.destroy();
+  }
+
+  if (window.Sortable) {
+    galleryBuilderSortable = Sortable.create(visualGalleryBuilder, {
+      animation: 150,
+      handle: ".visual-gallery-item",
+      ghostClass: "sortable-ghost",
+      chosenClass: "sortable-chosen",
+      onEnd: updateGalleryOrderLabels
+    });
+  }
+}
+
+function updateGalleryOrderLabels() {
+  [...visualGalleryBuilder.children].forEach((item, index) => {
+    const label = item.querySelector(".visual-gallery-order");
+    if (label) label.textContent = `Position ${index + 1}`;
+  });
+}
+
+function saveVisualGalleryOrder() {
+  const ids = [...visualGalleryBuilder.children].map(item => item.dataset.galleryId);
+  const ordered = ids.map(id => data.galleries.find(gallery => gallery.id === id)).filter(Boolean);
+
+  if (ordered.length !== data.galleries.length) {
+    alert("The gallery order could not be saved.");
+    return;
+  }
+
+  data.galleries = ordered;
+  saveCustomData();
+  renderGalleries(data.galleries);
+  populateParentWing();
+  alert("Gallery order saved.");
+}
+
+function moveGalleryByButton(id, direction) {
+  const index = data.galleries.findIndex(gallery => gallery.id === id);
+  if (index < 0) return;
+
+  const target = index + direction;
+  if (target < 0 || target >= data.galleries.length) return;
+
+  const [gallery] = data.galleries.splice(index, 1);
+  data.galleries.splice(target, 0, gallery);
+
+  saveCustomData();
+  populateVisualGalleryBuilder();
+  renderGalleries(data.galleries);
+}
+
+function populateUploadGallerySelect() {
+  if (!uploadGallerySelect) return;
+
+  const previous = uploadGallerySelect.value;
+  uploadGallerySelect.innerHTML = data.galleries
+    .map(gallery => `<option value="${gallery.id}">${gallery.name}</option>`)
+    .join("");
+
+  if (data.galleries.some(gallery => gallery.id === previous)) {
+    uploadGallerySelect.value = previous;
+  }
+}
+
+function formatFileSize(bytes) {
+  if (bytes < 1024) return `${bytes} bytes`;
+  if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+function fileKind(file) {
+  if (file.type.startsWith("image/")) return "image";
+  if (file.type === "application/pdf") return "pdf";
+  if (file.type.startsWith("video/")) return "video";
+  return "file";
+}
+
+function sanitizeUploadName(name) {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9._-]+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+function addPendingFiles(files) {
+  const galleryId = uploadGallerySelect.value;
+  if (!galleryId) {
+    alert("Choose a destination gallery first.");
+    return;
+  }
+
+  [...files].forEach(file => {
+    const kind = fileKind(file);
+    const maxSize = kind === "video" ? 20 * 1024 * 1024 : 10 * 1024 * 1024;
+
+    if (file.size > maxSize) {
+      alert(`${file.name} is too large. Use a link for large videos. Smaller files can be uploaded directly.`);
+      return;
+    }
+
+    pendingUploads.push({
+      id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+      file,
+      galleryId,
+      kind,
+      name: file.name.replace(/\.[^.]+$/, ""),
+      description: `${kind === "pdf" ? "PDF document" : kind === "video" ? "Video resource" : "Image resource"}`
+    });
+  });
+
+  renderPendingUploads();
+}
+
+function renderPendingUploads() {
+  pendingUploadsList.innerHTML = "";
+  pendingUploadsPanel.hidden = pendingUploads.length === 0;
+  pendingUploadsCount.textContent = `${pendingUploads.length} ${pendingUploads.length === 1 ? "item" : "items"}`;
+
+  pendingUploads.forEach(upload => {
+    const gallery = data.galleries.find(g => g.id === upload.galleryId);
+    const item = document.createElement("article");
+    item.className = "pending-upload-item";
+
+    const preview = document.createElement("div");
+    preview.className = "pending-upload-preview";
+
+    if (upload.kind === "image") {
+      const image = document.createElement("img");
+      image.src = URL.createObjectURL(upload.file);
+      image.onload = () => URL.revokeObjectURL(image.src);
+      preview.appendChild(image);
+    } else if (upload.kind === "video") {
+      preview.textContent = "🎬";
+    } else if (upload.kind === "pdf") {
+      preview.textContent = "📄";
+    } else {
+      preview.textContent = "📎";
+    }
+
+    const information = document.createElement("div");
+    information.className = "pending-upload-info";
+    information.innerHTML = `
+      <h5>${upload.file.name}</h5>
+      <p>${gallery?.name || upload.galleryId} · ${formatFileSize(upload.file.size)}</p>
+    `;
+
+    const remove = document.createElement("button");
+    remove.type = "button";
+    remove.textContent = "Remove";
+    remove.addEventListener("click", () => {
+      pendingUploads = pendingUploads.filter(item => item.id !== upload.id);
+      renderPendingUploads();
+    });
+
+    item.append(preview, information, remove);
+    pendingUploadsList.appendChild(item);
+  });
+}
+
+async function uploadPendingFileToGithub(upload, settings) {
+  const owner = encodeURIComponent(settings.owner);
+  const repo = encodeURIComponent(settings.repo);
+  const extension = upload.file.name.includes(".")
+    ? upload.file.name.slice(upload.file.name.lastIndexOf("."))
+    : "";
+
+  const baseName = sanitizeUploadName(upload.file.name.replace(extension, "")) || "resource";
+  const remotePath = `assets/uploads/${Date.now()}-${baseName}${extension}`;
+  const encodedPath = remotePath.split("/").map(encodeURIComponent).join("/");
+
+  const arrayBuffer = await upload.file.arrayBuffer();
+  const bytes = new Uint8Array(arrayBuffer);
+  let binary = "";
+  const chunkSize = 0x8000;
+
+  for (let index = 0; index < bytes.length; index += chunkSize) {
+    binary += String.fromCharCode(...bytes.subarray(index, index + chunkSize));
+  }
+
+  const content = btoa(binary);
+
+  await githubRequest(`https://api.github.com/repos/${owner}/${repo}/contents/${encodedPath}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      message: `Upload ${upload.file.name} from Wonder Hall`,
+      content,
+      branch: settings.branch
+    })
+  });
+
+  return remotePath;
+}
+
+async function publishPendingUploadsToGithub(settings) {
+  const createdResources = [];
+
+  for (let index = 0; index < pendingUploads.length; index++) {
+    const upload = pendingUploads[index];
+    directPublishProgressText.textContent = `Uploading ${index + 1} of ${pendingUploads.length}: ${upload.file.name}`;
+
+    const remotePath = await uploadPendingFileToGithub(upload, settings);
+
+    createdResources.push({
+      name: upload.name,
+      url: remotePath,
+      category: upload.galleryId,
+      description: upload.description,
+      type: upload.kind,
+      downloadable: true,
+      image: upload.kind === "image" ? remotePath : ""
+    });
+  }
+
+  data.resources.push(...createdResources);
+  pendingUploads = [];
+  renderPendingUploads();
+  saveCustomData();
+}
+
 function populateParentWing() {
   resourceCategoryInput.innerHTML = data.galleries
     .map(g => `<option value="${g.id}">${g.name}</option>`).join("");
@@ -986,6 +1261,9 @@ function populateParentWing() {
   populateFeaturedEditor();
   populateHomepageEditor();
   populatePublishSummary();
+  populateVisualGalleryBuilder();
+  populateUploadGallerySelect();
+  renderPendingUploads();
   loadGithubSettingsIntoForm();
   updateMaintenanceStatus();
 }
@@ -1222,7 +1500,29 @@ You do not need to open resources.json.
 `;
 
   const zip = new JSZip();
-  zip.file("resources.json", JSON.stringify(data, null, 2));
+  const manualData = JSON.parse(JSON.stringify(data));
+
+  for (const upload of pendingUploads) {
+    const extension = upload.file.name.includes(".")
+      ? upload.file.name.slice(upload.file.name.lastIndexOf("."))
+      : "";
+    const baseName = sanitizeUploadName(upload.file.name.replace(extension, "")) || "resource";
+    const remotePath = `assets/uploads/${Date.now()}-${baseName}${extension}`;
+
+    zip.file(remotePath, upload.file);
+
+    manualData.resources.push({
+      name: upload.name,
+      url: remotePath,
+      category: upload.galleryId,
+      description: upload.description,
+      type: upload.kind,
+      downloadable: true,
+      image: upload.kind === "image" ? remotePath : ""
+    });
+  }
+
+  zip.file("resources.json", JSON.stringify(manualData, null, 2));
   zip.file("PUBLISH-INSTRUCTIONS.txt", instructions);
 
   const blob = await zip.generateAsync({ type: "blob" });
@@ -1236,6 +1536,74 @@ You do not need to open resources.json.
   publishSuccessMessage.hidden = false;
 });
 
+
+
+saveGalleryOrderButton?.addEventListener("click", saveVisualGalleryOrder);
+
+visualGalleryBuilder?.addEventListener("click", event => {
+  const upId = event.target.dataset.moveGalleryUp;
+  const downId = event.target.dataset.moveGalleryDown;
+
+  if (upId) moveGalleryByButton(upId, -1);
+  if (downId) moveGalleryByButton(downId, 1);
+});
+
+resourceFilesInput?.addEventListener("change", event => {
+  addPendingFiles(event.target.files);
+  event.target.value = "";
+});
+
+["dragenter", "dragover"].forEach(type => {
+  resourceDropZone?.addEventListener(type, event => {
+    event.preventDefault();
+    resourceDropZone.classList.add("is-dragging");
+  });
+});
+
+["dragleave", "drop"].forEach(type => {
+  resourceDropZone?.addEventListener(type, event => {
+    event.preventDefault();
+    resourceDropZone.classList.remove("is-dragging");
+  });
+});
+
+resourceDropZone?.addEventListener("drop", event => {
+  const files = event.dataTransfer?.files;
+  if (files?.length) addPendingFiles(files);
+});
+
+addResourceLinkButton?.addEventListener("click", () => {
+  resourceLinkNameInput.value = "";
+  resourceLinkUrlInput.value = "";
+  resourceLinkDescriptionInput.value = "";
+  resourceLinkDialog.hidden = false;
+  resourceLinkNameInput.focus();
+});
+
+cancelResourceLinkButton?.addEventListener("click", () => {
+  resourceLinkDialog.hidden = true;
+});
+
+resourceLinkForm?.addEventListener("submit", event => {
+  event.preventDefault();
+
+  const galleryId = uploadGallerySelect.value;
+  if (!galleryId) return;
+
+  data.resources.push({
+    name: resourceLinkNameInput.value.trim(),
+    url: resourceLinkUrlInput.value.trim(),
+    category: galleryId,
+    description: resourceLinkDescriptionInput.value.trim() || "Website resource",
+    type: "link",
+    downloadable: false,
+    image: ""
+  });
+
+  saveCustomData();
+  resourceLinkDialog.hidden = true;
+  populateParentWing();
+});
 
 resourceEditorForm.addEventListener("submit", event => {
   event.preventDefault();

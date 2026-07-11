@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=410">
+  <link rel="stylesheet" href="style.css?v=420">
 </head>
 <body>
   <a class="skip-link" href="#mainContent">Skip to content</a>
@@ -162,6 +162,42 @@
       </nav>
 
       <section id="parentResourcesPanel" class="parent-panel" hidden>
+        <div class="resource-upload-studio">
+          <div class="resource-upload-heading">
+            <div>
+              <p class="section-kicker">Resource Uploads</p>
+              <h3>Drop Resources Into a Gallery</h3>
+              <p>Add website links or drag local images, PDFs, and small videos into Wonder Hall.</p>
+            </div>
+
+            <label class="upload-gallery-picker">
+              Destination gallery
+              <select id="uploadGallerySelect"></select>
+            </label>
+          </div>
+
+          <div id="resourceDropZone" class="resource-drop-zone" tabindex="0">
+            <div class="resource-drop-icon" aria-hidden="true">⬇</div>
+            <h4>Drop files or links here</h4>
+            <p>Images, PDFs, videos, or website links</p>
+            <div class="resource-drop-actions">
+              <label class="file-button">
+                Choose Files
+                <input id="resourceFilesInput" type="file" multiple accept="image/*,application/pdf,video/*">
+              </label>
+              <button id="addResourceLinkButton" type="button">Add Website Link</button>
+            </div>
+          </div>
+
+          <div id="pendingUploadsPanel" class="pending-uploads-panel" hidden>
+            <div class="pending-uploads-heading">
+              <h4>Pending Uploads</h4>
+              <span id="pendingUploadsCount">0 items</span>
+            </div>
+            <div id="pendingUploadsList" class="pending-uploads-list"></div>
+          </div>
+        </div>
+
         <div class="parent-form-card">
           <h3>Add or Edit a Resource</h3>
           <form id="resourceEditorForm">
@@ -199,8 +235,7 @@
             </div>
 
             <p class="parent-form-note">
-              Uploaded images are resized and saved inside the exported
-              <code>resources.json</code> file.
+              Images are resized before they are saved.
             </p>
 
             <div class="form-actions">
@@ -209,6 +244,7 @@
             </div>
           </form>
         </div>
+
         <div>
           <h3>Current Resources</h3>
           <div id="parentResourceList" class="parent-list"></div>
@@ -216,6 +252,19 @@
       </section>
 
       <section id="parentGalleriesPanel" class="parent-panel">
+        <div class="visual-builder-shell">
+          <div class="visual-builder-heading">
+            <div>
+              <p class="section-kicker">Visual Gallery Builder</p>
+              <h3>Arrange Your Museum</h3>
+              <p>Drag gallery cards into a new order. On touch devices, use the arrow buttons.</p>
+            </div>
+            <button id="saveGalleryOrderButton" class="primary-parent-button" type="button">Save Gallery Order</button>
+          </div>
+
+          <div id="visualGalleryBuilder" class="visual-gallery-builder" aria-label="Drag galleries to reorder"></div>
+        </div>
+
         <div class="parent-form-card">
           <h3 id="galleryEditorHeading">Create a Gallery</h3>
           <form id="galleryEditorForm">
@@ -253,8 +302,7 @@
             </div>
 
             <p class="parent-form-note">
-              Uploaded images are resized and saved inside the exported
-              <code>resources.json</code> file.
+              Uploaded gallery images are resized and saved with Wonder Hall.
             </p>
 
             <div class="form-actions">
@@ -270,13 +318,6 @@
         </div>
       </section>
 
-      <section id="parentBookmarksPanel" class="parent-panel" hidden>
-        <h3>Saved Bookmarks</h3>
-        <div id="parentBookmarksList" class="parent-list"></div>
-        <p id="parentBookmarksEmpty" class="empty-state">No bookmarks are saved on this device.</p>
-      </section>
-
-      
       <section id="parentImagesPanel" class="parent-panel curator-single-panel" hidden>
         <div class="curator-overview-card">
           <p class="section-kicker">Visual collection</p>
@@ -512,6 +553,33 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
-  <script src="app.js?v=410"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+  <script src="app.js?v=420"></script>
+
+  <div id="resourceLinkDialog" class="link-dialog" hidden>
+    <div class="link-dialog-card">
+      <p class="section-kicker">Add Website Link</p>
+      <h2>Add a Resource Link</h2>
+      <form id="resourceLinkForm">
+        <label>
+          Resource name
+          <input id="resourceLinkNameInput" required>
+        </label>
+        <label>
+          Website address
+          <input id="resourceLinkUrlInput" type="url" required>
+        </label>
+        <label>
+          Description
+          <textarea id="resourceLinkDescriptionInput" rows="3"></textarea>
+        </label>
+        <div class="form-actions">
+          <button class="primary-parent-button" type="submit">Add Link</button>
+          <button id="cancelResourceLinkButton" type="button">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
 </body>
 </html>

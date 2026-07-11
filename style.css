@@ -2108,3 +2108,314 @@ main{
     overscroll-behavior-x:none;
   }
 }
+
+
+/* =========================================================
+   Wonder Hall 4.2 — Visual Curator
+   ========================================================= */
+
+.visual-builder-shell,
+.resource-upload-studio{
+  grid-column:1/-1;
+  padding:24px;
+  background:var(--paper);
+  border:2px solid var(--gold);
+  border-radius:22px;
+}
+
+.visual-builder-heading,
+.resource-upload-heading,
+.pending-uploads-heading{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:18px;
+  margin-bottom:18px;
+}
+
+.visual-builder-heading h3,
+.resource-upload-heading h3{
+  margin:0;
+  font-size:2.2rem;
+}
+
+.visual-builder-heading p,
+.resource-upload-heading p{
+  margin:4px 0 0;
+  color:var(--muted);
+}
+
+.visual-gallery-builder{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:14px;
+}
+
+.visual-gallery-item{
+  position:relative;
+  overflow:hidden;
+  min-width:0;
+  background:#fff9ed;
+  border:2px solid var(--gold);
+  border-radius:18px;
+  cursor:grab;
+  box-shadow:0 6px 14px rgba(0,0,0,.08);
+}
+
+.visual-gallery-item:active{
+  cursor:grabbing;
+}
+
+.visual-gallery-item.sortable-ghost{
+  opacity:.35;
+}
+
+.visual-gallery-item.sortable-chosen{
+  outline:4px solid rgba(20,85,108,.22);
+}
+
+.visual-gallery-art{
+  width:100%;
+  height:120px;
+  display:block;
+  object-fit:cover;
+  background:#ded1b9;
+}
+
+.visual-gallery-body{
+  padding:12px;
+}
+
+.visual-gallery-body h4{
+  margin:0;
+  font:700 1.18rem "Cormorant Garamond",serif;
+}
+
+.visual-gallery-order{
+  margin-top:4px;
+  color:var(--muted);
+  font-size:.82rem;
+}
+
+.visual-gallery-controls{
+  display:flex;
+  gap:6px;
+  padding:0 10px 10px;
+}
+
+.visual-gallery-controls button{
+  flex:1;
+  min-height:40px;
+  padding:7px;
+  color:var(--navy);
+  background:#fff2d1;
+  border:1px solid var(--gold);
+  border-radius:8px;
+}
+
+.upload-gallery-picker{
+  display:grid;
+  gap:6px;
+  min-width:230px;
+  font-weight:700;
+}
+
+.resource-drop-zone{
+  padding:36px 20px;
+  text-align:center;
+  background:#f7ecd8;
+  border:3px dashed #c89b43;
+  border-radius:20px;
+  transition:border-color .15s ease,background .15s ease;
+}
+
+.resource-drop-zone.is-dragging{
+  background:#edf5ea;
+  border-color:#4f8a42;
+}
+
+.resource-drop-zone h4{
+  margin:8px 0 4px;
+  font-size:1.55rem;
+}
+
+.resource-drop-zone p{
+  margin:0 0 18px;
+  color:var(--muted);
+}
+
+.resource-drop-icon{
+  font-size:2.6rem;
+  color:var(--gold-dark);
+}
+
+.resource-drop-actions{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+.resource-drop-actions button,
+.resource-drop-actions .file-button{
+  min-height:46px;
+  padding:11px 16px;
+}
+
+.pending-uploads-panel{
+  margin-top:18px;
+  padding:18px;
+  background:#fffaf0;
+  border:1px solid var(--line);
+  border-radius:16px;
+}
+
+.pending-uploads-heading{
+  align-items:center;
+  margin-bottom:12px;
+}
+
+.pending-uploads-heading h4{
+  margin:0;
+  font-size:1.35rem;
+}
+
+.pending-uploads-list{
+  display:grid;
+  gap:10px;
+}
+
+.pending-upload-item{
+  display:grid;
+  grid-template-columns:62px minmax(0,1fr) auto;
+  gap:12px;
+  align-items:center;
+  padding:12px;
+  background:white;
+  border:1px solid var(--line);
+  border-radius:12px;
+}
+
+.pending-upload-preview{
+  width:62px;
+  height:52px;
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  background:#ece2ce;
+  border-radius:9px;
+  font-size:1.6rem;
+}
+
+.pending-upload-preview img,
+.pending-upload-preview video{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.pending-upload-info h5{
+  margin:0 0 3px;
+  font-size:1rem;
+}
+
+.pending-upload-info p{
+  margin:0;
+  color:var(--muted);
+  font-size:.84rem;
+}
+
+.pending-upload-item button{
+  min-height:40px;
+  padding:8px 11px;
+  color:#8a2d25;
+  background:#fff0ed;
+  border:1px solid #c9897f;
+  border-radius:8px;
+}
+
+.link-dialog{
+  position:fixed;
+  inset:0;
+  z-index:150;
+  display:grid;
+  place-items:center;
+  padding:18px;
+  background:rgba(3,17,28,.78);
+}
+
+.link-dialog-card{
+  width:min(520px,100%);
+  padding:24px;
+  background:var(--paper);
+  border:3px solid var(--gold);
+  border-radius:20px;
+}
+
+.link-dialog-card form{
+  display:grid;
+  gap:14px;
+}
+
+.link-dialog-card label{
+  display:grid;
+  gap:6px;
+  font-weight:700;
+}
+
+.link-dialog-card input,
+.link-dialog-card textarea{
+  padding:11px;
+  border:1px solid #baa98d;
+  border-radius:10px;
+}
+
+@media(max-width:1180px){
+  .visual-gallery-builder{
+    grid-template-columns:repeat(4,minmax(0,1fr));
+  }
+}
+
+@media(max-width:900px){
+  .visual-gallery-builder{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+
+  .resource-upload-heading{
+    align-items:stretch;
+    flex-direction:column;
+  }
+
+  .upload-gallery-picker{
+    min-width:0;
+  }
+}
+
+@media(max-width:650px){
+  .visual-gallery-builder{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .visual-builder-heading{
+    align-items:stretch;
+    flex-direction:column;
+  }
+
+  .pending-upload-item{
+    grid-template-columns:52px 1fr;
+  }
+
+  .pending-upload-item button{
+    grid-column:1/-1;
+  }
+}
+
+@media(max-width:420px){
+  .visual-gallery-builder{
+    grid-template-columns:1fr;
+  }
+
+  .visual-gallery-art{
+    height:170px;
+  }
+}
