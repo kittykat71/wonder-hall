@@ -2,9 +2,9 @@
   "galleries": [
     {
       "id": "reading",
-      "name": "Reading & Literature",
+      "name": "Reading & Literature & Communication",
       "icon": "📚",
-      "description": "Books, literature, comprehension, and writing.",
+      "description": "Books, writing, grammar, storytelling, literature, journalism, media, rhetoric, and communication.",
       "artwork": "assets/gallery-art-v353/reading.jpg",
       "roomName": "library",
       "themeColor": "#6d3c24",
@@ -30,9 +30,9 @@
     },
     {
       "id": "math",
-      "name": "Math",
+      "name": "Mathematics & Logic",
       "icon": "➗",
-      "description": "Numbers, puzzles, problem-solving, and mathematical thinking.",
+      "description": "Numbers, puzzles, problem-solving, and mathematical thinking. Arithmetic, algebra, geometry, statistics, probability, formal logic, and problem-solving.",
       "artwork": "assets/gallery-art-v353/math.jpg",
       "roomName": "geometry room",
       "themeColor": "#2e5f50",
@@ -44,9 +44,9 @@
     },
     {
       "id": "science",
-      "name": "Science",
+      "name": "Physical Sciences",
       "icon": "🔬",
-      "description": "Experiments, simulations, biology, chemistry, and physics.",
+      "description": "Experiments, simulations, biology, chemistry, and physics. astronomy, geology, meteorology, and the study of matter and energy.",
       "artwork": "assets/gallery-art-v353/science.jpg",
       "roomName": "laboratory",
       "themeColor": "#1c5361",
@@ -58,9 +58,9 @@
     },
     {
       "id": "history",
-      "name": "History",
+      "name": "History & Archaeology",
       "icon": "🏛️",
-      "description": "People, places, documents, and stories from the past.",
+      "description": "People, places, documents, and stories from the past. Ancient civilizations, world history, local history, historical people, archaeology, and major events.",
       "artwork": "assets/gallery-art-v353/history.jpg",
       "roomName": "history hall",
       "themeColor": "#735035",
@@ -72,9 +72,9 @@
     },
     {
       "id": "geography",
-      "name": "Geography",
+      "name": "Geography & The Enviornment",
       "icon": "🌎",
-      "description": "Maps, countries, cultures, and the world around us.",
+      "description": "Countries, cultures, maps, ecosystems, climate, natural resources, and human interaction with the Earth.",
       "artwork": "assets/gallery-art-v353/geography.jpg",
       "roomName": "map room",
       "themeColor": "#31736b",
@@ -99,22 +99,8 @@
       ]
     },
     {
-      "id": "animals",
-      "name": "Animals",
-      "icon": "🐘",
-      "description": "Wildlife, habitats, live cams, and animal science.",
-      "artwork": "assets/gallery-art-v353/animals.jpg",
-      "roomName": "animal pavilion",
-      "themeColor": "#526d3e",
-      "quotes": [
-        "Every creature has something to teach the careful observer.",
-        "The wild world is full of stories without words.",
-        "Respect grows when we learn how other lives unfold."
-      ]
-    },
-    {
       "id": "nature",
-      "name": "Nature",
+      "name": "Nature & Animals",
       "icon": "🌲",
       "description": "Birds, plants, ecosystems, and outdoor discovery.",
       "artwork": "assets/gallery-art-v353/nature.jpg",
@@ -130,7 +116,7 @@
       "id": "engineering",
       "name": "Engineering",
       "icon": "🏗️",
-      "description": "Design, build, invent, test, and improve.",
+      "description": "Design, build, invent, test, and improve. machines, inventions, architecture, design, and applied engineering.",
       "artwork": "assets/gallery-art-v353/engineering.jpg",
       "roomName": "inventor workshop",
       "themeColor": "#6b5136",
@@ -155,24 +141,10 @@
       ]
     },
     {
-      "id": "languages",
-      "name": "Languages",
-      "icon": "🗣️",
-      "description": "Learn new languages and explore communication.",
-      "artwork": "assets/gallery-art-v353/languages.jpg",
-      "roomName": "world language room",
-      "themeColor": "#7b4c59",
-      "quotes": [
-        "Every language offers another window into the human world.",
-        "New words make room for new ideas.",
-        "Understanding grows when we learn how others express themselves."
-      ]
-    },
-    {
       "id": "art",
-      "name": "Art",
+      "name": "Arts, Philosophy, & Culture",
       "icon": "🎨",
-      "description": "Drawing, museums, techniques, and creative expression.",
+      "description": "Drawing, museums, techniques, and creative expression, Visual art, theater, film, dance, ethics, philosophy, customs, and human expression",
       "artwork": "assets/gallery-art-v353/art.jpg",
       "roomName": "artist studio",
       "themeColor": "#874f43",
@@ -212,11 +184,11 @@
     },
     {
       "id": "logic",
-      "name": "Logic & Critical Thinking",
-      "icon": "🧠",
-      "description": "Chess, reasoning, strategy, and brain challenges.",
+      "name": "Society, Government, & Law",
+      "icon": "🏛",
+      "description": "Sociology, politics, civics, legal systems, public policy, international relations, and social issues.",
       "artwork": "assets/gallery-art-v353/logic.jpg",
-      "roomName": "strategy room",
+      "roomName": "Social Studies room",
       "themeColor": "#5a6942",
       "quotes": [
         "Clear thinking begins with careful questions.",
@@ -226,9 +198,9 @@
     },
     {
       "id": "finance",
-      "name": "Economics & Finance",
+      "name": "Economics, Business & Finance",
       "icon": "💰",
-      "description": "Money, markets, budgeting, and financial literacy.",
+      "description": "Money, markets, budgeting, and financial literacy, entrepreneurship, accounting, investing, management",
       "artwork": "assets/gallery-art-v353/finance.jpg",
       "roomName": "finance gallery",
       "themeColor": "#75652f",
@@ -253,38 +225,10 @@
       ]
     },
     {
-      "id": "college",
-      "name": "College-Level Learning",
-      "icon": "🎓",
-      "description": "Free courses and textbooks for advanced learners.",
-      "artwork": "assets/gallery-art-v353/college.jpg",
-      "roomName": "scholars hall",
-      "themeColor": "#455678",
-      "quotes": [
-        "Serious study begins with the courage to remain curious.",
-        "Knowledge deepens when we connect ideas across subjects.",
-        "The goal of learning is not only to know more, but to understand better."
-      ]
-    },
-    {
-      "id": "videos",
-      "name": "Educational Videos",
-      "icon": "📺",
-      "description": "Curated channels that make complex ideas understandable.",
-      "artwork": "assets/gallery-art-v353/videos.jpg",
-      "roomName": "screening room",
-      "themeColor": "#73464d",
-      "quotes": [
-        "A good explanation can turn confusion into possibility.",
-        "Watch actively, pause thoughtfully, and follow your questions.",
-        "Seeing an idea in motion can help it settle in the mind."
-      ]
-    },
-    {
       "id": "heart-studies",
-      "name": "Heart Studies",
+      "name": "Faith and Values",
       "icon": "❤️",
-      "description": "Thoughtful studies and resources for the heart and home.",
+      "description": "Religion, spirituality, sacred texts, moral beliefs, character, ethics, traditions, worship.",
       "artwork": "assets/gallery-art-v353/heart-studies.jpg",
       "roomName": "quiet reflection room",
       "themeColor": "#85545b",
@@ -295,18 +239,13 @@
       ]
     },
     {
-      "id": "futurescape",
-      "name": "Futurescape",
-      "icon": "🌅",
-      "description": "A space for future-focused exploration and discovery.",
-      "artwork": "assets/gallery-art-v353/futurescape.jpg",
-      "roomName": "future studies gallery",
-      "themeColor": "#3f517b",
-      "quotes": [
-        "The future is shaped by the questions we are brave enough to ask.",
-        "Imagination helps us prepare for possibilities that do not yet exist.",
-        "Tomorrow begins in the ideas we explore today."
-      ]
+      "id": "life-sciences-health",
+      "name": "LIfe Sciences & Health",
+      "icon": "🧬",
+      "description": "Biology, ecology, medicine, anatomy, nutrition, psychology, exercise, and public health.",
+      "roomName": "Health and Happiness",
+      "artwork": "",
+      "quotes": []
     }
   ],
   "resources": [
@@ -329,13 +268,6 @@
       "category": "science",
       "description": "Interactive math and science simulations from the University of Colorado Boulder.",
       "url": "https://phet.colorado.edu/",
-      "image": ""
-    },
-    {
-      "name": "Mystery Science",
-      "category": "science",
-      "description": "Engaging science lessons and activities for children.",
-      "url": "https://mysteryscience.com/",
       "image": ""
     },
     {
@@ -368,21 +300,21 @@
     },
     {
       "name": "San Diego Zoo Kids",
-      "category": "animals",
+      "category": "nature",
       "description": "Animal facts, videos, stories, and activities.",
       "url": "https://sdzwildlifeexplorers.org/",
       "image": ""
     },
     {
       "name": "Monterey Bay Aquarium Live Cams",
-      "category": "animals",
+      "category": "nature",
       "description": "Watch sea otters, jellyfish, sharks, and other ocean life live.",
       "url": "https://www.montereybayaquarium.org/animals/live-cams",
       "image": ""
     },
     {
       "name": "Explore.org Live Nature Cams",
-      "category": "animals",
+      "category": "nature",
       "description": "Live wildlife and nature cameras from around the world.",
       "url": "https://explore.org/livecams",
       "image": ""
@@ -460,9 +392,10 @@
     },
     {
       "name": "Heart Studies Rotation",
-      "category": "heart-studies",
+      "category": "read-alouds",
       "description": "A rotating collection of heart-centered studies.",
-      "url": "https://www.fcbelmonde.com/rotation"
+      "url": "https://www.fcbelmonde.com/rotation",
+      "image": ""
     }
   ],
   "siteSettings": {
