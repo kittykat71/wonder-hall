@@ -1,26 +1,27 @@
-# Wonder Hall 4.3 — Gallery Builder & Device Sync Repair
+# Wonder Hall 4.31 — Safe Merge and Recovery
 
-## Gallery Builder repair
-- Gallery cards are rendered before the other Parent Wing tools
-- Reordering uses a built-in pointer-based drag handle
-- Works with a mouse, touchscreen, and stylus
-- Earlier and Later buttons remain available
-- Click Save Gallery Order after moving cards
+## Critical repair
+This release never blindly replaces local Parent Wing work with published data.
 
-## Device sync repair
-Wonder Hall now distinguishes between:
+At startup it:
+1. Saves a backup of the device's existing Parent Wing data
+2. Loads the published GitHub data
+3. Merges both copies
+4. Preserves locally added galleries and resources
+5. Preserves embedded custom gallery and resource images
 
-1. Unpublished edits on the current desktop
-2. Successfully published GitHub data
+## Device Backups
+Parent Wing now includes Device Backups.
 
-Phones, tablets, and clean desktop sessions automatically load the newest
-published resources.json instead of retaining an old browser copy.
+Backups are automatically created:
+- Before startup merging
+- Before edits overwrite the previous state
+- Before direct GitHub publishing
+- Before restoring another backup
 
-Unpublished desktop edits are protected until Publish Directly to GitHub
-succeeds.
+Backups can be restored, downloaded, or deleted.
 
-## Updating devices
-After publishing:
-- Refresh the phone or tablet page
-- If it was already open for a long time, close and reopen the tab
-- The newest galleries and resources should load automatically
+## Important recovery note
+If Wonder Hall 4.3 already overwrote the only local copy and the changes were
+never published, that exact data may no longer exist in browser storage.
+Check GitHub commit history for an earlier published resources.json.

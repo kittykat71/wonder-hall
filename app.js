@@ -115,6 +115,11 @@ const directPublishError = document.getElementById("directPublishError");
 const directPublishErrorText = document.getElementById("directPublishErrorText");
 const publishedCommitLink = document.getElementById("publishedCommitLink");
 
+const createDeviceBackupButton = document.getElementById("createDeviceBackupButton");
+const downloadCurrentDataButton = document.getElementById("downloadCurrentDataButton");
+const backupStatusMessage = document.getElementById("backupStatusMessage");
+const deviceBackupList = document.getElementById("deviceBackupList");
+
 const visualGalleryBuilder = document.getElementById("visualGalleryBuilder");
 const saveGalleryOrderButton = document.getElementById("saveGalleryOrderButton");
 const uploadGallerySelect = document.getElementById("uploadGallerySelect");
@@ -148,8 +153,9 @@ let pendingUploads = [];
 const FAVORITES_KEY = "wonderHallFavorites";
 const PASSPORT_KEY = "wonderHallPassport";
 const CUSTOM_DATA_KEY = "wonderHallCustomData";
-const LOCAL_DIRTY_KEY = "wonderHallLocalChangesPending";
-const LAST_SYNC_KEY = "wonderHallLastPublishedSync";
+const DEVICE_BACKUPS_KEY = "wonderHallDeviceBackups";
+const LAST_PUBLISHED_SNAPSHOT_KEY = "wonderHallLastPublishedSnapshot";
+const MAX_DEVICE_BACKUPS = 12;
 const PARENT_HASH_KEY = "wonderHallParentHash";
 const GITHUB_SETTINGS_KEY = "wonderHallGithubSettings";
 const GITHUB_TOKEN_SESSION_KEY = "wonderHallGithubToken";
@@ -161,22 +167,16 @@ function getStoredSet(key) {
 function saveStoredSet(key, set) {
   localStorage.setItem(key, JSON.stringify([...set]));
 }
-function saveCustomData({ markDirty = true } = {}) {
-  localStorage.setItem(CUSTOM_DATA_KEY, JSON.stringify(data));
+function saveCustomData() {
+  const previousRaw = localStorage.getItem(CUSTOM_DATA_KEY);
 
-  if (markDirty) {
-    localStorage.setItem(LOCAL_DIRTY_KEY, "true");
+  if (previousRaw) {
+    try {
+      createDeviceBackup("Automatic backup before edit", JSON.parse(previousRaw));
+    } catch {}
   }
-}
 
-function markDataPublished() {
   localStorage.setItem(CUSTOM_DATA_KEY, JSON.stringify(data));
-  localStorage.setItem(LOCAL_DIRTY_KEY, "false");
-  localStorage.setItem(LAST_SYNC_KEY, new Date().toISOString());
-}
-
-function hasUnpublishedLocalChanges() {
-  return localStorage.getItem(LOCAL_DIRTY_KEY) === "true";
 }
 function slugify(value) {
   return value.toLowerCase().trim()
@@ -382,42 +382,209 @@ function safeAssetUrl(value, version = "358") {
   return `${trimmed}${separator}v=${version}`;
 }
 
+
+function cloneData(value) {
+  return JSON.parse(JSON.stringify(value));
+}
+
+function getDeviceBackups() {
+  try {
+    return JSON.parse(localStorage.getItem(DEVICE_BACKUPS_KEY) || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function saveDeviceBackups(backups) {
+  localStorage.setItem(
+    DEVICE_BACKUPS_KEY,
+    JSON.stringify(backups.slice(0, MAX_DEVICE_BACKUPS))
+  );
+}
+
+function createDeviceBackup(reason = "Manual backup", sourceData = data) {
+  if (!sourceData || !Array.isArray(sourceData.galleries)) return null;
+
+  const backups = getDeviceBackups();
+  const backup = {
+    id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+    createdAt: new Date().toISOString(),
+    reason,
+    galleryCount: sourceData.galleries?.length || 0,
+    resourceCount: sourceData.resources?.length || 0,
+    data: cloneData(sourceData)
+  };
+
+  backups.unshift(backup);
+  saveDeviceBackups(backups);
+  return backup;
+}
+
+function identifyGallery(gallery) {
+  return gallery?.id || gallery?.name?.trim().toLowerCase();
+}
+
+function identifyResource(resource) {
+  return resource?.url?.trim() ||
+    `${resource?.category || ""}::${resource?.name?.trim().toLowerCase() || ""}`;
+}
+
+function hasCustomGalleryImage(gallery) {
+  return typeof gallery?.artwork === "string" && gallery.artwork.startsWith("data:");
+}
+
+function hasCustomResourceImage(resource) {
+  return typeof resource?.image === "string" && resource.image.startsWith("data:");
+}
+
+function mergeWonderHallData(publishedData, localData) {
+  if (!publishedData) return cloneData(localData);
+  if (!localData) return cloneData(publishedData);
+
+  const merged = cloneData(publishedData);
+
+  const localGalleryMap = new Map(
+    (localData.galleries || []).map(gallery => [identifyGallery(gallery), gallery])
+  );
+  const publishedGalleryKeys = new Set(
+    (publishedData.galleries || []).map(identifyGallery)
+  );
+
+  merged.galleries = (publishedData.galleries || []).map(publishedGallery => {
+    const key = identifyGallery(publishedGallery);
+    const localGallery = localGalleryMap.get(key);
+    if (!localGallery) return publishedGallery;
+
+    return {
+      ...publishedGallery,
+      ...localGallery,
+      artwork: hasCustomGalleryImage(localGallery)
+        ? localGallery.artwork
+        : (publishedGallery.artwork || localGallery.artwork),
+      quotes: localGallery.quotes?.length
+        ? localGallery.quotes
+        : publishedGallery.quotes
+    };
+  });
+
+  for (const localGallery of localData.galleries || []) {
+    if (!publishedGalleryKeys.has(identifyGallery(localGallery))) {
+      merged.galleries.push(cloneData(localGallery));
+    }
+  }
+
+  const localResourceMap = new Map(
+    (localData.resources || []).map(resource => [identifyResource(resource), resource])
+  );
+  const publishedResourceKeys = new Set(
+    (publishedData.resources || []).map(identifyResource)
+  );
+
+  merged.resources = (publishedData.resources || []).map(publishedResource => {
+    const key = identifyResource(publishedResource);
+    const localResource = localResourceMap.get(key);
+    if (!localResource) return publishedResource;
+
+    return {
+      ...publishedResource,
+      ...localResource,
+      image: hasCustomResourceImage(localResource)
+        ? localResource.image
+        : (publishedResource.image || localResource.image)
+    };
+  });
+
+  for (const localResource of localData.resources || []) {
+    if (!publishedResourceKeys.has(identifyResource(localResource))) {
+      merged.resources.push(cloneData(localResource));
+    }
+  }
+
+  merged.siteSettings = {
+    ...(publishedData.siteSettings || {}),
+    ...(localData.siteSettings || {})
+  };
+
+  return merged;
+}
+
+function renderDeviceBackups() {
+  if (!deviceBackupList) return;
+
+  const backups = getDeviceBackups();
+  deviceBackupList.innerHTML = "";
+
+  if (!backups.length) {
+    deviceBackupList.innerHTML =
+      '<p class="empty-state">No device backups have been created yet.</p>';
+    return;
+  }
+
+  backups.forEach(backup => {
+    const item = document.createElement("article");
+    item.className = "device-backup-item";
+
+    const date = new Date(backup.createdAt);
+    item.innerHTML = `
+      <div>
+        <h4>${backup.reason}</h4>
+        <p>${date.toLocaleString()} · ${backup.galleryCount} galleries · ${backup.resourceCount} resources</p>
+      </div>
+      <div class="device-backup-actions">
+        <button type="button" data-restore-backup="${backup.id}">Restore</button>
+        <button type="button" data-download-backup="${backup.id}">Download</button>
+        <button type="button" data-delete-backup="${backup.id}">Delete</button>
+      </div>
+    `;
+
+    deviceBackupList.appendChild(item);
+  });
+}
+
+function downloadJsonFile(filename, value) {
+  const blob = new Blob([JSON.stringify(value, null, 2)], {
+    type: "application/json"
+  });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
 async function loadData() {
   try {
     let publishedData = null;
+    let localData = null;
 
     try {
-      const response = await fetch(`resources.json?v=430&t=${Date.now()}`, {
+      const response = await fetch(`resources.json?v=431&t=${Date.now()}`, {
         cache: "no-store"
       });
-
-      if (!response.ok) {
-        throw new Error(`Could not load resources.json (${response.status})`);
-      }
-
-      publishedData = await response.json();
-    } catch (publishedError) {
-      console.warn("Published data could not be loaded.", publishedError);
+      if (response.ok) publishedData = await response.json();
+    } catch (error) {
+      console.warn("Published data could not be loaded.", error);
     }
 
-    const localRaw = localStorage.getItem(CUSTOM_DATA_KEY);
-    const localData = localRaw ? JSON.parse(localRaw) : null;
-
-    if (localData && hasUnpublishedLocalChanges()) {
-      // Protect edits that have not been published yet.
-      data = localData;
-    } else if (publishedData) {
-      // Phones, tablets, and clean desktop sessions always receive
-      // the latest successfully published GitHub data.
-      data = publishedData;
-      saveCustomData({ markDirty: false });
-      localStorage.setItem(LOCAL_DIRTY_KEY, "false");
-      localStorage.setItem(LAST_SYNC_KEY, new Date().toISOString());
-    } else if (localData) {
-      data = localData;
-    } else {
-      throw new Error("Wonder Hall could not load local or published data.");
+    try {
+      const localRaw = localStorage.getItem(CUSTOM_DATA_KEY);
+      if (localRaw) localData = JSON.parse(localRaw);
+    } catch (error) {
+      console.warn("Local data could not be read.", error);
     }
+
+    if (localData) {
+      createDeviceBackup("Automatic backup before startup merge", localData);
+    }
+
+    data = mergeWonderHallData(publishedData, localData);
+
+    if (!data) {
+      throw new Error("No Wonder Hall data could be loaded.");
+    }
+
+    localStorage.setItem(CUSTOM_DATA_KEY, JSON.stringify(data));
 
     ensureSiteSettings();
     applySiteSettingsToPage();
@@ -835,6 +1002,9 @@ async function testGithubConnection() {
 }
 
 async function publishDataDirectlyToGithub() {
+  createDeviceBackup("Automatic backup before GitHub publish");
+  localStorage.setItem(LAST_PUBLISHED_SNAPSHOT_KEY, JSON.stringify(data));
+
   if (!githubConnected) {
     throw new Error("Connect GitHub before publishing.");
   }
@@ -987,7 +1157,7 @@ function applySiteSettingsToPage() {
 
 
 function populateVisualGalleryBuilder() {
-  if (!visualGalleryBuilder || !Array.isArray(data?.galleries)) return;
+  if (!visualGalleryBuilder) return;
 
   visualGalleryBuilder.innerHTML = "";
 
@@ -995,101 +1165,90 @@ function populateVisualGalleryBuilder() {
     const item = document.createElement("article");
     item.className = "visual-gallery-item";
     item.dataset.galleryId = gallery.id;
+    item.draggable = true;
+    item.setAttribute("aria-grabbed", "false");
 
     item.innerHTML = `
-      <button class="gallery-drag-handle" type="button"
-        aria-label="Drag ${gallery.name} to reorder">
-        ☰ Move
-      </button>
-
-      <img class="visual-gallery-art"
-        src="${safeAssetUrl(getGalleryArtwork(gallery))}" alt="">
-
+      <img class="visual-gallery-art" src="${safeAssetUrl(getGalleryArtwork(gallery))}" alt="">
       <div class="visual-gallery-body">
+        <div class="visual-gallery-drag-label" aria-hidden="true">☰ Drag to move</div>
         <h4>${gallery.icon || "✨"} ${gallery.name}</h4>
         <div class="visual-gallery-order">Position ${index + 1}</div>
       </div>
-
       <div class="visual-gallery-controls">
-        <button type="button" data-move-gallery-up="${gallery.id}"
-          aria-label="Move ${gallery.name} earlier">↑ Earlier</button>
-        <button type="button" data-move-gallery-down="${gallery.id}"
-          aria-label="Move ${gallery.name} later">↓ Later</button>
+        <button type="button" data-move-gallery-up="${gallery.id}" aria-label="Move ${gallery.name} earlier">↑ Earlier</button>
+        <button type="button" data-move-gallery-down="${gallery.id}" aria-label="Move ${gallery.name} later">↓ Later</button>
       </div>
     `;
 
     visualGalleryBuilder.appendChild(item);
   });
 
-  installPointerGalleryDragging();
+  installNativeGalleryDragging();
   updateGalleryOrderLabels();
 }
 
 function updateGalleryOrderLabels() {
-  if (!visualGalleryBuilder) return;
-
   [...visualGalleryBuilder.children].forEach((item, index) => {
     const label = item.querySelector(".visual-gallery-order");
     if (label) label.textContent = `Position ${index + 1}`;
   });
 }
 
-function installPointerGalleryDragging() {
+function installNativeGalleryDragging() {
   if (!visualGalleryBuilder) return;
 
-  visualGalleryBuilder.querySelectorAll(".gallery-drag-handle").forEach(handle => {
-    handle.addEventListener("pointerdown", event => {
-      if (event.button !== undefined && event.button !== 0) return;
+  let draggedItem = null;
 
-      const item = handle.closest(".visual-gallery-item");
-      if (!item) return;
+  visualGalleryBuilder.querySelectorAll(".visual-gallery-item").forEach(item => {
+    item.addEventListener("dragstart", event => {
+      draggedItem = item;
+      item.classList.add("is-dragging");
+      item.setAttribute("aria-grabbed", "true");
 
+      if (event.dataTransfer) {
+        event.dataTransfer.effectAllowed = "move";
+        event.dataTransfer.setData("text/plain", item.dataset.galleryId);
+      }
+    });
+
+    item.addEventListener("dragend", () => {
+      item.classList.remove("is-dragging");
+      item.setAttribute("aria-grabbed", "false");
+      visualGalleryBuilder
+        .querySelectorAll(".visual-gallery-item")
+        .forEach(card => card.classList.remove("drag-over"));
+
+      draggedItem = null;
+      updateGalleryOrderLabels();
+    });
+
+    item.addEventListener("dragover", event => {
       event.preventDefault();
+      if (!draggedItem || draggedItem === item) return;
 
-      let active = true;
-      item.classList.add("is-pointer-dragging");
-      handle.setPointerCapture?.(event.pointerId);
+      item.classList.add("drag-over");
 
-      const move = moveEvent => {
-        if (!active) return;
+      const rect = item.getBoundingClientRect();
+      const insertAfter = event.clientY > rect.top + rect.height / 2;
 
-        const target = document
-          .elementFromPoint(moveEvent.clientX, moveEvent.clientY)
-          ?.closest(".visual-gallery-item");
+      if (insertAfter) {
+        item.after(draggedItem);
+      } else {
+        item.before(draggedItem);
+      }
 
-        if (!target || target === item || target.parentElement !== visualGalleryBuilder) {
-          return;
-        }
+      updateGalleryOrderLabels();
+    });
 
-        const rect = target.getBoundingClientRect();
-        const horizontal = visualGalleryBuilder.clientWidth > 650;
-        const after = horizontal
-          ? moveEvent.clientX > rect.left + rect.width / 2
-          : moveEvent.clientY > rect.top + rect.height / 2;
+    item.addEventListener("dragleave", () => {
+      item.classList.remove("drag-over");
+    });
 
-        if (after) target.after(item);
-        else target.before(item);
-
-        updateGalleryOrderLabels();
-      };
-
-      const finish = finishEvent => {
-        if (!active) return;
-        active = false;
-
-        item.classList.remove("is-pointer-dragging");
-        handle.releasePointerCapture?.(finishEvent.pointerId);
-
-        handle.removeEventListener("pointermove", move);
-        handle.removeEventListener("pointerup", finish);
-        handle.removeEventListener("pointercancel", finish);
-
-        updateGalleryOrderLabels();
-      };
-
-      handle.addEventListener("pointermove", move);
-      handle.addEventListener("pointerup", finish);
-      handle.addEventListener("pointercancel", finish);
+    item.addEventListener("drop", event => {
+      event.preventDefault();
+      item.classList.remove("drag-over");
+      updateGalleryOrderLabels();
     });
   });
 }
@@ -1296,10 +1455,6 @@ async function publishPendingUploadsToGithub(settings) {
 }
 
 function populateParentWing() {
-  // Draw the reorder board first so unrelated curator tools cannot block it.
-  populateVisualGalleryBuilder();
-  populateUploadGallerySelect();
-
   resourceCategoryInput.innerHTML = data.galleries
     .map(g => `<option value="${g.id}">${g.name}</option>`).join("");
 
@@ -1370,6 +1525,8 @@ function populateParentWing() {
   populateFeaturedEditor();
   populateHomepageEditor();
   populatePublishSummary();
+  populateVisualGalleryBuilder();
+  populateUploadGallerySelect();
   renderPendingUploads();
   loadGithubSettingsIntoForm();
   updateMaintenanceStatus();
@@ -1388,14 +1545,9 @@ function renderParentBookmarks() {
   });
 }
 function updateMaintenanceStatus(message="") {
-  const syncState = hasUnpublishedLocalChanges()
-    ? "Unpublished changes on this device"
-    : "Synced with published website";
-
   maintenanceStatus.textContent = message ||
     `${data.galleries.length} galleries · ${data.resources.length} resources · ` +
-    `${getStoredSet(FAVORITES_KEY).size} bookmarks · ` +
-    `${getStoredSet(PASSPORT_KEY).size} passport stamps · ${syncState}`;
+    `${getStoredSet(FAVORITES_KEY).size} bookmarks · ${getStoredSet(PASSPORT_KEY).size} passport stamps`;
 }
 function downloadJson(filename,obj) {
   const blob = new Blob([JSON.stringify(obj,null,2)], {type:"application/json"});
@@ -1460,6 +1612,7 @@ document.querySelectorAll(".parent-tab").forEach(button => {
       featured: document.getElementById("parentFeaturedPanel"),
       homepage: document.getElementById("parentHomepagePanel"),
       bookmarks: document.getElementById("parentBookmarksPanel"),
+      backups: document.getElementById("parentBackupsPanel"),
       maintenance: document.getElementById("parentMaintenancePanel"),
       publish: document.getElementById("parentPublishPanel")
     };
@@ -1469,6 +1622,7 @@ document.querySelectorAll(".parent-tab").forEach(button => {
     });
 
     if (target === "bookmarks") renderParentBookmarks();
+    if (target === "backups") renderDeviceBackups();
     if (target === "galleries") populateVisualGalleryBuilder();
     if (target === "images") populateImageOverview();
     if (target === "quotes") populateQuoteEditor();
@@ -1564,8 +1718,6 @@ publishDirectlyButton?.addEventListener("click", async () => {
     } else {
       publishedCommitLink.hidden = true;
     }
-
-    markDataPublished();
 
     setGithubStatus(
       "connected",
@@ -2002,5 +2154,54 @@ history.replaceState(
   "",
   window.location.href
 );
+
+
+createDeviceBackupButton?.addEventListener("click", () => {
+  createDeviceBackup("Manual backup");
+  backupStatusMessage.textContent = "Backup created.";
+  renderDeviceBackups();
+});
+
+downloadCurrentDataButton?.addEventListener("click", () => {
+  downloadJsonFile("wonder-hall-current-data.json", data);
+});
+
+deviceBackupList?.addEventListener("click", event => {
+  const restoreId = event.target.dataset.restoreBackup;
+  const downloadId = event.target.dataset.downloadBackup;
+  const deleteId = event.target.dataset.deleteBackup;
+  const backups = getDeviceBackups();
+
+  if (restoreId) {
+    const backup = backups.find(item => item.id === restoreId);
+    if (!backup) return;
+
+    if (!confirm("Restore this backup? A new safety backup of the current data will be created first.")) {
+      return;
+    }
+
+    createDeviceBackup("Safety backup before restore");
+    data = cloneData(backup.data);
+    localStorage.setItem(CUSTOM_DATA_KEY, JSON.stringify(data));
+    populateParentWing();
+    renderGalleries(data.galleries);
+    backupStatusMessage.textContent = "Backup restored. Publish when you are ready.";
+  }
+
+  if (downloadId) {
+    const backup = backups.find(item => item.id === downloadId);
+    if (backup) {
+      downloadJsonFile(
+        `wonder-hall-backup-${backup.createdAt.slice(0, 10)}.json`,
+        backup.data
+      );
+    }
+  }
+
+  if (deleteId) {
+    saveDeviceBackups(backups.filter(item => item.id !== deleteId));
+    renderDeviceBackups();
+  }
+});
 
 loadData();

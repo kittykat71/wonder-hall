@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=430">
+  <link rel="stylesheet" href="style.css?v=431">
 </head>
 <body>
   <a class="skip-link" href="#mainContent">Skip to content</a>
@@ -158,6 +158,7 @@
         <button class="parent-tab" data-parent-tab="featured" type="button">Featured Exhibit</button>
         <button class="parent-tab" data-parent-tab="homepage" type="button">Homepage</button>
         <button class="parent-tab" data-parent-tab="bookmarks" type="button">Favorites</button>
+        <button class="parent-tab" data-parent-tab="backups" type="button">Device Backups</button>
         <button class="parent-tab publish-tab" data-parent-tab="publish" type="button">Publish Wonder Hall</button>
       </nav>
 
@@ -394,7 +395,24 @@
         </div>
       </section>
 
-      <section id="parentPublishPanel" class="parent-panel curator-single-panel publish-panel" hidden>
+      
+      <section id="parentBackupsPanel" class="parent-panel curator-single-panel" hidden>
+        <div class="backup-manager-card">
+          <p class="section-kicker">Safety and recovery</p>
+          <h2>Device Backups</h2>
+          <p>Wonder Hall now saves dated copies of your Parent Wing data before syncing, publishing, importing, or replacing anything.</p>
+
+          <div class="backup-actions">
+            <button id="createDeviceBackupButton" class="primary-parent-button" type="button">Create Backup Now</button>
+            <button id="downloadCurrentDataButton" type="button">Download Current Data</button>
+          </div>
+
+          <div id="backupStatusMessage" class="backup-status-message"></div>
+          <div id="deviceBackupList" class="device-backup-list"></div>
+        </div>
+      </section>
+
+<section id="parentPublishPanel" class="parent-panel curator-single-panel publish-panel" hidden>
         <div class="publish-card connected-publish-card">
           <p class="section-kicker">Connected Curator</p>
           <h2>Publish Wonder Hall</h2>
@@ -553,7 +571,7 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
-  <script src="app.js?v=430"></script>
+  <script src="app.js?v=431"></script>
 
   <div id="resourceLinkDialog" class="link-dialog" hidden>
     <div class="link-dialog-card">
