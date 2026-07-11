@@ -1,27 +1,40 @@
-# Wonder Hall 4.31 — Safe Merge and Recovery
+# Wonder Hall 5.0 — Museum Studio
 
-## Critical repair
-This release never blindly replaces local Parent Wing work with published data.
+This is a clean rebuild of the Wonder Hall application and editor.
 
-At startup it:
-1. Saves a backup of the device's existing Parent Wing data
-2. Loads the published GitHub data
-3. Merges both copies
-4. Preserves locally added galleries and resources
-5. Preserves embedded custom gallery and resource images
+## Safety model
 
-## Device Backups
-Parent Wing now includes Device Backups.
+- `resources.json` is the published website.
+- Museum Studio edits a separate local draft.
+- Opening Wonder Hall never merges or overwrites the draft automatically.
+- The public museum continues showing published data until publishing succeeds.
+- A backup is created before each saved edit, reset, or restore.
+- Successful GitHub publishing makes the draft the new published baseline.
 
-Backups are automatically created:
-- Before startup merging
-- Before edits overwrite the previous state
-- Before direct GitHub publishing
-- Before restoring another backup
+## Included tools
 
-Backups can be restored, downloaded, or deleted.
+- Responsive museum for phones, tablets, and desktops
+- Browser Back-button navigation
+- Search, Favorites, and Explorer's Passport
+- Visual gallery ordering with drag handles and Earlier/Later buttons
+- Gallery creation, editing, deletion, and card images
+- Resource creation, editing, deletion, and card images
+- Link entry and drag-and-drop file staging
+- Homepage and Featured Exhibit editor
+- Draft preview
+- Automatic and manual draft backups
+- Direct GitHub publishing
+- Manual `resources.json` download
 
-## Important recovery note
-If Wonder Hall 4.3 already overwrote the only local copy and the changes were
-never published, that exact data may no longer exist in browser storage.
-Check GitHub commit history for an earlier published resources.json.
+## Installing
+
+1. Fetch and pull current GitHub changes in GitHub Desktop.
+2. Replace the repository files with this release.
+3. Commit as `Wonder Hall 5.0 - Museum Studio`.
+4. Push origin.
+5. Hard-refresh Wonder Hall.
+
+## Recreating content
+
+Recreate missing galleries and resources in Museum Studio. They remain in the draft
+until you deliberately publish them.

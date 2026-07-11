@@ -1,0 +1,11 @@
+WONDER HALL 5.0 QUICK START
+
+1. Open Wonder Hall and choose Museum Studio.
+2. Create or enter the local Studio password.
+3. Recreate galleries and resources.
+4. Use Preview Draft to inspect the museum without publishing.
+5. Open Publish and connect GitHub.
+6. Click Publish Draft to GitHub.
+7. Refresh phones and tablets after GitHub Pages updates.
+
+Your draft and published website are deliberately separate.
