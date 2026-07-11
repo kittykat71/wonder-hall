@@ -124,6 +124,8 @@ let pendingResourceImage = null;
 let removeCurrentResourceImage = false;
 let githubConnected = false;
 let githubConnectionFileSha = null;
+let handlingBrowserHistory = false;
+let currentViewName = "home";
 
 const FAVORITES_KEY = "wonderHallFavorites";
 const PASSPORT_KEY = "wonderHallPassport";
@@ -352,7 +354,7 @@ async function loadData() {
     if (custom) {
       data = JSON.parse(custom);
     } else {
-      const response = await fetch("resources.json?v=400", { cache:"no-store" });
+      const response = await fetch("resources.json?v=410", { cache:"no-store" });
       if (!response.ok) throw new Error(`Could not load resources.json (${response.status})`);
       data = await response.json();
     }
@@ -364,6 +366,27 @@ async function loadData() {
     console.error(error);
     galleryGrid.innerHTML = `<p class="empty-state">Wonder Hall could not load its resource list.</p>`;
   }
+}
+
+
+function setBrowserView(view, details = {}, { replace = false } = {}) {
+  currentViewName = view;
+
+  if (handlingBrowserHistory) return;
+
+  const state = { wonderHallView: view, ...details };
+
+  if (replace) {
+    history.replaceState(state, "", window.location.href);
+  } else {
+    history.pushState(state, "", window.location.href);
+  }
+}
+
+function returnHomeFromBrowserHistory() {
+  handlingBrowserHistory = true;
+  showHome({ updateHistory: false });
+  handlingBrowserHistory = false;
 }
 
 function hideAllViews() {
@@ -486,7 +509,7 @@ function renderSearchResults(term) {
   resources.forEach(resource => searchResultsGrid.appendChild(createResourceCard(resource)));
 }
 
-function openGallery(id) {
+function openGallery(id, { updateHistory = true } = {}) {
   const gallery = data.galleries.find(g => g.id === id);
   if (!gallery) return;
   currentGalleryId = id;
@@ -510,19 +533,32 @@ function openGallery(id) {
 
   searchInput.value = "";
   searchResultsSection.hidden = true;
+  if (updateHistory) {
+    setBrowserView("gallery", { galleryId: id });
+  } else {
+    currentViewName = "gallery";
+  }
+
   window.scrollTo({top:0,behavior:"auto"});
 }
 
-function showHome() {
+function showHome({ updateHistory = true, replaceHistory = false } = {}) {
   hideAllViews();
   homeView.hidden = false;
   searchInput.value = "";
   searchResultsSection.hidden = true;
   renderGalleries(data.galleries);
   showEntranceQuote();
+
+  if (updateHistory) {
+    setBrowserView("home", {}, { replace: replaceHistory });
+  } else {
+    currentViewName = "home";
+  }
+
   window.scrollTo({top:0,behavior:"auto"});
 }
-function showFavorites() {
+function showFavorites({ updateHistory = true } = {}) {
   hideAllViews();
   favoritesView.hidden = false;
   const favorites = getStoredSet(FAVORITES_KEY);
@@ -530,9 +566,16 @@ function showFavorites() {
   favoritesGrid.innerHTML = "";
   favoritesEmpty.hidden = saved.length !== 0;
   saved.forEach(resource => favoritesGrid.appendChild(createResourceCard(resource)));
+
+  if (updateHistory) {
+    setBrowserView("favorites");
+  } else {
+    currentViewName = "favorites";
+  }
+
   window.scrollTo({top:0,behavior:"auto"});
 }
-function showPassport() {
+function showPassport({ updateHistory = true } = {}) {
   hideAllViews();
   passportView.hidden = false;
   const passport = getStoredSet(PASSPORT_KEY);
@@ -546,6 +589,12 @@ function showPassport() {
       <h3>${gallery.name}</h3><p>${gallery.roomName || "Wonder Hall gallery"}</p>`;
     passportGrid.appendChild(stamp);
   });
+  if (updateHistory) {
+    setBrowserView("passport");
+  } else {
+    currentViewName = "passport";
+  }
+
   window.scrollTo({top:0,behavior:"auto"});
 }
 
@@ -564,10 +613,17 @@ function openPasswordModal() {
   parentPasswordInput.focus();
 }
 
-function showParentWing() {
+function showParentWing({ updateHistory = true } = {}) {
   hideAllViews();
   parentWingView.hidden = false;
   populateParentWing();
+
+  if (updateHistory) {
+    setBrowserView("parent");
+  } else {
+    currentViewName = "parent";
+  }
+
   window.scrollTo({top:0,behavior:"auto"});
 }
 
@@ -998,7 +1054,7 @@ lockParentWingButton.addEventListener("click", () => {
   parentUnlocked = false;
   showHome();
 });
-document.querySelector(".parent-back").addEventListener("click", showHome);
+document.querySelector(".parent-back").addEventListener("click", () => showHome());
 
 document.querySelectorAll(".parent-tab").forEach(button => {
   button.addEventListener("click", () => {
@@ -1417,12 +1473,12 @@ searchInput.addEventListener("input", event => {
   if (homeView.hidden) showHome();
   renderSearchResults(event.target.value);
 });
-backButton.addEventListener("click", showHome);
-document.querySelectorAll(".collection-back").forEach(button => button.addEventListener("click", showHome));
+backButton.addEventListener("click", () => showHome());
+document.querySelectorAll(".collection-back").forEach(button => button.addEventListener("click", () => showHome()));
 brandHome.addEventListener("click", event => { event.preventDefault(); showHome(); });
 featuredButton.addEventListener("click", () => { ensureSiteSettings(); openGallery(data.siteSettings.featuredGallery || "space"); });
-favoritesButton.addEventListener("click", showFavorites);
-passportButton.addEventListener("click", showPassport);
+favoritesButton.addEventListener("click", () => showFavorites());
+passportButton.addEventListener("click", () => showPassport());
 stampButton.addEventListener("click", () => {
   if (!currentGalleryId) return;
   const passport = getStoredSet(PASSPORT_KEY);
@@ -1430,5 +1486,38 @@ stampButton.addEventListener("click", () => {
   saveStoredSet(PASSPORT_KEY, passport);
   stampButton.textContent = "✓ Passport Stamp Added";
 });
+
+
+window.addEventListener("popstate", event => {
+  const state = event.state;
+
+  handlingBrowserHistory = true;
+
+  if (!state || state.wonderHallView === "home") {
+    showHome({ updateHistory: false });
+  } else if (state.wonderHallView === "gallery" && state.galleryId) {
+    openGallery(state.galleryId, { updateHistory: false });
+  } else if (state.wonderHallView === "favorites") {
+    showFavorites({ updateHistory: false });
+  } else if (state.wonderHallView === "passport") {
+    showPassport({ updateHistory: false });
+  } else if (state.wonderHallView === "parent") {
+    if (parentUnlocked) {
+      showParentWing({ updateHistory: false });
+    } else {
+      showHome({ updateHistory: false });
+    }
+  } else {
+    showHome({ updateHistory: false });
+  }
+
+  handlingBrowserHistory = false;
+});
+
+history.replaceState(
+  { wonderHallView: "home" },
+  "",
+  window.location.href
+);
 
 loadData();

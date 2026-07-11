@@ -1,26 +1,26 @@
-# Wonder Hall 4.0 — Connected Curator
+# Wonder Hall 4.1 — Mobile Navigation Edition
 
-## Automatic GitHub publishing
-Wonder Hall can now update resources.json directly through GitHub's repository contents API.
+## New browser Back behavior
+The phone or tablet browser Back button now returns visitors through Wonder Hall views.
 
-## Connection design
-- Repository owner, repository, branch, and file path are remembered locally.
-- The GitHub token is kept only in sessionStorage.
-- Closing the browser removes the token.
-- The token should be fine-grained, repository-specific, and limited to Contents: Read and write.
+Supported views:
+- Gallery rooms
+- Favorites
+- Explorer's Passport
+- Parent Wing / Connected Curator
 
-## Publishing flow
-1. Edit Wonder Hall in Parent Wing.
-2. Open Publish Wonder Hall.
-3. Connect GitHub.
-4. Click Publish Directly to GitHub.
-5. GitHub creates a new commit on the selected branch.
-6. GitHub Pages refreshes from that branch.
+Examples:
+- Homepage → Science Gallery → browser Back → Homepage
+- Homepage → Favorites → browser Back → Homepage
+- Homepage → Passport → browser Back → Homepage
+- Homepage → Parent Wing → browser Back → Homepage
 
-## Manual fallback
-The Curator Studio publish package remains available as a backup.
+The existing Back to Wonder Hall buttons remain available.
 
 ## Existing features preserved
+- Connected Curator
+- Direct GitHub publishing
+- Manual publish fallback
 - Responsive phone, tablet, laptop, and desktop layouts
 - Gallery manager
 - Resource image manager

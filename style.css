@@ -2100,3 +2100,11 @@ main{
     animation:none!important;
   }
 }
+
+
+/* Wonder Hall 4.1 — Mobile browser navigation */
+@media (max-width:1180px){
+  body{
+    overscroll-behavior-x:none;
+  }
+}
