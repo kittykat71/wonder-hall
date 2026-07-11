@@ -974,3 +974,736 @@ input,select,textarea{min-height:46px;font-size:16px}
 @media (min-width:600px) and (max-width:900px) and (orientation:portrait){.museum-header{grid-template-columns:auto minmax(0,1fr) auto auto;gap:8px;padding:8px 10px}.brand-copy{display:flex}.brand-copy strong{font-size:1.8rem}.header-search{grid-column:1/-1;grid-row:2}.hero{min-height:390px}.museum-stage{grid-template-columns:1fr;padding:22px 16px 42px}.featured{position:relative;top:auto;display:grid;grid-template-columns:240px minmax(0,1fr)}.featured-ribbon{grid-column:1/-1}.featured img{height:100%;min-height:235px}.gallery-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.gallery-card::before{height:180px}.resource-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.parent-panel{grid-template-columns:1fr}.parent-form-card{position:relative;top:auto}.gallery-manager-list .parent-list-item,.parent-resource-list .parent-list-item{grid-template-columns:82px minmax(0,1fr) auto}}
 @media (min-width:540px) and (max-width:699px){.museum-header{grid-template-columns:auto minmax(0,1fr) auto;min-height:70px;gap:8px;padding:7px 9px}.brand-copy strong{font-size:1.65rem}.brand-copy small{display:none}.header-search{grid-column:1/-1;grid-row:2}.hero{min-height:365px}.hero-copy{width:calc(100% - 24px);padding:22px 18px}.hero h1{font-size:4.1rem}.museum-stage{grid-template-columns:1fr;padding:20px 12px 40px}.gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.gallery-card::before{height:190px}.featured{position:relative;top:auto}.resource-grid{grid-template-columns:1fr}.passport-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.parent-tabs{display:grid;grid-template-columns:1fr 1fr}.parent-tab{width:100%}.maintenance-grid{grid-template-columns:1fr}}
 @media (min-width:800px) and (max-width:1366px) and (orientation:landscape){.museum-header{padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right))}.hero{min-height:360px}.hero-copy{padding-top:20px;padding-bottom:24px}.hero-seal{width:72px;height:72px}.welcome{font-size:1.55rem}.hero-tagline{margin:16px 0 20px}.entrance-quote{margin-bottom:22px}.museum-stage{padding-top:18px}.gallery-room{min-height:300px}.parent-wing-header,.section-heading{align-items:center}}
+
+
+/* =========================================================
+   Wonder Hall 3.60 — Responsive Edition
+   Phones, tablets, laptops, desktops, and large monitors.
+   ========================================================= */
+
+:root{
+  --content-max:1600px;
+  --page-gutter:clamp(12px,2.1vw,30px);
+  --touch-target:46px;
+}
+
+html{
+  width:100%;
+  overflow-x:hidden;
+  -webkit-text-size-adjust:100%;
+}
+
+body{
+  width:100%;
+  min-width:0;
+  overflow-x:hidden;
+}
+
+img,
+svg,
+video,
+canvas{
+  max-width:100%;
+}
+
+button,
+a,
+input,
+select,
+textarea{
+  -webkit-tap-highlight-color:transparent;
+}
+
+button,
+.nav-pill,
+.hero-button,
+.enter-label,
+.favorite-toggle,
+.stamp-button,
+.back-button,
+.parent-tab,
+.primary-parent-button{
+  min-height:var(--touch-target);
+}
+
+input,
+select,
+textarea{
+  width:100%;
+  max-width:100%;
+  min-height:44px;
+  font-size:16px;
+}
+
+main{
+  width:min(var(--content-max),100%);
+}
+
+/* Flexible header across all widths */
+.museum-header{
+  width:100%;
+  padding-left:max(var(--page-gutter),env(safe-area-inset-left));
+  padding-right:max(var(--page-gutter),env(safe-area-inset-right));
+}
+
+.header-search{
+  min-width:0;
+}
+
+.header-search input{
+  min-width:0;
+}
+
+.brand{
+  min-width:0;
+}
+
+.brand-copy{
+  min-width:0;
+}
+
+.brand-copy strong,
+.brand-copy small{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+/* Scale hero more gracefully on very large and very small screens */
+.hero{
+  min-height:clamp(340px,36vw,560px);
+}
+
+.hero-copy{
+  width:min(900px,calc(100% - 2 * var(--page-gutter)));
+  padding:clamp(20px,3vw,38px);
+}
+
+.hero h1{
+  font-size:clamp(3.6rem,8vw,8rem);
+}
+
+.hero-tagline{
+  font-size:clamp(.88rem,1.4vw,1.24rem);
+}
+
+.entrance-quote{
+  width:min(900px,calc(100% - 2 * var(--page-gutter)));
+}
+
+/* Main museum layout */
+.museum-stage{
+  width:100%;
+  padding-left:var(--page-gutter);
+  padding-right:var(--page-gutter);
+}
+
+.directory{
+  min-width:0;
+}
+
+.gallery-grid,
+.resource-grid,
+.passport-grid,
+.maintenance-grid{
+  min-width:0;
+}
+
+.gallery-card,
+.resource-card,
+.passport-stamp,
+.maintenance-card{
+  min-width:0;
+}
+
+.gallery-card h3,
+.resource-card h3,
+.parent-list-item h4{
+  overflow-wrap:anywhere;
+}
+
+/* Large desktops */
+@media (min-width:1500px){
+  .museum-stage{
+    grid-template-columns:minmax(0,1fr) 380px;
+    gap:28px;
+  }
+
+  .gallery-grid{
+    grid-template-columns:repeat(5,minmax(0,1fr));
+    gap:18px;
+  }
+
+  .gallery-card{
+    min-height:330px;
+  }
+
+  .gallery-card::before{
+    height:218px;
+  }
+
+  .resource-grid{
+    grid-template-columns:repeat(4,minmax(0,1fr));
+  }
+
+  .passport-grid{
+    grid-template-columns:repeat(5,minmax(0,1fr));
+  }
+
+  .maintenance-grid{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+}
+
+/* Standard desktops and laptops */
+@media (min-width:1181px) and (max-width:1499px){
+  .museum-header{
+    grid-template-columns:auto minmax(260px,1fr) minmax(300px,470px) auto auto;
+    gap:12px;
+  }
+
+  .gallery-grid{
+    grid-template-columns:repeat(4,minmax(0,1fr));
+  }
+
+  .resource-grid{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+
+  .passport-grid{
+    grid-template-columns:repeat(4,minmax(0,1fr));
+  }
+
+  .museum-stage{
+    grid-template-columns:minmax(0,1fr) 330px;
+  }
+}
+
+/* Landscape tablets and compact laptops */
+@media (min-width:900px) and (max-width:1180px){
+  .museum-header{
+    grid-template-columns:auto minmax(200px,1fr) minmax(250px,390px) auto auto;
+    gap:9px;
+    padding-top:7px;
+    padding-bottom:7px;
+  }
+
+  .brand-seal{
+    width:52px;
+    height:52px;
+  }
+
+  .brand-copy strong{
+    font-size:1.95rem;
+  }
+
+  .brand-copy small{
+    display:none;
+  }
+
+  .nav-pill{
+    padding:9px 12px;
+    font-size:.9rem;
+  }
+
+  .museum-stage{
+    grid-template-columns:minmax(0,1fr) 280px;
+    gap:16px;
+    padding-top:20px;
+  }
+
+  .gallery-grid{
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:12px;
+  }
+
+  .gallery-card{
+    min-height:270px;
+    border-radius:28px 28px 15px 15px;
+  }
+
+  .gallery-card::before{
+    height:170px;
+  }
+
+  .gallery-card h3{
+    font-size:1.23rem;
+  }
+
+  .enter-label{
+    font-size:.8rem;
+    margin:0 8px 8px;
+  }
+
+  .featured{
+    top:92px;
+  }
+
+  .featured img{
+    height:220px;
+  }
+
+  .resource-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .passport-grid{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+
+  .maintenance-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+
+/* Portrait tablets and small landscape tablets */
+@media (min-width:700px) and (max-width:899px){
+  .museum-header{
+    grid-template-columns:auto minmax(0,1fr) auto auto;
+    gap:8px;
+    min-height:72px;
+  }
+
+  .header-search{
+    grid-column:1/-1;
+    grid-row:2;
+  }
+
+  .brand-copy strong{
+    font-size:1.85rem;
+  }
+
+  .brand-copy small{
+    display:none;
+  }
+
+  .museum-stage{
+    grid-template-columns:1fr;
+    gap:18px;
+  }
+
+  .featured{
+    position:relative;
+    top:auto;
+    display:grid;
+    grid-template-columns:240px minmax(0,1fr);
+  }
+
+  .featured-ribbon{
+    grid-column:1/-1;
+  }
+
+  .featured img{
+    height:100%;
+    min-height:230px;
+  }
+
+  .gallery-grid{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:13px;
+  }
+
+  .gallery-card::before{
+    height:180px;
+  }
+
+  .resource-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .parent-panel{
+    grid-template-columns:1fr;
+  }
+
+  .parent-form-card{
+    position:relative;
+    top:auto;
+  }
+
+  .maintenance-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .passport-grid{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+}
+
+/* Large phones and small tablets */
+@media (min-width:540px) and (max-width:699px){
+  .museum-header{
+    grid-template-columns:auto minmax(0,1fr) auto;
+    gap:7px;
+    padding-top:7px;
+    padding-bottom:7px;
+  }
+
+  .header-search{
+    grid-column:1/-1;
+    grid-row:2;
+  }
+
+  .brand-copy strong{
+    font-size:1.65rem;
+  }
+
+  .brand-copy small{
+    display:none;
+  }
+
+  .parent-wing-button{
+    grid-column:auto;
+  }
+
+  .hero-copy{
+    padding:22px 18px;
+  }
+
+  .museum-stage{
+    grid-template-columns:1fr;
+    padding-top:18px;
+  }
+
+  .featured{
+    position:relative;
+    top:auto;
+  }
+
+  .gallery-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:12px;
+  }
+
+  .gallery-card::before{
+    height:185px;
+  }
+
+  .resource-grid{
+    grid-template-columns:1fr;
+  }
+
+  .passport-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .parent-tabs{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+  }
+
+  .maintenance-grid{
+    grid-template-columns:1fr;
+  }
+}
+
+/* Phones */
+@media (max-width:539px){
+  :root{
+    --page-gutter:12px;
+    --touch-target:48px;
+  }
+
+  .museum-header{
+    position:sticky;
+    top:0;
+    grid-template-columns:auto minmax(0,1fr) auto;
+    gap:6px;
+    padding-top:6px;
+    padding-bottom:6px;
+  }
+
+  .brand-seal{
+    width:46px;
+    height:46px;
+    font-size:1.2rem;
+  }
+
+  .brand-copy{
+    display:block;
+  }
+
+  .brand-copy strong{
+    font-size:1.45rem;
+  }
+
+  .brand-copy small{
+    display:none;
+  }
+
+  .nav-pill{
+    padding:8px 10px;
+    font-size:.82rem;
+  }
+
+  .museum-header > .nav-pill:first-child{
+    grid-column:1;
+  }
+
+  .favoritesButton,
+  #favoritesButton{
+    grid-column:3;
+  }
+
+  .parent-wing-button{
+    grid-column:1/-1;
+    justify-self:end;
+  }
+
+  .header-search{
+    grid-column:1/-1;
+    grid-row:auto;
+    padding:9px 12px;
+  }
+
+  .hero{
+    min-height:330px;
+  }
+
+  .hero-copy{
+    width:calc(100% - 20px);
+    padding:20px 14px;
+    border-radius:20px;
+  }
+
+  .hero-seal{
+    width:64px;
+    height:64px;
+  }
+
+  .welcome{
+    font-size:1.35rem;
+  }
+
+  .hero h1{
+    font-size:clamp(3.1rem,16vw,4.3rem);
+  }
+
+  .hero-tagline{
+    margin:16px 0 18px;
+    line-height:1.35;
+  }
+
+  .entrance-quote{
+    width:calc(100% - 20px);
+    margin-top:-16px;
+    margin-bottom:18px;
+    border-radius:18px;
+    padding:13px 14px;
+  }
+
+  .quote-ornament{
+    display:none;
+  }
+
+  .museum-stage{
+    grid-template-columns:1fr;
+    gap:16px;
+    padding-top:14px;
+    padding-bottom:34px;
+  }
+
+  .section-heading{
+    align-items:flex-start;
+    flex-direction:column;
+    gap:8px;
+  }
+
+  .section-heading h2{
+    font-size:2.2rem;
+  }
+
+  .gallery-grid{
+    grid-template-columns:1fr;
+    gap:12px;
+  }
+
+  .gallery-card{
+    min-height:0;
+    border-radius:22px 22px 14px 14px;
+  }
+
+  .gallery-card::before{
+    height:210px;
+  }
+
+  .gallery-card h3{
+    font-size:1.45rem;
+  }
+
+  .featured{
+    position:relative;
+    top:auto;
+  }
+
+  .featured img{
+    height:250px;
+  }
+
+  .featured-copy h2{
+    font-size:2rem;
+  }
+
+  .gallery-page,
+  .collection-page,
+  .parent-wing{
+    padding:20px 12px 36px;
+  }
+
+  .gallery-room{
+    min-height:340px;
+    padding:22px 18px;
+    align-items:flex-end;
+  }
+
+  .gallery-room h2{
+    font-size:2.8rem;
+  }
+
+  .gallery-large-icon{
+    width:72px;
+    height:72px;
+    font-size:2rem;
+  }
+
+  .gallery-quote{
+    padding:14px 14px 14px 40px;
+  }
+
+  .resource-grid{
+    grid-template-columns:1fr;
+  }
+
+  .resource-card-image{
+    height:190px;
+  }
+
+  .passport-grid{
+    grid-template-columns:1fr;
+  }
+
+  .parent-tabs{
+    display:grid;
+    grid-template-columns:1fr;
+  }
+
+  .parent-panel{
+    grid-template-columns:1fr;
+  }
+
+  .parent-form-card{
+    position:relative;
+    top:auto;
+    padding:18px;
+  }
+
+  .parent-list-item,
+  .gallery-manager-list .parent-list-item,
+  .parent-resource-list .parent-list-item{
+    grid-template-columns:1fr;
+  }
+
+  .parent-gallery-thumbnail,
+  .parent-resource-thumbnail,
+  .parent-resource-placeholder{
+    width:100%;
+    height:170px;
+  }
+
+  .parent-list-actions{
+    justify-content:stretch;
+  }
+
+  .parent-list-actions button{
+    flex:1;
+  }
+
+  .maintenance-grid{
+    grid-template-columns:1fr;
+  }
+
+  .parent-wing-header{
+    align-items:stretch;
+    flex-direction:column;
+  }
+
+  .password-dialog{
+    width:calc(100% - 16px);
+    padding:22px 18px;
+  }
+
+  footer{
+    flex-direction:column;
+    text-align:center;
+  }
+}
+
+/* Extra-small phones */
+@media (max-width:380px){
+  .brand-copy strong{
+    font-size:1.25rem;
+  }
+
+  .nav-pill{
+    font-size:.75rem;
+    padding:7px 8px;
+  }
+
+  .hero h1{
+    font-size:3rem;
+  }
+
+  .gallery-card::before{
+    height:185px;
+  }
+}
+
+/* Protect against overflow from long links and custom names */
+.parent-list-item p,
+.parent-wing-title p,
+.maintenance-card p,
+.resource-card p,
+.resource-card a,
+.gallery-card h3,
+.gallery-room p{
+  overflow-wrap:anywhere;
+}
+
+/* Landscape phone tuning */
+@media (max-height:520px) and (orientation:landscape){
+  .museum-header{
+    position:relative;
+  }
+
+  .hero{
+    min-height:300px;
+  }
+
+  .hero-copy{
+    padding-top:14px;
+    padding-bottom:16px;
+  }
+
+  .hero-seal{
+    width:54px;
+    height:54px;
+  }
+
+  .hero-tagline{
+    margin:10px 0 13px;
+  }
+
+  .gallery-room{
+    min-height:280px;
+  }
+}
+
+/* Accessibility and reduced motion */
+@media (prefers-reduced-motion:reduce){
+  *,
+  *::before,
+  *::after{
+    scroll-behavior:auto!important;
+    animation:none!important;
+    transition:none!important;
+  }
+}
