@@ -372,7 +372,7 @@ async function loadData() {
     if (custom) {
       data = JSON.parse(custom);
     } else {
-      const response = await fetch("resources.json?v=420", { cache:"no-store" });
+      const response = await fetch("resources.json?v=421", { cache:"no-store" });
       if (!response.ok) throw new Error(`Could not load resources.json (${response.status})`);
       data = await response.json();
     }
@@ -951,41 +951,91 @@ function populateVisualGalleryBuilder() {
     const item = document.createElement("article");
     item.className = "visual-gallery-item";
     item.dataset.galleryId = gallery.id;
+    item.draggable = true;
+    item.setAttribute("aria-grabbed", "false");
 
     item.innerHTML = `
       <img class="visual-gallery-art" src="${safeAssetUrl(getGalleryArtwork(gallery))}" alt="">
       <div class="visual-gallery-body">
+        <div class="visual-gallery-drag-label" aria-hidden="true">☰ Drag to move</div>
         <h4>${gallery.icon || "✨"} ${gallery.name}</h4>
         <div class="visual-gallery-order">Position ${index + 1}</div>
       </div>
       <div class="visual-gallery-controls">
-        <button type="button" data-move-gallery-up="${gallery.id}" aria-label="Move ${gallery.name} earlier">↑</button>
-        <button type="button" data-move-gallery-down="${gallery.id}" aria-label="Move ${gallery.name} later">↓</button>
+        <button type="button" data-move-gallery-up="${gallery.id}" aria-label="Move ${gallery.name} earlier">↑ Earlier</button>
+        <button type="button" data-move-gallery-down="${gallery.id}" aria-label="Move ${gallery.name} later">↓ Later</button>
       </div>
     `;
 
     visualGalleryBuilder.appendChild(item);
   });
 
-  if (galleryBuilderSortable) {
-    galleryBuilderSortable.destroy();
-  }
-
-  if (window.Sortable) {
-    galleryBuilderSortable = Sortable.create(visualGalleryBuilder, {
-      animation: 150,
-      handle: ".visual-gallery-item",
-      ghostClass: "sortable-ghost",
-      chosenClass: "sortable-chosen",
-      onEnd: updateGalleryOrderLabels
-    });
-  }
+  installNativeGalleryDragging();
+  updateGalleryOrderLabels();
 }
 
 function updateGalleryOrderLabels() {
   [...visualGalleryBuilder.children].forEach((item, index) => {
     const label = item.querySelector(".visual-gallery-order");
     if (label) label.textContent = `Position ${index + 1}`;
+  });
+}
+
+function installNativeGalleryDragging() {
+  if (!visualGalleryBuilder) return;
+
+  let draggedItem = null;
+
+  visualGalleryBuilder.querySelectorAll(".visual-gallery-item").forEach(item => {
+    item.addEventListener("dragstart", event => {
+      draggedItem = item;
+      item.classList.add("is-dragging");
+      item.setAttribute("aria-grabbed", "true");
+
+      if (event.dataTransfer) {
+        event.dataTransfer.effectAllowed = "move";
+        event.dataTransfer.setData("text/plain", item.dataset.galleryId);
+      }
+    });
+
+    item.addEventListener("dragend", () => {
+      item.classList.remove("is-dragging");
+      item.setAttribute("aria-grabbed", "false");
+      visualGalleryBuilder
+        .querySelectorAll(".visual-gallery-item")
+        .forEach(card => card.classList.remove("drag-over"));
+
+      draggedItem = null;
+      updateGalleryOrderLabels();
+    });
+
+    item.addEventListener("dragover", event => {
+      event.preventDefault();
+      if (!draggedItem || draggedItem === item) return;
+
+      item.classList.add("drag-over");
+
+      const rect = item.getBoundingClientRect();
+      const insertAfter = event.clientY > rect.top + rect.height / 2;
+
+      if (insertAfter) {
+        item.after(draggedItem);
+      } else {
+        item.before(draggedItem);
+      }
+
+      updateGalleryOrderLabels();
+    });
+
+    item.addEventListener("dragleave", () => {
+      item.classList.remove("drag-over");
+    });
+
+    item.addEventListener("drop", event => {
+      event.preventDefault();
+      item.classList.remove("drag-over");
+      updateGalleryOrderLabels();
+    });
   });
 }
 
@@ -1357,6 +1407,7 @@ document.querySelectorAll(".parent-tab").forEach(button => {
     });
 
     if (target === "bookmarks") renderParentBookmarks();
+    if (target === "galleries") populateVisualGalleryBuilder();
     if (target === "images") populateImageOverview();
     if (target === "quotes") populateQuoteEditor();
     if (target === "featured") populateFeaturedEditor();

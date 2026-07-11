@@ -1,34 +1,16 @@
-# Wonder Hall 4.2 — Visual Curator
+# Wonder Hall 4.21 — Visual Gallery Builder Repair
 
-## Visual Gallery Builder
-- Drag gallery cards to reorder them
-- Save the new museum order
-- Touch-friendly arrow buttons for phones and tablets
-- Order is preserved in resources.json and published to every device
+## Fixed
+- The Visual Gallery Builder now displays all gallery cards
+- Desktop users can drag gallery cards into a new order
+- Phones and tablets can use Earlier and Later buttons
+- Reordering no longer depends on an external JavaScript library
+- The gallery order can be saved and published through Connected Curator
 
-## Resource Uploads
-- Drag local images, PDFs, and small videos into a chosen gallery
-- Choose multiple files at once
-- Add website links directly
-- Pending uploads are shown before publishing
-- Direct GitHub publishing uploads files to assets/uploads
-- resources.json is updated with the new resources
-- Manual publish package includes uploaded files as a backup
-
-## Recommended limits
-- Images and PDFs: up to 10 MB each
-- Direct video uploads: up to 20 MB each
-- Use links for large videos or streaming content
-
-## Existing features preserved
-- Connected Curator
-- Automatic GitHub publishing
-- Browser Back navigation
-- Responsive phone, tablet, laptop, and desktop layouts
-- Gallery and resource editors
-- Quotes editor
-- Featured Exhibit editor
-- Homepage editor
-- Favorites
-- Explorer's Passport
-- Search
+## How to use
+1. Open Parent Wing → Galleries
+2. Drag a gallery card to a new position on desktop
+3. On touch devices, use Earlier or Later
+4. Click Save Gallery Order
+5. Open Publish Wonder Hall
+6. Publish directly to GitHub
