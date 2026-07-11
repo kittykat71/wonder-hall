@@ -148,6 +148,8 @@ let pendingUploads = [];
 const FAVORITES_KEY = "wonderHallFavorites";
 const PASSPORT_KEY = "wonderHallPassport";
 const CUSTOM_DATA_KEY = "wonderHallCustomData";
+const LOCAL_DIRTY_KEY = "wonderHallLocalChangesPending";
+const LAST_SYNC_KEY = "wonderHallLastPublishedSync";
 const PARENT_HASH_KEY = "wonderHallParentHash";
 const GITHUB_SETTINGS_KEY = "wonderHallGithubSettings";
 const GITHUB_TOKEN_SESSION_KEY = "wonderHallGithubToken";
@@ -159,8 +161,22 @@ function getStoredSet(key) {
 function saveStoredSet(key, set) {
   localStorage.setItem(key, JSON.stringify([...set]));
 }
-function saveCustomData() {
+function saveCustomData({ markDirty = true } = {}) {
   localStorage.setItem(CUSTOM_DATA_KEY, JSON.stringify(data));
+
+  if (markDirty) {
+    localStorage.setItem(LOCAL_DIRTY_KEY, "true");
+  }
+}
+
+function markDataPublished() {
+  localStorage.setItem(CUSTOM_DATA_KEY, JSON.stringify(data));
+  localStorage.setItem(LOCAL_DIRTY_KEY, "false");
+  localStorage.setItem(LAST_SYNC_KEY, new Date().toISOString());
+}
+
+function hasUnpublishedLocalChanges() {
+  return localStorage.getItem(LOCAL_DIRTY_KEY) === "true";
 }
 function slugify(value) {
   return value.toLowerCase().trim()
@@ -368,21 +384,49 @@ function safeAssetUrl(value, version = "358") {
 
 async function loadData() {
   try {
-    const custom = localStorage.getItem(CUSTOM_DATA_KEY);
-    if (custom) {
-      data = JSON.parse(custom);
-    } else {
-      const response = await fetch("resources.json?v=421", { cache:"no-store" });
-      if (!response.ok) throw new Error(`Could not load resources.json (${response.status})`);
-      data = await response.json();
+    let publishedData = null;
+
+    try {
+      const response = await fetch(`resources.json?v=430&t=${Date.now()}`, {
+        cache: "no-store"
+      });
+
+      if (!response.ok) {
+        throw new Error(`Could not load resources.json (${response.status})`);
+      }
+
+      publishedData = await response.json();
+    } catch (publishedError) {
+      console.warn("Published data could not be loaded.", publishedError);
     }
+
+    const localRaw = localStorage.getItem(CUSTOM_DATA_KEY);
+    const localData = localRaw ? JSON.parse(localRaw) : null;
+
+    if (localData && hasUnpublishedLocalChanges()) {
+      // Protect edits that have not been published yet.
+      data = localData;
+    } else if (publishedData) {
+      // Phones, tablets, and clean desktop sessions always receive
+      // the latest successfully published GitHub data.
+      data = publishedData;
+      saveCustomData({ markDirty: false });
+      localStorage.setItem(LOCAL_DIRTY_KEY, "false");
+      localStorage.setItem(LAST_SYNC_KEY, new Date().toISOString());
+    } else if (localData) {
+      data = localData;
+    } else {
+      throw new Error("Wonder Hall could not load local or published data.");
+    }
+
     ensureSiteSettings();
     applySiteSettingsToPage();
     renderGalleries(data.galleries);
     showEntranceQuote();
   } catch (error) {
     console.error(error);
-    galleryGrid.innerHTML = `<p class="empty-state">Wonder Hall could not load its resource list.</p>`;
+    galleryGrid.innerHTML =
+      `<p class="empty-state">Wonder Hall could not load its resource list.</p>`;
   }
 }
 
@@ -943,7 +987,7 @@ function applySiteSettingsToPage() {
 
 
 function populateVisualGalleryBuilder() {
-  if (!visualGalleryBuilder) return;
+  if (!visualGalleryBuilder || !Array.isArray(data?.galleries)) return;
 
   visualGalleryBuilder.innerHTML = "";
 
@@ -951,90 +995,101 @@ function populateVisualGalleryBuilder() {
     const item = document.createElement("article");
     item.className = "visual-gallery-item";
     item.dataset.galleryId = gallery.id;
-    item.draggable = true;
-    item.setAttribute("aria-grabbed", "false");
 
     item.innerHTML = `
-      <img class="visual-gallery-art" src="${safeAssetUrl(getGalleryArtwork(gallery))}" alt="">
+      <button class="gallery-drag-handle" type="button"
+        aria-label="Drag ${gallery.name} to reorder">
+        ☰ Move
+      </button>
+
+      <img class="visual-gallery-art"
+        src="${safeAssetUrl(getGalleryArtwork(gallery))}" alt="">
+
       <div class="visual-gallery-body">
-        <div class="visual-gallery-drag-label" aria-hidden="true">☰ Drag to move</div>
         <h4>${gallery.icon || "✨"} ${gallery.name}</h4>
         <div class="visual-gallery-order">Position ${index + 1}</div>
       </div>
+
       <div class="visual-gallery-controls">
-        <button type="button" data-move-gallery-up="${gallery.id}" aria-label="Move ${gallery.name} earlier">↑ Earlier</button>
-        <button type="button" data-move-gallery-down="${gallery.id}" aria-label="Move ${gallery.name} later">↓ Later</button>
+        <button type="button" data-move-gallery-up="${gallery.id}"
+          aria-label="Move ${gallery.name} earlier">↑ Earlier</button>
+        <button type="button" data-move-gallery-down="${gallery.id}"
+          aria-label="Move ${gallery.name} later">↓ Later</button>
       </div>
     `;
 
     visualGalleryBuilder.appendChild(item);
   });
 
-  installNativeGalleryDragging();
+  installPointerGalleryDragging();
   updateGalleryOrderLabels();
 }
 
 function updateGalleryOrderLabels() {
+  if (!visualGalleryBuilder) return;
+
   [...visualGalleryBuilder.children].forEach((item, index) => {
     const label = item.querySelector(".visual-gallery-order");
     if (label) label.textContent = `Position ${index + 1}`;
   });
 }
 
-function installNativeGalleryDragging() {
+function installPointerGalleryDragging() {
   if (!visualGalleryBuilder) return;
 
-  let draggedItem = null;
+  visualGalleryBuilder.querySelectorAll(".gallery-drag-handle").forEach(handle => {
+    handle.addEventListener("pointerdown", event => {
+      if (event.button !== undefined && event.button !== 0) return;
 
-  visualGalleryBuilder.querySelectorAll(".visual-gallery-item").forEach(item => {
-    item.addEventListener("dragstart", event => {
-      draggedItem = item;
-      item.classList.add("is-dragging");
-      item.setAttribute("aria-grabbed", "true");
+      const item = handle.closest(".visual-gallery-item");
+      if (!item) return;
 
-      if (event.dataTransfer) {
-        event.dataTransfer.effectAllowed = "move";
-        event.dataTransfer.setData("text/plain", item.dataset.galleryId);
-      }
-    });
-
-    item.addEventListener("dragend", () => {
-      item.classList.remove("is-dragging");
-      item.setAttribute("aria-grabbed", "false");
-      visualGalleryBuilder
-        .querySelectorAll(".visual-gallery-item")
-        .forEach(card => card.classList.remove("drag-over"));
-
-      draggedItem = null;
-      updateGalleryOrderLabels();
-    });
-
-    item.addEventListener("dragover", event => {
       event.preventDefault();
-      if (!draggedItem || draggedItem === item) return;
 
-      item.classList.add("drag-over");
+      let active = true;
+      item.classList.add("is-pointer-dragging");
+      handle.setPointerCapture?.(event.pointerId);
 
-      const rect = item.getBoundingClientRect();
-      const insertAfter = event.clientY > rect.top + rect.height / 2;
+      const move = moveEvent => {
+        if (!active) return;
 
-      if (insertAfter) {
-        item.after(draggedItem);
-      } else {
-        item.before(draggedItem);
-      }
+        const target = document
+          .elementFromPoint(moveEvent.clientX, moveEvent.clientY)
+          ?.closest(".visual-gallery-item");
 
-      updateGalleryOrderLabels();
-    });
+        if (!target || target === item || target.parentElement !== visualGalleryBuilder) {
+          return;
+        }
 
-    item.addEventListener("dragleave", () => {
-      item.classList.remove("drag-over");
-    });
+        const rect = target.getBoundingClientRect();
+        const horizontal = visualGalleryBuilder.clientWidth > 650;
+        const after = horizontal
+          ? moveEvent.clientX > rect.left + rect.width / 2
+          : moveEvent.clientY > rect.top + rect.height / 2;
 
-    item.addEventListener("drop", event => {
-      event.preventDefault();
-      item.classList.remove("drag-over");
-      updateGalleryOrderLabels();
+        if (after) target.after(item);
+        else target.before(item);
+
+        updateGalleryOrderLabels();
+      };
+
+      const finish = finishEvent => {
+        if (!active) return;
+        active = false;
+
+        item.classList.remove("is-pointer-dragging");
+        handle.releasePointerCapture?.(finishEvent.pointerId);
+
+        handle.removeEventListener("pointermove", move);
+        handle.removeEventListener("pointerup", finish);
+        handle.removeEventListener("pointercancel", finish);
+
+        updateGalleryOrderLabels();
+      };
+
+      handle.addEventListener("pointermove", move);
+      handle.addEventListener("pointerup", finish);
+      handle.addEventListener("pointercancel", finish);
     });
   });
 }
@@ -1241,6 +1296,10 @@ async function publishPendingUploadsToGithub(settings) {
 }
 
 function populateParentWing() {
+  // Draw the reorder board first so unrelated curator tools cannot block it.
+  populateVisualGalleryBuilder();
+  populateUploadGallerySelect();
+
   resourceCategoryInput.innerHTML = data.galleries
     .map(g => `<option value="${g.id}">${g.name}</option>`).join("");
 
@@ -1311,8 +1370,6 @@ function populateParentWing() {
   populateFeaturedEditor();
   populateHomepageEditor();
   populatePublishSummary();
-  populateVisualGalleryBuilder();
-  populateUploadGallerySelect();
   renderPendingUploads();
   loadGithubSettingsIntoForm();
   updateMaintenanceStatus();
@@ -1331,9 +1388,14 @@ function renderParentBookmarks() {
   });
 }
 function updateMaintenanceStatus(message="") {
+  const syncState = hasUnpublishedLocalChanges()
+    ? "Unpublished changes on this device"
+    : "Synced with published website";
+
   maintenanceStatus.textContent = message ||
     `${data.galleries.length} galleries · ${data.resources.length} resources · ` +
-    `${getStoredSet(FAVORITES_KEY).size} bookmarks · ${getStoredSet(PASSPORT_KEY).size} passport stamps`;
+    `${getStoredSet(FAVORITES_KEY).size} bookmarks · ` +
+    `${getStoredSet(PASSPORT_KEY).size} passport stamps · ${syncState}`;
 }
 function downloadJson(filename,obj) {
   const blob = new Blob([JSON.stringify(obj,null,2)], {type:"application/json"});
@@ -1502,6 +1564,8 @@ publishDirectlyButton?.addEventListener("click", async () => {
     } else {
       publishedCommitLink.hidden = true;
     }
+
+    markDataPublished();
 
     setGithubStatus(
       "connected",

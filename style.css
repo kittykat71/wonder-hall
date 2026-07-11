@@ -2468,3 +2468,54 @@ main{
     min-height:46px;
   }
 }
+
+
+/* =========================================================
+   Wonder Hall 4.3 — Gallery Builder & Device Sync Repair
+   ========================================================= */
+
+.visual-gallery-builder{
+  display:grid!important;
+  min-height:220px;
+}
+
+.gallery-drag-handle{
+  width:calc(100% - 20px);
+  min-height:42px;
+  margin:10px 10px 0;
+  padding:8px 10px;
+  color:#fff4cf;
+  background:var(--navy);
+  border:1px solid var(--gold);
+  border-radius:10px;
+  cursor:grab;
+  touch-action:none;
+  font-weight:800;
+}
+
+.gallery-drag-handle:active{
+  cursor:grabbing;
+}
+
+.visual-gallery-item.is-pointer-dragging{
+  z-index:10;
+  opacity:.72;
+  transform:scale(.97);
+  box-shadow:0 0 0 4px rgba(202,151,48,.35),
+             0 16px 30px rgba(0,0,0,.22);
+}
+
+.visual-gallery-art{
+  pointer-events:none;
+}
+
+.visual-gallery-body{
+  pointer-events:none;
+}
+
+@media(hover:none), (pointer:coarse){
+  .gallery-drag-handle{
+    display:block;
+    min-height:48px;
+  }
+}
