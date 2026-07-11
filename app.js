@@ -282,6 +282,27 @@ function showGalleryQuote(gallery) {
   );
 }
 
+
+function safeAssetUrl(value, version = "358") {
+  if (!value) return "";
+
+  const trimmed = String(value).trim();
+
+  // Uploaded Parent Wing images are stored as data URLs.
+  // Adding a query string would corrupt them.
+  if (
+    trimmed.startsWith("data:") ||
+    trimmed.startsWith("blob:") ||
+    trimmed.startsWith("http://") ||
+    trimmed.startsWith("https://")
+  ) {
+    return trimmed;
+  }
+
+  const separator = trimmed.includes("?") ? "&" : "?";
+  return `${trimmed}${separator}v=${version}`;
+}
+
 async function loadData() {
   try {
     const custom = localStorage.getItem(CUSTOM_DATA_KEY);
@@ -318,7 +339,7 @@ function renderGalleries(galleries) {
     card.className = "gallery-card";
     card.type = "button";
     if (gallery.artwork) {
-      card.style.setProperty("--gallery-art", `url("${gallery.artwork}?v=357")`);
+      card.style.setProperty("--gallery-art", `url("${safeAssetUrl(gallery.artwork)}")`);
     }
     card.innerHTML = `
       <span class="gallery-card-icon" aria-hidden="true">${gallery.icon}</span>
@@ -345,7 +366,7 @@ function createResourceCard(resource) {
   if (resource.image) {
     const image = document.createElement("img");
     image.className = "resource-card-image";
-    image.src = resource.image;
+    image.src = safeAssetUrl(resource.image);
     image.alt = "";
     link.appendChild(image);
   }
@@ -433,7 +454,7 @@ function openGallery(id) {
   document.getElementById("galleryRoomName").textContent = gallery.roomName || "Gallery Room";
   document.getElementById("galleryIcon").textContent = gallery.icon;
   showGalleryQuote(gallery);
-  galleryRoom.style.setProperty("--room-art", `url("${gallery.artwork}?v=357")`);
+  galleryRoom.style.setProperty("--room-art", `url("${safeAssetUrl(gallery.artwork)}")`);
 
   const passport = getStoredSet(PASSPORT_KEY);
   stampButton.textContent = passport.has(id) ? "✓ Passport Stamp Added" : "Add Passport Stamp";
@@ -522,7 +543,7 @@ function populateParentWing() {
     if (resource.image) {
       preview = document.createElement("img");
       preview.className = "parent-resource-thumbnail";
-      preview.src = resource.image;
+      preview.src = safeAssetUrl(resource.image);
       preview.alt = "";
     } else {
       preview = document.createElement("div");
@@ -553,7 +574,7 @@ function populateParentWing() {
 
     const image = document.createElement("img");
     image.className = "parent-gallery-thumbnail";
-    image.src = getGalleryArtwork(gallery);
+    image.src = safeAssetUrl(getGalleryArtwork(gallery));
     image.alt = "";
 
     const information = document.createElement("div");
@@ -705,7 +726,7 @@ parentResourceList.addEventListener("click", event => {
     pendingResourceImage = null;
     removeCurrentResourceImage = false;
     resourceImageInput.value = "";
-    showResourceImagePreview(getResourceImage(resource));
+    showResourceImagePreview(safeAssetUrl(getResourceImage(resource)));
 
     window.scrollTo({top:0,behavior:"auto"});
   }
@@ -820,7 +841,7 @@ parentGalleryList.addEventListener("click", event => {
     pendingGalleryImage = null;
     removeCurrentGalleryImage = false;
     galleryImageInput.value = "";
-    showGalleryImagePreview(getGalleryArtwork(gallery));
+    showGalleryImagePreview(safeAssetUrl(getGalleryArtwork(gallery)));
 
     galleryEditorHeading.textContent = "Edit Gallery";
     saveGalleryButton.textContent = "Save Gallery Changes";

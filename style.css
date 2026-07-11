@@ -943,3 +943,13 @@ footer{
     font-size:1.05rem;
   }
 }
+
+
+/* Wonder Hall 3.58 — Uploaded Image Repair */
+.gallery-card::before{
+  background-color:#d9c8a7;
+}
+
+.gallery-room{
+  background-color:var(--navy);
+}
