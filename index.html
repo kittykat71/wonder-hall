@@ -1,236 +1,602 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#061f33">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Wonder Hall — a family museum of lifelong learning.">
+  <meta name="theme-color" content="#061a2b">
   <title>Wonder Hall</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=500">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=431">
 </head>
 <body>
-  <header class="topbar">
-    <button id="passportButton" class="pill" type="button">Passport</button>
-    <button id="brandButton" class="brand" type="button" aria-label="Wonder Hall home">
-      <span class="seal">WH</span>
-      <span><strong>Wonder Hall</strong><small>A Museum of Lifelong Learning</small></span>
-    </button>
-    <label class="search">
+  <a class="skip-link" href="#mainContent">Skip to content</a>
+
+  <header class="museum-header">
+    <button id="passportButton" class="nav-pill" type="button">Passport</button>
+
+    <a href="#" class="brand" id="brandHome" aria-label="Wonder Hall home">
+      <span class="brand-seal">WH</span>
+      <span class="brand-copy">
+        <strong>Wonder Hall</strong>
+        <small>A Museum of Lifelong Learning</small>
+      </span>
+    </a>
+
+    <label class="header-search" for="searchInput">
       <span aria-hidden="true">⌕</span>
-      <input id="searchInput" type="search" placeholder="Search galleries and resources…">
+      <input id="searchInput" type="search" placeholder="Search galleries and resources…" autocomplete="off">
     </label>
-    <button id="favoritesButton" class="pill" type="button">Favorites</button>
-    <button id="studioButton" class="pill" type="button">Museum Studio</button>
+
+    <button id="favoritesButton" class="nav-pill" type="button">Favorites</button>
+    <button id="parentWingButton" class="nav-pill parent-wing-button" type="button">Parent Wing</button>
   </header>
 
-  <main>
+  <main id="mainContent">
     <section id="homeView">
       <section class="hero">
-        <div class="hero-panel">
-          <span class="hero-seal">WH</span>
-          <p id="heroWelcome" class="welcome">Welcome to</p>
-          <h1 id="heroTitle">Wonder Hall</h1>
-          <p id="heroTagline">Step inside. Your next adventure is waiting.</p>
-          <button id="exploreButton" class="primary" type="button">Explore the Galleries ↓</button>
+        <div class="hero-copy">
+          <div class="hero-seal">WH</div>
+          <p class="welcome">Welcome to</p>
+          <h1>Wonder Hall</h1>
+          <p class="hero-tagline">Step inside. Your next adventure is waiting.</p>
+          <a href="#museumDirectory" class="hero-button">Explore the Galleries ↓</a>
         </div>
       </section>
 
-      <p id="dailyQuote" class="daily-quote"></p>
+      <aside id="entranceQuote" class="entrance-quote" aria-label="A thought for today">
+        <span class="quote-ornament" aria-hidden="true">✦</span>
+        <p id="entranceQuoteText"></p>
+        <span class="quote-ornament" aria-hidden="true">✦</span>
+      </aside>
 
-      <section class="museum-layout">
-        <div>
+      <section class="museum-stage">
+        <section class="directory" id="museumDirectory">
+          <section id="searchResultsSection" class="search-results" hidden>
+            <div class="section-heading">
+              <div>
+                <p class="section-kicker">Search results</p>
+                <h2 id="searchResultsHeading">Resources and galleries</h2>
+              </div>
+              <p id="searchResultCount" class="result-count"></p>
+            </div>
+            <div id="searchResultsGrid" class="resource-grid"></div>
+            <p id="searchEmptyState" class="empty-state" hidden>No matching galleries or resources were found.</p>
+          </section>
+
           <div class="section-heading">
-            <div><small>Museum Directory</small><h2>Choose your next gallery</h2></div>
-            <span id="galleryCount"></span>
+            <div>
+              <p class="section-kicker">Museum directory</p>
+              <h2>Choose your next gallery</h2>
+            </div>
+            <p id="resultCount" class="result-count"></p>
           </div>
-          <div id="galleryGrid" class="gallery-grid"></div>
-        </div>
 
-        <aside id="featuredCard" class="featured-card">
-          <span>Today's Featured Exhibit</span>
-          <img id="featuredImage" alt="">
-          <div>
-            <h2 id="featuredTitle">Journey Through the Solar System</h2>
-            <p id="featuredDescription"></p>
-            <button id="featuredButton" class="primary" type="button">Enter Exhibit →</button>
+          <div id="galleryGrid" class="gallery-grid"></div>
+          <p id="emptyState" class="empty-state" hidden>No galleries are available.</p>
+        </section>
+
+        <aside class="featured">
+          <div class="featured-ribbon">Today’s Featured Exhibit</div>
+          <img src="assets/featured-space-v3.jpg" alt="">
+          <div class="featured-copy">
+            <h2>Journey Through the Solar System</h2>
+            <p>Explore NASA resources, watch planets in motion, visit the ISS, and discover the wonders beyond Earth.</p>
+            <button id="featuredButton" type="button">Enter Exhibit →</button>
           </div>
         </aside>
       </section>
     </section>
 
-    <section id="galleryView" class="page" hidden>
-      <button class="back-home pill" type="button">← Back to Wonder Hall</button>
-      <div id="galleryHero" class="gallery-hero">
-        <div>
+    <section id="galleryView" class="gallery-page" hidden>
+      <button id="backButton" class="back-button" type="button">← Back to Wonder Hall</button>
+
+      <section id="galleryRoom" class="gallery-room">
+        <div class="gallery-room-shade"></div>
+        <div class="gallery-room-copy">
+          <p class="section-kicker">You are visiting</p>
+          <h2 id="galleryTitle"></h2>
           <p id="galleryRoomName" class="room-name"></p>
-          <h1 id="galleryTitle"></h1>
           <p id="galleryDescription"></p>
-          <blockquote id="galleryQuote"></blockquote>
-          <button id="stampButton" class="primary" type="button">Add Passport Stamp</button>
+
+          <blockquote id="galleryQuote" class="gallery-quote">
+            <span aria-hidden="true">“</span>
+            <p id="galleryQuoteText"></p>
+          </blockquote>
+
+          <button id="stampButton" class="stamp-button" type="button">Add Passport Stamp</button>
         </div>
-      </div>
-      <div class="section-heading"><div><small>Curated Resources</small><h2>Explore this gallery</h2></div></div>
-      <div id="resourceGrid" class="resource-grid"></div>
-    </section>
-
-    <section id="collectionView" class="page" hidden>
-      <button class="back-home pill" type="button">← Back to Wonder Hall</button>
-      <div class="section-heading"><div><small id="collectionKicker"></small><h1 id="collectionTitle"></h1></div></div>
-      <div id="collectionGrid" class="resource-grid"></div>
-    </section>
-
-    <section id="studioView" class="studio-page" hidden>
-      <div class="studio-head">
-        <button class="back-home pill" type="button">← Back to Wonder Hall</button>
-        <button id="lockStudioButton" class="pill" type="button">Lock Studio</button>
-      </div>
-
-      <section class="studio-intro">
-        <small>Private Curator Tools</small>
-        <h1>Museum Studio</h1>
-        <p>Draft safely, preview changes, and publish only when you are ready.</p>
-        <div class="status-row">
-          <span id="draftStatus" class="status-chip"></span>
-          <button id="previewDraftButton" type="button">Preview Draft</button>
-          <button id="discardDraftButton" type="button">Reset Draft to Published</button>
-        </div>
+        <div id="galleryIcon" class="gallery-large-icon" aria-hidden="true"></div>
       </section>
 
-      <nav class="studio-tabs" aria-label="Museum Studio sections">
-        <button class="active" data-tab="galleries" type="button">Galleries</button>
-        <button data-tab="resources" type="button">Resources</button>
-        <button data-tab="homepage" type="button">Homepage</button>
-        <button data-tab="backups" type="button">Backups</button>
-        <button data-tab="publish" type="button">Publish</button>
+      <div id="resourceGrid" class="resource-grid exhibits-grid"></div>
+      <p id="resourceEmptyState" class="empty-state" hidden>Resources for this gallery are coming soon.</p>
+    </section>
+
+    <section id="favoritesView" class="collection-page" hidden>
+      <button class="back-button collection-back" type="button">← Back to Wonder Hall</button>
+      <div class="section-heading">
+        <div>
+          <p class="section-kicker">Personal collection</p>
+          <h2>Favorite Exhibits</h2>
+        </div>
+      </div>
+      <div id="favoritesGrid" class="resource-grid"></div>
+      <p id="favoritesEmpty" class="empty-state">No favorites have been saved yet.</p>
+    </section>
+
+    <section id="passportView" class="collection-page" hidden>
+      <button class="back-button collection-back" type="button">← Back to Wonder Hall</button>
+      <div class="passport-cover">
+        <p class="section-kicker">Explorer’s Passport</p>
+        <h2>Galleries Visited</h2>
+        <p>Your stamps are stored on this device.</p>
+      </div>
+      <div id="passportGrid" class="passport-grid"></div>
+      <p id="passportEmpty" class="empty-state">Visit a gallery and add your first stamp.</p>
+    </section>
+
+    <section id="parentWingView" class="collection-page parent-wing" hidden>
+      <div class="parent-wing-header">
+        <button class="back-button parent-back" type="button">← Back to Wonder Hall</button>
+        <button id="lockParentWingButton" class="nav-pill" type="button">Lock Parent Wing</button>
+      </div>
+
+      <div class="parent-wing-title">
+        <p class="section-kicker">Private curator tools</p>
+        <h2>Connected Curator</h2>
+        <p>Design and manage Wonder Hall here. Connect GitHub once, then publish changes directly to the live website.</p>
+      </div>
+
+      <nav class="parent-tabs curator-tabs" aria-label="Curator Studio sections">
+        <button class="parent-tab active" data-parent-tab="galleries" type="button">Galleries</button>
+        <button class="parent-tab" data-parent-tab="resources" type="button">Resources</button>
+        <button class="parent-tab" data-parent-tab="images" type="button">Images</button>
+        <button class="parent-tab" data-parent-tab="quotes" type="button">Quotes</button>
+        <button class="parent-tab" data-parent-tab="featured" type="button">Featured Exhibit</button>
+        <button class="parent-tab" data-parent-tab="homepage" type="button">Homepage</button>
+        <button class="parent-tab" data-parent-tab="bookmarks" type="button">Favorites</button>
+        <button class="parent-tab" data-parent-tab="backups" type="button">Device Backups</button>
+        <button class="parent-tab publish-tab" data-parent-tab="publish" type="button">Publish Wonder Hall</button>
       </nav>
 
-      <section id="tab-galleries" class="studio-tab">
-        <div class="studio-card full">
-          <div class="card-heading">
-            <div><small>Visual Gallery Builder</small><h2>Arrange Your Museum</h2><p>Drag by the dark handle, or use Earlier/Later.</p></div>
-            <button id="saveOrderButton" class="primary" type="button">Save Order</button>
+      <section id="parentResourcesPanel" class="parent-panel" hidden>
+        <div class="resource-upload-studio">
+          <div class="resource-upload-heading">
+            <div>
+              <p class="section-kicker">Resource Uploads</p>
+              <h3>Drop Resources Into a Gallery</h3>
+              <p>Add website links or drag local images, PDFs, and small videos into Wonder Hall.</p>
+            </div>
+
+            <label class="upload-gallery-picker">
+              Destination gallery
+              <select id="uploadGallerySelect"></select>
+            </label>
           </div>
-          <div id="galleryBuilder" class="gallery-builder"></div>
+
+          <div id="resourceDropZone" class="resource-drop-zone" tabindex="0">
+            <div class="resource-drop-icon" aria-hidden="true">⬇</div>
+            <h4>Drop files or links here</h4>
+            <p>Images, PDFs, videos, or website links</p>
+            <div class="resource-drop-actions">
+              <label class="file-button">
+                Choose Files
+                <input id="resourceFilesInput" type="file" multiple accept="image/*,application/pdf,video/*">
+              </label>
+              <button id="addResourceLinkButton" type="button">Add Website Link</button>
+            </div>
+          </div>
+
+          <div id="pendingUploadsPanel" class="pending-uploads-panel" hidden>
+            <div class="pending-uploads-heading">
+              <h4>Pending Uploads</h4>
+              <span id="pendingUploadsCount">0 items</span>
+            </div>
+            <div id="pendingUploadsList" class="pending-uploads-list"></div>
+          </div>
         </div>
 
-        <div class="studio-columns">
-          <form id="galleryForm" class="studio-card form-card">
-            <input id="galleryId" type="hidden">
-            <h2 id="galleryFormTitle">Create Gallery</h2>
-            <label>Name<input id="galleryName" required></label>
-            <label>Icon or emoji<input id="galleryIcon" value="✨" required></label>
-            <label>Description<textarea id="galleryDescriptionInput" rows="4" required></textarea></label>
-            <label>Room name<input id="galleryRoom" placeholder="Discovery Room"></label>
-            <label>Card image<input id="galleryImage" type="file" accept="image/png,image/jpeg,image/webp"></label>
-            <img id="galleryImagePreview" class="editor-preview" alt="" hidden>
-            <div class="form-actions"><button class="primary" type="submit">Save Gallery</button><button id="clearGalleryForm" type="button">Clear</button></div>
+        <div class="parent-form-card">
+          <h3>Add or Edit a Resource</h3>
+          <form id="resourceEditorForm">
+            <input id="resourceEditIndex" type="hidden">
+
+            <label>
+              Name
+              <input id="resourceNameInput" required>
+            </label>
+
+            <label>
+              Website address
+              <input id="resourceUrlInput" type="url" required>
+            </label>
+
+            <label>
+              Gallery
+              <select id="resourceCategoryInput" required></select>
+            </label>
+
+            <label>
+              Description
+              <textarea id="resourceDescriptionInput" rows="4" required></textarea>
+            </label>
+
+            <label>
+              Add or replace resource image
+              <input id="resourceImageInput" type="file" accept="image/png,image/jpeg,image/webp">
+            </label>
+
+            <div id="resourceImagePreviewWrap" class="resource-image-preview-wrap" hidden>
+              <p>Current resource image</p>
+              <img id="resourceImagePreview" class="resource-image-preview" alt="Resource image preview">
+              <button id="removeResourceImageButton" type="button">Remove Image</button>
+            </div>
+
+            <p class="parent-form-note">
+              Images are resized before they are saved.
+            </p>
+
+            <div class="form-actions">
+              <button class="primary-parent-button" type="submit">Save Resource</button>
+              <button id="cancelResourceEdit" type="button">Clear Form</button>
+            </div>
           </form>
-          <div class="studio-card">
-            <h2>Current Galleries</h2>
-            <div id="galleryList" class="manager-list"></div>
-          </div>
+        </div>
+
+        <div>
+          <h3>Current Resources</h3>
+          <div id="parentResourceList" class="parent-list"></div>
         </div>
       </section>
 
-      <section id="tab-resources" class="studio-tab" hidden>
-        <div class="studio-card full">
-          <div class="card-heading">
-            <div><small>Resource Drop Zone</small><h2>Add Resources</h2><p>Choose a gallery, then add links or small files.</p></div>
-            <label>Destination gallery<select id="uploadGallery"></select></label>
+      <section id="parentGalleriesPanel" class="parent-panel">
+        <div class="visual-builder-shell">
+          <div class="visual-builder-heading">
+            <div>
+              <p class="section-kicker">Visual Gallery Builder</p>
+              <h3>Arrange Your Museum</h3>
+              <p>Drag gallery cards into a new order. On touch devices, use the arrow buttons.</p>
+            </div>
+            <button id="saveGalleryOrderButton" class="primary-parent-button" type="button">Save Gallery Order</button>
           </div>
-          <div id="dropZone" class="drop-zone" tabindex="0">
-            <strong>Drop images, PDFs, or small videos here</strong>
-            <span>Large videos should be added as website links.</span>
-            <div><label class="file-button">Choose Files<input id="resourceFiles" type="file" multiple accept="image/*,application/pdf,video/*"></label><button id="addLinkButton" type="button">Add Website Link</button></div>
-          </div>
-          <div id="pendingFiles" class="pending-files"></div>
+
+          <div id="visualGalleryBuilder" class="visual-gallery-builder" aria-label="Drag galleries to reorder"></div>
         </div>
 
-        <div class="studio-columns">
-          <form id="resourceForm" class="studio-card form-card">
-            <input id="resourceId" type="hidden">
-            <h2>Add or Edit Resource</h2>
-            <label>Name<input id="resourceName" required></label>
-            <label>Website address<input id="resourceUrl" type="url" required></label>
-            <label>Gallery<select id="resourceGallery" required></select></label>
-            <label>Description<textarea id="resourceDescription" rows="4" required></textarea></label>
-            <label>Card image<input id="resourceImage" type="file" accept="image/png,image/jpeg,image/webp"></label>
-            <img id="resourceImagePreview" class="editor-preview" alt="" hidden>
-            <div class="form-actions"><button class="primary" type="submit">Save Resource</button><button id="clearResourceForm" type="button">Clear</button></div>
+        <div class="parent-form-card">
+          <h3 id="galleryEditorHeading">Create a Gallery</h3>
+          <form id="galleryEditorForm">
+            <input id="galleryEditIndex" type="hidden">
+
+            <label>
+              Gallery name
+              <input id="galleryNameInput" required>
+            </label>
+
+            <label>
+              Icon or emoji
+              <input id="galleryIconInput" value="✨" required>
+            </label>
+
+            <label>
+              Description
+              <textarea id="galleryDescriptionInput" rows="4" required></textarea>
+            </label>
+
+            <label>
+              Room name
+              <input id="galleryRoomNameInput" placeholder="Example: Discovery Room">
+            </label>
+
+            <label>
+              Replace card image
+              <input id="galleryImageInput" type="file" accept="image/png,image/jpeg,image/webp">
+            </label>
+
+            <div id="galleryImagePreviewWrap" class="gallery-image-preview-wrap" hidden>
+              <p>Current card image</p>
+              <img id="galleryImagePreview" class="gallery-image-preview" alt="Gallery card preview">
+              <button id="removeGalleryImageButton" type="button">Remove Custom Image</button>
+            </div>
+
+            <p class="parent-form-note">
+              Uploaded gallery images are resized and saved with Wonder Hall.
+            </p>
+
+            <div class="form-actions">
+              <button id="saveGalleryButton" class="primary-parent-button" type="submit">Create Gallery</button>
+              <button id="cancelGalleryEdit" type="button">Clear Form</button>
+            </div>
           </form>
-          <div class="studio-card">
-            <h2>Current Resources</h2>
-            <div id="resourceList" class="manager-list"></div>
+        </div>
+
+        <div>
+          <h3>Current Galleries</h3>
+          <div id="parentGalleryList" class="parent-list gallery-manager-list"></div>
+        </div>
+      </section>
+
+      <section id="parentImagesPanel" class="parent-panel curator-single-panel" hidden>
+        <div class="curator-overview-card">
+          <p class="section-kicker">Visual collection</p>
+          <h3>Images</h3>
+          <p>Gallery and resource images are managed inside their editors. This overview shows which items currently have custom artwork.</p>
+        </div>
+        <div id="imageOverviewGrid" class="image-overview-grid"></div>
+      </section>
+
+      <section id="parentQuotesPanel" class="parent-panel curator-single-panel" hidden>
+        <div class="parent-form-card curator-wide-form">
+          <h3>Edit Gallery Quotes</h3>
+          <form id="quoteEditorForm">
+            <label>
+              Gallery
+              <select id="quoteGallerySelect"></select>
+            </label>
+            <label>
+              Quote 1
+              <textarea id="quoteOneInput" rows="3"></textarea>
+            </label>
+            <label>
+              Quote 2
+              <textarea id="quoteTwoInput" rows="3"></textarea>
+            </label>
+            <label>
+              Quote 3
+              <textarea id="quoteThreeInput" rows="3"></textarea>
+            </label>
+            <button class="primary-parent-button" type="submit">Save Quotes</button>
+          </form>
+        </div>
+      </section>
+
+      <section id="parentFeaturedPanel" class="parent-panel curator-single-panel" hidden>
+        <div class="parent-form-card curator-wide-form">
+          <h3>Featured Exhibit</h3>
+          <form id="featuredEditorForm">
+            <label>
+              Featured gallery
+              <select id="featuredGallerySelect"></select>
+            </label>
+            <label>
+              Exhibit title
+              <input id="featuredTitleInput">
+            </label>
+            <label>
+              Description
+              <textarea id="featuredDescriptionInput" rows="4"></textarea>
+            </label>
+            <button class="primary-parent-button" type="submit">Save Featured Exhibit</button>
+          </form>
+        </div>
+      </section>
+
+      <section id="parentHomepagePanel" class="parent-panel curator-single-panel" hidden>
+        <div class="parent-form-card curator-wide-form">
+          <h3>Homepage</h3>
+          <form id="homepageEditorForm">
+            <label>
+              Welcome line
+              <input id="homepageWelcomeInput">
+            </label>
+            <label>
+              Main title
+              <input id="homepageTitleInput">
+            </label>
+            <label>
+              Tagline
+              <input id="homepageTaglineInput">
+            </label>
+            <button class="primary-parent-button" type="submit">Save Homepage</button>
+          </form>
+        </div>
+      </section>
+
+      
+      <section id="parentBackupsPanel" class="parent-panel curator-single-panel" hidden>
+        <div class="backup-manager-card">
+          <p class="section-kicker">Safety and recovery</p>
+          <h2>Device Backups</h2>
+          <p>Wonder Hall now saves dated copies of your Parent Wing data before syncing, publishing, importing, or replacing anything.</p>
+
+          <div class="backup-actions">
+            <button id="createDeviceBackupButton" class="primary-parent-button" type="button">Create Backup Now</button>
+            <button id="downloadCurrentDataButton" type="button">Download Current Data</button>
           </div>
+
+          <div id="backupStatusMessage" class="backup-status-message"></div>
+          <div id="deviceBackupList" class="device-backup-list"></div>
         </div>
       </section>
 
-      <section id="tab-homepage" class="studio-tab" hidden>
-        <form id="homepageForm" class="studio-card narrow form-card">
-          <h2>Homepage and Featured Exhibit</h2>
-          <label>Welcome line<input id="settingWelcome"></label>
-          <label>Main title<input id="settingTitle"></label>
-          <label>Tagline<input id="settingTagline"></label>
-          <label>Featured gallery<select id="settingFeaturedGallery"></select></label>
-          <label>Featured title<input id="settingFeaturedTitle"></label>
-          <label>Featured description<textarea id="settingFeaturedDescription" rows="4"></textarea></label>
-          <button class="primary" type="submit">Save Homepage</button>
-        </form>
-      </section>
-
-      <section id="tab-backups" class="studio-tab" hidden>
-        <div class="studio-card narrow">
-          <div class="card-heading"><div><small>Safety</small><h2>Draft Backups</h2></div><button id="backupNowButton" class="primary" type="button">Backup Now</button></div>
-          <div id="backupList" class="manager-list"></div>
-        </div>
-      </section>
-
-      <section id="tab-publish" class="studio-tab" hidden>
-        <div class="studio-card narrow publish-card">
-          <small>Connected Curator</small>
+<section id="parentPublishPanel" class="parent-panel curator-single-panel publish-panel" hidden>
+        <div class="publish-card connected-publish-card">
+          <p class="section-kicker">Connected Curator</p>
           <h2>Publish Wonder Hall</h2>
-          <p>Publishing replaces the live <code>resources.json</code> and uploads pending files. Drafts remain separate until this succeeds.</p>
-          <div id="githubStatus" class="connection-status"></div>
-          <details id="githubDetails" open>
-            <summary>GitHub connection</summary>
-            <form id="githubForm" class="form-card compact">
-              <label>Username<input id="githubOwner" value="kittykat71" required></label>
-              <label>Repository<input id="githubRepo" value="wonder-hall" required></label>
-              <label>Branch<input id="githubBranch" value="main" required></label>
-              <label>Fine-grained token<input id="githubToken" type="password" autocomplete="off" required></label>
-              <button class="primary" type="submit">Test and Connect</button>
+          <p>Connect this Parent Wing to the Wonder Hall GitHub repository. After it is connected, one button will update the live website for every device.</p>
+
+          <div id="githubConnectionStatus" class="github-status disconnected">
+            <span class="github-status-dot" aria-hidden="true"></span>
+            <div>
+              <strong id="githubStatusHeading">GitHub is not connected</strong>
+              <p id="githubStatusMessage">Enter the repository information and a fine-grained access token below.</p>
+            </div>
+          </div>
+
+          <details id="githubSetupDetails" class="github-setup" open>
+            <summary>GitHub connection settings</summary>
+
+            <form id="githubConnectionForm" class="github-connection-form">
+              <div class="github-form-grid">
+                <label>
+                  GitHub username
+                  <input id="githubOwnerInput" autocomplete="username" placeholder="kittykat71" required>
+                </label>
+
+                <label>
+                  Repository
+                  <input id="githubRepoInput" placeholder="wonder-hall" required>
+                </label>
+
+                <label>
+                  Branch
+                  <input id="githubBranchInput" value="main" required>
+                </label>
+
+                <label>
+                  Website data file
+                  <input id="githubPathInput" value="resources.json" required>
+                </label>
+              </div>
+
+              <label>
+                Fine-grained GitHub access token
+                <input id="githubTokenInput" type="password" autocomplete="off" placeholder="github_pat_…" required>
+              </label>
+
+              <p class="connection-note">
+                Use a fine-grained token limited to this repository with
+                <strong>Contents: Read and write</strong>. Wonder Hall keeps the token only for this browser session.
+              </p>
+
+              <div class="form-actions github-form-actions">
+                <button id="testGithubConnectionButton" class="primary-parent-button" type="submit">Test and Connect</button>
+                <button id="disconnectGithubButton" type="button">Disconnect</button>
+              </div>
             </form>
           </details>
-          <label>Publish note<input id="commitMessage" value="Publish Wonder Hall 5.0 draft"></label>
-          <button id="publishButton" class="publish-button" type="button" disabled>Publish Draft to GitHub</button>
-          <p id="publishMessage"></p>
-          <button id="downloadPackageButton" type="button">Download Manual Backup Package</button>
+
+          <div class="publish-summary" id="publishSummary"></div>
+
+          <div class="auto-publish-area">
+            <label class="commit-message-label">
+              Publish note
+              <input id="githubCommitMessageInput" value="Update Wonder Hall from Parent Wing">
+            </label>
+
+            <button id="publishDirectlyButton" class="publish-wonder-hall-button" type="button" disabled>
+              Publish Directly to GitHub
+            </button>
+
+            <div id="directPublishProgress" class="direct-publish-progress" hidden>
+              <div class="publish-spinner" aria-hidden="true"></div>
+              <p id="directPublishProgressText">Publishing Wonder Hall…</p>
+            </div>
+
+            <div id="directPublishSuccess" class="publish-success" hidden>
+              <h3>Wonder Hall was published</h3>
+              <p id="directPublishSuccessText">GitHub accepted the update. GitHub Pages should refresh shortly.</p>
+              <a id="publishedCommitLink" target="_blank" rel="noopener noreferrer">View the GitHub commit</a>
+            </div>
+
+            <div id="directPublishError" class="publish-error" hidden>
+              <h3>Wonder Hall could not publish</h3>
+              <p id="directPublishErrorText"></p>
+            </div>
+          </div>
+
+          <hr class="publish-divider">
+
+          <details class="manual-publish-fallback">
+            <summary>Manual backup method</summary>
+            <p>Create the same publish package used in Wonder Hall 3.61. This remains available in case the GitHub connection is unavailable.</p>
+            <button id="publishWonderHallButton" type="button">Create Manual Publish Package</button>
+
+            <div id="publishSuccessMessage" class="publish-success" hidden>
+              <h3>Your package is ready</h3>
+              <p>Extract the ZIP, copy <code>resources.json</code> into the Wonder Hall folder, and publish through GitHub Desktop.</p>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <section id="parentMaintenancePanel" class="parent-panel" hidden>
+        <div class="maintenance-grid">
+          <article class="maintenance-card">
+            <h3>Publish Resource Changes</h3>
+            <p>Download the updated resource file, replace the existing file in your Wonder Hall folder, then commit and push with GitHub Desktop.</p>
+            <button id="exportResourcesButton" class="primary-parent-button" type="button">Download resources.json</button>
+          </article>
+          <article class="maintenance-card">
+            <h3>Backup Parent Data</h3>
+            <p>Download galleries, resources, bookmarks, passport stamps, and Parent Wing settings.</p>
+            <button id="exportBackupButton" type="button">Download Full Backup</button>
+          </article>
+          <article class="maintenance-card">
+            <h3>Import Resources</h3>
+            <p>Load a previously exported resources file into the Parent Wing.</p>
+            <label class="file-button">Choose resources.json
+              <input id="importResourcesInput" type="file" accept=".json,application/json">
+            </label>
+          </article>
+          <article class="maintenance-card">
+            <h3>Maintenance Status</h3>
+            <p id="maintenanceStatus"></p>
+            <button id="validateDataButton" type="button">Check Data</button>
+          </article>
+          <article class="maintenance-card danger-card">
+            <h3>Reset Device Data</h3>
+            <p>Clear local Parent Wing edits, favorites, and passport stamps. This does not change the published GitHub site.</p>
+            <button id="resetDeviceDataButton" type="button">Reset Local Data</button>
+          </article>
         </div>
       </section>
     </section>
+
+    <div id="parentPasswordModal" class="password-modal" hidden>
+      <div class="password-dialog">
+        <p class="section-kicker">Parent Wing</p>
+        <h2 id="passwordModalTitle">Unlock Parent Wing</h2>
+        <p id="passwordModalHelp"></p>
+        <form id="parentPasswordForm">
+          <label>Password <input id="parentPasswordInput" type="password" required autocomplete="current-password"></label>
+          <label id="confirmPasswordLabel" hidden>Confirm password <input id="parentPasswordConfirm" type="password"></label>
+          <p id="passwordError" class="password-error" hidden></p>
+          <div class="form-actions">
+            <button class="primary-parent-button" type="submit">Continue</button>
+            <button id="cancelPasswordButton" type="button">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
   </main>
 
-  <dialog id="passwordDialog">
-    <form method="dialog" id="passwordForm" class="dialog-card">
-      <h2 id="passwordTitle">Open Museum Studio</h2>
-      <p id="passwordHelp"></p>
-      <label>Password<input id="passwordInput" type="password" required minlength="6"></label>
-      <div class="form-actions"><button class="primary" value="submit">Continue</button><button value="cancel">Cancel</button></div>
-    </form>
-  </dialog>
+  <footer>
+    <strong>Wonder Hall</strong>
+    <span>Curated for curious minds.</span>
+  </footer>
 
-  <dialog id="linkDialog">
-    <form method="dialog" id="linkForm" class="dialog-card">
-      <h2>Add Website Link</h2>
-      <label>Name<input id="linkName" required></label>
-      <label>Website address<input id="linkUrl" type="url" required></label>
-      <label>Description<textarea id="linkDescription" rows="3"></textarea></label>
-      <div class="form-actions"><button class="primary" value="submit">Add Link</button><button value="cancel">Cancel</button></div>
-    </form>
-  </dialog>
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <script src="app.js?v=431"></script>
 
-  <script type="module" src="js/app.js?v=500"></script>
+  <div id="resourceLinkDialog" class="link-dialog" hidden>
+    <div class="link-dialog-card">
+      <p class="section-kicker">Add Website Link</p>
+      <h2>Add a Resource Link</h2>
+      <form id="resourceLinkForm">
+        <label>
+          Resource name
+          <input id="resourceLinkNameInput" required>
+        </label>
+        <label>
+          Website address
+          <input id="resourceLinkUrlInput" type="url" required>
+        </label>
+        <label>
+          Description
+          <textarea id="resourceLinkDescriptionInput" rows="3"></textarea>
+        </label>
+        <div class="form-actions">
+          <button class="primary-parent-button" type="submit">Add Link</button>
+          <button id="cancelResourceLinkButton" type="button">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
 </body>
 </html>
