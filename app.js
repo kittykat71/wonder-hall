@@ -94,6 +94,27 @@ const publishSummary = document.getElementById("publishSummary");
 const publishWonderHallButton = document.getElementById("publishWonderHallButton");
 const publishSuccessMessage = document.getElementById("publishSuccessMessage");
 
+const githubConnectionForm = document.getElementById("githubConnectionForm");
+const githubOwnerInput = document.getElementById("githubOwnerInput");
+const githubRepoInput = document.getElementById("githubRepoInput");
+const githubBranchInput = document.getElementById("githubBranchInput");
+const githubPathInput = document.getElementById("githubPathInput");
+const githubTokenInput = document.getElementById("githubTokenInput");
+const disconnectGithubButton = document.getElementById("disconnectGithubButton");
+const githubConnectionStatus = document.getElementById("githubConnectionStatus");
+const githubStatusHeading = document.getElementById("githubStatusHeading");
+const githubStatusMessage = document.getElementById("githubStatusMessage");
+const githubSetupDetails = document.getElementById("githubSetupDetails");
+const githubCommitMessageInput = document.getElementById("githubCommitMessageInput");
+const publishDirectlyButton = document.getElementById("publishDirectlyButton");
+const directPublishProgress = document.getElementById("directPublishProgress");
+const directPublishProgressText = document.getElementById("directPublishProgressText");
+const directPublishSuccess = document.getElementById("directPublishSuccess");
+const directPublishSuccessText = document.getElementById("directPublishSuccessText");
+const directPublishError = document.getElementById("directPublishError");
+const directPublishErrorText = document.getElementById("directPublishErrorText");
+const publishedCommitLink = document.getElementById("publishedCommitLink");
+
 let data = { galleries: [], resources: [] };
 let currentGalleryId = null;
 let parentUnlocked = false;
@@ -101,11 +122,15 @@ let pendingGalleryImage = null;
 let removeCurrentGalleryImage = false;
 let pendingResourceImage = null;
 let removeCurrentResourceImage = false;
+let githubConnected = false;
+let githubConnectionFileSha = null;
 
 const FAVORITES_KEY = "wonderHallFavorites";
 const PASSPORT_KEY = "wonderHallPassport";
 const CUSTOM_DATA_KEY = "wonderHallCustomData";
 const PARENT_HASH_KEY = "wonderHallParentHash";
+const GITHUB_SETTINGS_KEY = "wonderHallGithubSettings";
+const GITHUB_TOKEN_SESSION_KEY = "wonderHallGithubToken";
 
 function getStoredSet(key) {
   try { return new Set(JSON.parse(localStorage.getItem(key) || "[]")); }
@@ -327,7 +352,7 @@ async function loadData() {
     if (custom) {
       data = JSON.parse(custom);
     } else {
-      const response = await fetch("resources.json?v=361", { cache:"no-store" });
+      const response = await fetch("resources.json?v=400", { cache:"no-store" });
       if (!response.ok) throw new Error(`Could not load resources.json (${response.status})`);
       data = await response.json();
     }
@@ -547,6 +572,197 @@ function showParentWing() {
 }
 
 
+
+function getGithubSettings() {
+  try {
+    return JSON.parse(localStorage.getItem(GITHUB_SETTINGS_KEY) || "{}");
+  } catch {
+    return {};
+  }
+}
+
+function saveGithubSettings() {
+  const settings = {
+    owner: githubOwnerInput.value.trim(),
+    repo: githubRepoInput.value.trim(),
+    branch: githubBranchInput.value.trim() || "main",
+    path: githubPathInput.value.trim() || "resources.json"
+  };
+  localStorage.setItem(GITHUB_SETTINGS_KEY, JSON.stringify(settings));
+  return settings;
+}
+
+function getGithubToken() {
+  return sessionStorage.getItem(GITHUB_TOKEN_SESSION_KEY) || "";
+}
+
+function setGithubToken(token) {
+  if (token) sessionStorage.setItem(GITHUB_TOKEN_SESSION_KEY, token);
+  else sessionStorage.removeItem(GITHUB_TOKEN_SESSION_KEY);
+}
+
+function loadGithubSettingsIntoForm() {
+  const settings = getGithubSettings();
+  githubOwnerInput.value = settings.owner || "kittykat71";
+  githubRepoInput.value = settings.repo || "wonder-hall";
+  githubBranchInput.value = settings.branch || "main";
+  githubPathInput.value = settings.path || "resources.json";
+
+  const token = getGithubToken();
+  githubTokenInput.value = token;
+
+  if (token && settings.owner && settings.repo) {
+    setGithubStatus("disconnected", "GitHub connection can be restored", "Click Test and Connect to verify the saved repository and current-session token.");
+  }
+}
+
+function setGithubStatus(kind, heading, message) {
+  githubConnectionStatus.classList.remove("connected", "disconnected", "error");
+  githubConnectionStatus.classList.add(kind);
+  githubStatusHeading.textContent = heading;
+  githubStatusMessage.textContent = message;
+}
+
+function setDirectPublishState({ loading = false, success = false, error = "" } = {}) {
+  publishDirectlyButton.disabled = loading || !githubConnected;
+  directPublishProgress.hidden = !loading;
+  directPublishSuccess.hidden = !success;
+  directPublishError.hidden = !error;
+
+  if (error) directPublishErrorText.textContent = error;
+}
+
+function encodeUtf8ToBase64(value) {
+  const bytes = new TextEncoder().encode(value);
+  let binary = "";
+  const chunkSize = 0x8000;
+
+  for (let index = 0; index < bytes.length; index += chunkSize) {
+    binary += String.fromCharCode(...bytes.subarray(index, index + chunkSize));
+  }
+
+  return btoa(binary);
+}
+
+async function githubRequest(url, options = {}) {
+  const token = getGithubToken();
+
+  if (!token) {
+    throw new Error("The GitHub token is missing. Enter it again and reconnect.");
+  }
+
+  const response = await fetch(url, {
+    ...options,
+    headers: {
+      "Accept": "application/vnd.github+json",
+      "Authorization": `Bearer ${token}`,
+      "X-GitHub-Api-Version": "2022-11-28",
+      ...(options.headers || {})
+    }
+  });
+
+  let body = null;
+  const text = await response.text();
+
+  if (text) {
+    try {
+      body = JSON.parse(text);
+    } catch {
+      body = { message: text };
+    }
+  }
+
+  if (!response.ok) {
+    const message = body?.message || `GitHub returned ${response.status}.`;
+    const error = new Error(message);
+    error.status = response.status;
+    error.body = body;
+    throw error;
+  }
+
+  return body;
+}
+
+function buildGithubContentsUrl(settings) {
+  const owner = encodeURIComponent(settings.owner);
+  const repo = encodeURIComponent(settings.repo);
+  const path = settings.path.split("/").map(encodeURIComponent).join("/");
+  const branch = encodeURIComponent(settings.branch);
+  return `https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`;
+}
+
+async function testGithubConnection() {
+  const settings = saveGithubSettings();
+  const token = githubTokenInput.value.trim();
+
+  if (!token) throw new Error("Enter a GitHub access token.");
+  setGithubToken(token);
+
+  const file = await githubRequest(buildGithubContentsUrl(settings));
+  githubConnectionFileSha = file.sha;
+  githubConnected = true;
+
+  setGithubStatus(
+    "connected",
+    "GitHub is connected",
+    `${settings.owner}/${settings.repo} · ${settings.branch} · ${settings.path}`
+  );
+
+  publishDirectlyButton.disabled = false;
+  githubSetupDetails.open = false;
+}
+
+async function publishDataDirectlyToGithub() {
+  if (!githubConnected) {
+    throw new Error("Connect GitHub before publishing.");
+  }
+
+  const settings = saveGithubSettings();
+  const contentUrl = buildGithubContentsUrl(settings);
+
+  directPublishProgressText.textContent = "Checking the latest GitHub version…";
+  const currentFile = await githubRequest(contentUrl);
+  githubConnectionFileSha = currentFile.sha;
+
+  directPublishProgressText.textContent = "Uploading the Wonder Hall changes…";
+
+  const message = githubCommitMessageInput.value.trim() || "Update Wonder Hall from Parent Wing";
+  const content = encodeUtf8ToBase64(JSON.stringify(data, null, 2));
+
+  const owner = encodeURIComponent(settings.owner);
+  const repo = encodeURIComponent(settings.repo);
+  const path = settings.path.split("/").map(encodeURIComponent).join("/");
+  const putUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+
+  const result = await githubRequest(putUrl, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      message,
+      content,
+      sha: githubConnectionFileSha,
+      branch: settings.branch
+    })
+  });
+
+  githubConnectionFileSha = result.content?.sha || null;
+  return result;
+}
+
+function disconnectGithub() {
+  githubConnected = false;
+  githubConnectionFileSha = null;
+  setGithubToken("");
+  githubTokenInput.value = "";
+  publishDirectlyButton.disabled = true;
+
+  setGithubStatus(
+    "disconnected",
+    "GitHub is disconnected",
+    "Repository settings are remembered, but the access token was removed from this browser session."
+  );
+}
+
 function ensureSiteSettings() {
   if (!data.siteSettings) {
     data.siteSettings = {
@@ -714,6 +930,7 @@ function populateParentWing() {
   populateFeaturedEditor();
   populateHomepageEditor();
   populatePublishSummary();
+  loadGithubSettingsIntoForm();
   updateMaintenanceStatus();
 }
 
@@ -855,6 +1072,78 @@ homepageEditorForm?.addEventListener("submit", event => {
   saveCustomData();
   applySiteSettingsToPage();
   alert("Homepage saved.");
+});
+
+
+githubConnectionForm?.addEventListener("submit", async event => {
+  event.preventDefault();
+
+  setDirectPublishState();
+  setGithubStatus("disconnected", "Testing GitHub connection…", "Wonder Hall is checking the repository and token.");
+
+  try {
+    await testGithubConnection();
+  } catch (error) {
+    githubConnected = false;
+    publishDirectlyButton.disabled = true;
+
+    let message = error.message;
+    if (error.status === 401) message = "GitHub rejected the token. Check that it was copied correctly and has not expired.";
+    if (error.status === 403) message = "The token does not have permission to update this repository. Grant Contents: Read and write.";
+    if (error.status === 404) message = "The repository, branch, or resources.json path could not be found.";
+
+    setGithubStatus("error", "GitHub connection failed", message);
+  }
+});
+
+disconnectGithubButton?.addEventListener("click", disconnectGithub);
+
+publishDirectlyButton?.addEventListener("click", async () => {
+  setDirectPublishState({ loading: true });
+
+  try {
+    const result = await publishDataDirectlyToGithub();
+    const commitUrl = result.commit?.html_url || "";
+
+    directPublishProgressText.textContent = "GitHub accepted the update.";
+    setDirectPublishState({ success: true });
+
+    directPublishSuccessText.textContent =
+      "GitHub accepted the new Wonder Hall data. GitHub Pages normally refreshes after the new commit is processed.";
+
+    if (commitUrl) {
+      publishedCommitLink.href = commitUrl;
+      publishedCommitLink.hidden = false;
+    } else {
+      publishedCommitLink.hidden = true;
+    }
+
+    setGithubStatus(
+      "connected",
+      "Wonder Hall was published",
+      "The latest Parent Wing changes were committed directly to GitHub."
+    );
+  } catch (error) {
+    let message = error.message;
+
+    if (error.status === 401) {
+      message = "The GitHub token is invalid or expired. Enter a new token and reconnect.";
+    } else if (error.status === 403) {
+      message = "GitHub refused the update. Confirm the token has Contents: Read and write for this repository.";
+    } else if (error.status === 404) {
+      message = "GitHub could not find the repository, branch, or resources.json file.";
+    } else if (error.status === 409) {
+      message = "GitHub detected a conflict. Reconnect and try publishing again.";
+    } else if (error.status === 422) {
+      message = "GitHub could not accept the update. Check the branch and repository settings.";
+    }
+
+    setDirectPublishState({ error: message });
+    setGithubStatus("error", "Publishing failed", message);
+  } finally {
+    directPublishProgress.hidden = true;
+    publishDirectlyButton.disabled = !githubConnected;
+  }
 });
 
 publishWonderHallButton?.addEventListener("click", async () => {

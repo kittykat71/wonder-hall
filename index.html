@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=361">
+  <link rel="stylesheet" href="style.css?v=400">
 </head>
 <body>
   <a class="skip-link" href="#mainContent">Skip to content</a>
@@ -146,8 +146,8 @@
 
       <div class="parent-wing-title">
         <p class="section-kicker">Private curator tools</p>
-        <h2>Curator Studio</h2>
-        <p>Design and manage Wonder Hall here. When you are finished, use Publish Wonder Hall to create one ready-to-use package.</p>
+        <h2>Connected Curator</h2>
+        <p>Design and manage Wonder Hall here. Connect GitHub once, then publish changes directly to the live website.</p>
       </div>
 
       <nav class="parent-tabs curator-tabs" aria-label="Curator Studio sections">
@@ -354,25 +354,107 @@
       </section>
 
       <section id="parentPublishPanel" class="parent-panel curator-single-panel publish-panel" hidden>
-        <div class="publish-card">
-          <p class="section-kicker">Ready to update every device</p>
+        <div class="publish-card connected-publish-card">
+          <p class="section-kicker">Connected Curator</p>
           <h2>Publish Wonder Hall</h2>
-          <p>This creates one ZIP file containing the updated <code>resources.json</code> plus simple instructions. You do not need to open the JSON file.</p>
+          <p>Connect this Parent Wing to the Wonder Hall GitHub repository. After it is connected, one button will update the live website for every device.</p>
+
+          <div id="githubConnectionStatus" class="github-status disconnected">
+            <span class="github-status-dot" aria-hidden="true"></span>
+            <div>
+              <strong id="githubStatusHeading">GitHub is not connected</strong>
+              <p id="githubStatusMessage">Enter the repository information and a fine-grained access token below.</p>
+            </div>
+          </div>
+
+          <details id="githubSetupDetails" class="github-setup" open>
+            <summary>GitHub connection settings</summary>
+
+            <form id="githubConnectionForm" class="github-connection-form">
+              <div class="github-form-grid">
+                <label>
+                  GitHub username
+                  <input id="githubOwnerInput" autocomplete="username" placeholder="kittykat71" required>
+                </label>
+
+                <label>
+                  Repository
+                  <input id="githubRepoInput" placeholder="wonder-hall" required>
+                </label>
+
+                <label>
+                  Branch
+                  <input id="githubBranchInput" value="main" required>
+                </label>
+
+                <label>
+                  Website data file
+                  <input id="githubPathInput" value="resources.json" required>
+                </label>
+              </div>
+
+              <label>
+                Fine-grained GitHub access token
+                <input id="githubTokenInput" type="password" autocomplete="off" placeholder="github_pat_…" required>
+              </label>
+
+              <p class="connection-note">
+                Use a fine-grained token limited to this repository with
+                <strong>Contents: Read and write</strong>. Wonder Hall keeps the token only for this browser session.
+              </p>
+
+              <div class="form-actions github-form-actions">
+                <button id="testGithubConnectionButton" class="primary-parent-button" type="submit">Test and Connect</button>
+                <button id="disconnectGithubButton" type="button">Disconnect</button>
+              </div>
+            </form>
+          </details>
 
           <div class="publish-summary" id="publishSummary"></div>
 
-          <button id="publishWonderHallButton" class="publish-wonder-hall-button" type="button">
-            📦 Create Publish Package
-          </button>
+          <div class="auto-publish-area">
+            <label class="commit-message-label">
+              Publish note
+              <input id="githubCommitMessageInput" value="Update Wonder Hall from Parent Wing">
+            </label>
 
-          <div id="publishSuccessMessage" class="publish-success" hidden>
-            <h3>Your package is ready</h3>
-            <p>Extract the downloaded ZIP, copy <code>resources.json</code> into your Wonder Hall folder, then commit and push with GitHub Desktop.</p>
+            <button id="publishDirectlyButton" class="publish-wonder-hall-button" type="button" disabled>
+              Publish Directly to GitHub
+            </button>
+
+            <div id="directPublishProgress" class="direct-publish-progress" hidden>
+              <div class="publish-spinner" aria-hidden="true"></div>
+              <p id="directPublishProgressText">Publishing Wonder Hall…</p>
+            </div>
+
+            <div id="directPublishSuccess" class="publish-success" hidden>
+              <h3>Wonder Hall was published</h3>
+              <p id="directPublishSuccessText">GitHub accepted the update. GitHub Pages should refresh shortly.</p>
+              <a id="publishedCommitLink" target="_blank" rel="noopener noreferrer">View the GitHub commit</a>
+            </div>
+
+            <div id="directPublishError" class="publish-error" hidden>
+              <h3>Wonder Hall could not publish</h3>
+              <p id="directPublishErrorText"></p>
+            </div>
           </div>
+
+          <hr class="publish-divider">
+
+          <details class="manual-publish-fallback">
+            <summary>Manual backup method</summary>
+            <p>Create the same publish package used in Wonder Hall 3.61. This remains available in case the GitHub connection is unavailable.</p>
+            <button id="publishWonderHallButton" type="button">Create Manual Publish Package</button>
+
+            <div id="publishSuccessMessage" class="publish-success" hidden>
+              <h3>Your package is ready</h3>
+              <p>Extract the ZIP, copy <code>resources.json</code> into the Wonder Hall folder, and publish through GitHub Desktop.</p>
+            </div>
+          </details>
         </div>
       </section>
 
-<section id="parentMaintenancePanel" class="parent-panel" hidden>
+      <section id="parentMaintenancePanel" class="parent-panel" hidden>
         <div class="maintenance-grid">
           <article class="maintenance-card">
             <h3>Publish Resource Changes</h3>
@@ -430,6 +512,6 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
-  <script src="app.js?v=361"></script>
+  <script src="app.js?v=400"></script>
 </body>
 </html>
