@@ -559,7 +559,7 @@ async function loadData() {
     let localData = null;
 
     try {
-      const response = await fetch(`resources.json?v=431&t=${Date.now()}`, {
+      const response = await fetch(`resources.json?v=4311&t=${Date.now()}`, {
         cache: "no-store"
       });
       if (response.ok) publishedData = await response.json();
@@ -1533,10 +1533,14 @@ function populateParentWing() {
 }
 
 function renderParentBookmarks() {
+  if (!parentBookmarksList || !parentBookmarksEmpty) return;
+
   const favorites = getStoredSet(FAVORITES_KEY);
   const saved = data.resources.filter(r => favorites.has(r.url));
+
   parentBookmarksList.innerHTML = "";
   parentBookmarksEmpty.hidden = saved.length !== 0;
+
   saved.forEach(resource => {
     const row = document.createElement("article");
     row.className = "parent-list-item";

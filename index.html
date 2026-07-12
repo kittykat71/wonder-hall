@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=431">
+  <link rel="stylesheet" href="style.css?v=4311">
 </head>
 <body>
   <a class="skip-link" href="#mainContent">Skip to content</a>
@@ -396,7 +396,19 @@
       </section>
 
       
-      <section id="parentBackupsPanel" class="parent-panel curator-single-panel" hidden>
+      
+      <section id="parentBookmarksPanel" class="parent-panel curator-single-panel" hidden>
+        <div class="backup-manager-card">
+          <p class="section-kicker">Saved collection</p>
+          <h2>Favorites</h2>
+          <p id="parentBookmarksEmpty" class="empty-state">
+            No favorite resources have been saved yet.
+          </p>
+          <div id="parentBookmarksList" class="parent-list"></div>
+        </div>
+      </section>
+
+<section id="parentBackupsPanel" class="parent-panel curator-single-panel" hidden>
         <div class="backup-manager-card">
           <p class="section-kicker">Safety and recovery</p>
           <h2>Device Backups</h2>
@@ -571,7 +583,7 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
-  <script src="app.js?v=431"></script>
+  <script src="app.js?v=4311"></script>
 
   <div id="resourceLinkDialog" class="link-dialog" hidden>
     <div class="link-dialog-card">
