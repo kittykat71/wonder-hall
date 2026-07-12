@@ -197,20 +197,6 @@
       ]
     },
     {
-      "id": "logic",
-      "name": "Logic & Critical Thinking",
-      "icon": "🧠",
-      "description": "Chess, reasoning, strategy, and brain challenges.",
-      "artwork": "assets/gallery-art-v353/logic.jpg",
-      "roomName": "strategy room",
-      "themeColor": "#5a6942",
-      "quotes": [
-        "Clear thinking begins with careful questions.",
-        "A puzzle is a path that has not yet revealed itself.",
-        "Reasoning helps us separate what seems true from what is true."
-      ]
-    },
-    {
       "id": "finance",
       "name": "Economics & Finance",
       "icon": "💰",
@@ -278,20 +264,6 @@
         "A thoughtful life is built from what we choose to value.",
         "Character grows through the choices no one else sees.",
         "The heart learns through reflection, practice, and care."
-      ]
-    },
-    {
-      "id": "futurescape",
-      "name": "Futurescape",
-      "icon": "🌅",
-      "description": "A space for future-focused exploration and discovery.",
-      "artwork": "assets/gallery-art-v353/futurescape.jpg",
-      "roomName": "future studies gallery",
-      "themeColor": "#3f517b",
-      "quotes": [
-        "The future is shaped by the questions we are brave enough to ask.",
-        "Imagination helps us prepare for possibilities that do not yet exist.",
-        "Tomorrow begins in the ideas we explore today."
       ]
     }
   ],
