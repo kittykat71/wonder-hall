@@ -157,6 +157,9 @@ const mediaObjectUrls = new Map();
 const FAVORITES_KEY = "wonderHallFavorites";
 const PASSPORT_KEY = "wonderHallPassport";
 const CUSTOM_DATA_KEY = "wonderHallCustomData";
+const LOCAL_DIRTY_KEY = "wonderHallHasUnpublishedChanges";
+const LAST_PUBLISHED_FINGERPRINT_KEY = "wonderHallPublishedFingerprint";
+const SMART_REFRESH_INTERVAL_MS = 60 * 1000;
 const DEVICE_BACKUPS_KEY = "wonderHallDeviceBackups";
 const LAST_PUBLISHED_SNAPSHOT_KEY = "wonderHallLastPublishedSnapshot";
 const MAX_DEVICE_BACKUPS = 12;
@@ -556,6 +559,152 @@ function getStoredSet(key) {
 function saveStoredSet(key, set) {
   localStorage.setItem(key, JSON.stringify([...set]));
 }
+
+function stableDataFingerprint(value) {
+  try {
+    const text = JSON.stringify(value || {});
+    let hash = 2166136261;
+
+    for (let index = 0; index < text.length; index++) {
+      hash ^= text.charCodeAt(index);
+      hash = Math.imul(hash, 16777619);
+    }
+
+    return (hash >>> 0).toString(16);
+  } catch {
+    return "";
+  }
+}
+
+function hasUnpublishedLocalChanges() {
+  return localStorage.getItem(LOCAL_DIRTY_KEY) === "true";
+}
+
+function markLocalChangesPending() {
+  localStorage.setItem(LOCAL_DIRTY_KEY, "true");
+}
+
+function markLocalDataPublished() {
+  localStorage.setItem(LOCAL_DIRTY_KEY, "false");
+  localStorage.setItem(
+    LAST_PUBLISHED_FINGERPRINT_KEY,
+    stableDataFingerprint(data)
+  );
+
+  try {
+    localStorage.setItem(CUSTOM_DATA_KEY, JSON.stringify(data));
+  } catch (error) {
+    console.warn("The synchronized browser copy could not be stored.", error);
+  }
+}
+
+async function applyPublishedData(publishedData, { announce = false } = {}) {
+  if (!publishedData) return false;
+
+  const oldFingerprint = stableDataFingerprint(data);
+  const newFingerprint = stableDataFingerprint(publishedData);
+
+  if (oldFingerprint === newFingerprint) {
+    localStorage.setItem(
+      LAST_PUBLISHED_FINGERPRINT_KEY,
+      newFingerprint
+    );
+    return false;
+  }
+
+  data = cloneData(publishedData);
+
+  try {
+    localStorage.setItem(CUSTOM_DATA_KEY, JSON.stringify(data));
+    localStorage.setItem(LOCAL_DIRTY_KEY, "false");
+    localStorage.setItem(
+      LAST_PUBLISHED_FINGERPRINT_KEY,
+      newFingerprint
+    );
+  } catch (error) {
+    if (error?.name === "QuotaExceededError") {
+      localStorage.removeItem(DEVICE_BACKUPS_KEY);
+      localStorage.setItem(CUSTOM_DATA_KEY, JSON.stringify(data));
+      localStorage.setItem(LOCAL_DIRTY_KEY, "false");
+      localStorage.setItem(
+        LAST_PUBLISHED_FINGERPRINT_KEY,
+        newFingerprint
+      );
+    } else {
+      throw error;
+    }
+  }
+
+  await hydrateMediaObjectUrls();
+
+  ensureSiteSettings();
+  applySiteSettingsToPage();
+  renderGalleries(data.galleries);
+
+  if (currentViewName === "gallery" && currentGalleryId) {
+    openGallery(currentGalleryId, { updateHistory: false });
+  } else if (currentViewName === "favorites") {
+    renderFavorites();
+  } else if (currentViewName === "passport") {
+    renderPassport();
+  } else if (currentViewName === "parent") {
+    populateParentWing();
+  }
+
+  if (announce) {
+    showSmartRefreshNotice();
+  }
+
+  return true;
+}
+
+async function fetchNewestPublishedData() {
+  const response = await fetch(
+    `resources.json?v=4410&t=${Date.now()}`,
+    { cache: "no-store" }
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      `Could not check for Wonder Hall updates (${response.status}).`
+    );
+  }
+
+  return response.json();
+}
+
+async function refreshPublishedDataIfClean({ announce = true } = {}) {
+  if (hasUnpublishedLocalChanges()) return false;
+
+  try {
+    const publishedData = await fetchNewestPublishedData();
+    return await applyPublishedData(publishedData, { announce });
+  } catch (error) {
+    console.warn("Wonder Hall could not check for published updates.", error);
+    return false;
+  }
+}
+
+function showSmartRefreshNotice() {
+  let notice = document.getElementById("smartRefreshNotice");
+
+  if (!notice) {
+    notice = document.createElement("div");
+    notice.id = "smartRefreshNotice";
+    notice.className = "smart-refresh-notice";
+    notice.setAttribute("role", "status");
+    document.body.appendChild(notice);
+  }
+
+  notice.textContent = "Wonder Hall updated to the newest published version.";
+  notice.classList.add("show");
+
+  clearTimeout(showSmartRefreshNotice.timeout);
+  showSmartRefreshNotice.timeout = setTimeout(() => {
+    notice.classList.remove("show");
+  }, 3500);
+}
+
 function saveCustomData() {
   const previousRaw = localStorage.getItem(CUSTOM_DATA_KEY);
 
@@ -571,6 +720,7 @@ function saveCustomData() {
 
   try {
     localStorage.setItem(CUSTOM_DATA_KEY, serialized);
+    markLocalChangesPending();
     return true;
   } catch (error) {
     if (error?.name !== "QuotaExceededError") throw error;
@@ -580,6 +730,7 @@ function saveCustomData() {
 
     try {
       localStorage.setItem(CUSTOM_DATA_KEY, serialized);
+      markLocalChangesPending();
       return true;
     } catch (retryError) {
       alert(
@@ -958,10 +1109,7 @@ async function loadData() {
     let localData = null;
 
     try {
-      const response = await fetch(`resources.json?v=443&t=${Date.now()}`, {
-        cache: "no-store"
-      });
-      if (response.ok) publishedData = await response.json();
+      publishedData = await fetchNewestPublishedData();
     } catch (error) {
       console.warn("Published data could not be loaded.", error);
     }
@@ -973,27 +1121,30 @@ async function loadData() {
       console.warn("Local data could not be read.", error);
     }
 
-    const localLooksEmpty =
-      localData &&
-      (!Array.isArray(localData.galleries) || localData.galleries.length === 0) &&
-      (!Array.isArray(localData.resources) || localData.resources.length === 0);
+    /*
+      Smart Cache Refresh rule:
 
-    const publishedHasContent =
-      publishedData &&
-      Array.isArray(publishedData.galleries) &&
-      publishedData.galleries.length > 0 &&
-      Array.isArray(publishedData.resources) &&
-      publishedData.resources.length > 0;
-
-    data = localLooksEmpty && publishedHasContent
-      ? cloneData(publishedData)
-      : mergeWonderHallData(publishedData, localData);
-
-    if (!data) {
+      - A device with deliberate unpublished Parent Wing edits keeps its local copy.
+      - Every clean device, including phones and tablets with stale historical
+        localStorage, uses the newest published GitHub copy.
+      - If GitHub is temporarily unreachable, the last local copy remains available.
+    */
+    if (localData && hasUnpublishedLocalChanges()) {
+      data = localData;
+    } else if (publishedData) {
+      data = cloneData(publishedData);
+      localStorage.setItem(LOCAL_DIRTY_KEY, "false");
+      localStorage.setItem(
+        LAST_PUBLISHED_FINGERPRINT_KEY,
+        stableDataFingerprint(publishedData)
+      );
+    } else if (localData) {
+      data = localData;
+    } else {
       throw new Error("No Wonder Hall data could be loaded.");
     }
 
-    // Move legacy embedded images out of localStorage before saving the working copy.
+    // Move any remaining legacy embedded images out of localStorage.
     await migrateEmbeddedImagesToExternalMedia(data);
 
     try {
@@ -2244,6 +2395,8 @@ publishDirectlyButton?.addEventListener("click", async () => {
       publishedCommitLink.hidden = true;
     }
 
+    markLocalDataPublished();
+
     setGithubStatus(
       "connected",
       "Wonder Hall was published",
@@ -2766,5 +2919,22 @@ deviceBackupList?.addEventListener("click", event => {
     renderDeviceBackups();
   }
 });
+
+
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible") {
+    refreshPublishedDataIfClean({ announce: true });
+  }
+});
+
+window.addEventListener("focus", () => {
+  refreshPublishedDataIfClean({ announce: true });
+});
+
+window.setInterval(() => {
+  if (document.visibilityState === "visible") {
+    refreshPublishedDataIfClean({ announce: true });
+  }
+}, SMART_REFRESH_INTERVAL_MS);
 
 loadData();

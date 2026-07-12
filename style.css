@@ -2590,3 +2590,36 @@ main{
 }
 .external-media-status strong{color:var(--navy)}
 .publish-media-status{margin-top:0;text-align:left}
+
+
+/* Wonder Hall 4.41 — Smart Cache Refresh */
+.smart-refresh-notice{
+  position:fixed;
+  left:50%;
+  bottom:max(20px, env(safe-area-inset-bottom));
+  z-index:300;
+  max-width:min(520px, calc(100vw - 28px));
+  padding:13px 18px;
+  color:#fff6d2;
+  background:var(--navy);
+  border:2px solid var(--gold);
+  border-radius:999px;
+  box-shadow:0 12px 30px rgba(0,0,0,.24);
+  font-weight:800;
+  text-align:center;
+  opacity:0;
+  pointer-events:none;
+  transform:translate(-50%, 18px);
+  transition:opacity .2s ease, transform .2s ease;
+}
+
+.smart-refresh-notice.show{
+  opacity:1;
+  transform:translate(-50%, 0);
+}
+
+@media(max-width:520px){
+  .smart-refresh-notice{
+    border-radius:16px;
+  }
+}
