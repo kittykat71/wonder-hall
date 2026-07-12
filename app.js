@@ -374,6 +374,37 @@ async function githubFileSha(settings, path) {
   }
 }
 
+function mediaBlobToArrayBuffer(blob) {
+  if (!blob) {
+    return Promise.reject(new Error("A staged media file is missing its image data."));
+  }
+
+  if (typeof blob.arrayBuffer === "function") {
+    return blob.arrayBuffer();
+  }
+
+  // Compatibility path for browsers whose IndexedDB Blob objects do not
+  // expose Blob.arrayBuffer(), even though they remain valid Blob objects.
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () =>
+      reject(reader.error || new Error("A staged image could not be read."));
+
+    try {
+      reader.readAsArrayBuffer(blob);
+    } catch (error) {
+      reject(
+        new Error(
+          "A staged image is in an unsupported browser format. " +
+          "Please remove and reselect that image."
+        )
+      );
+    }
+  });
+}
+
 async function uploadMediaRecordToGithub(record, settings, position, total) {
   directPublishProgressText.textContent =
     `Uploading image ${position} of ${total}: ${record.path.split("/").pop()}`;
@@ -381,7 +412,7 @@ async function uploadMediaRecordToGithub(record, settings, position, total) {
   const owner = encodeURIComponent(settings.owner);
   const repo = encodeURIComponent(settings.repo);
   const encodedPath = record.path.split("/").map(encodeURIComponent).join("/");
-  const arrayBuffer = await record.blob.arrayBuffer();
+  const arrayBuffer = await mediaBlobToArrayBuffer(record.blob);
   const bytes = new Uint8Array(arrayBuffer);
   let binary = "";
   for (let index = 0; index < bytes.length; index += 0x8000) {
@@ -409,7 +440,18 @@ async function uploadMediaRecordToGithub(record, settings, position, total) {
 async function publishExternalMediaToGithub(settings) {
   const records = await getAllMediaRecords();
   for (let index = 0; index < records.length; index++) {
-    await uploadMediaRecordToGithub(records[index], settings, index + 1, records.length);
+    try {
+      await uploadMediaRecordToGithub(
+        records[index],
+        settings,
+        index + 1,
+        records.length
+      );
+    } catch (error) {
+      throw new Error(
+        `${records[index]?.path || "Unknown media file"}: ${error.message}`
+      );
+    }
   }
   return records;
 }
@@ -833,7 +875,7 @@ async function loadData() {
     let localData = null;
 
     try {
-      const response = await fetch(`resources.json?v=441&t=${Date.now()}`, {
+      const response = await fetch(`resources.json?v=442&t=${Date.now()}`, {
         cache: "no-store"
       });
       if (response.ok) publishedData = await response.json();
