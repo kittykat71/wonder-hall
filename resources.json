@@ -4,7 +4,7 @@
       "id": "reading",
       "name": "Reading & Literature",
       "icon": "📚",
-      "description": "Books, literature, comprehension, and writing.",
+      "description": "writing, grammar, languages, storytelling, journalism, media, rhetoric, and literature.",
       "artwork": "assets/uploads/gallery-reading-1783819240135-1907c.jpg",
       "roomName": "library",
       "themeColor": "#6d3c24",
@@ -142,10 +142,10 @@
     },
     {
       "id": "languages",
-      "name": "Languages",
+      "name": "Cultures & Languages",
       "icon": "🗣️",
-      "description": "Learn new languages and explore communication.",
-      "artwork": "assets/gallery-art-v353/languages.jpg",
+      "description": "Learn new languages and explore communication. religion, ethics, philosophy, customs",
+      "artwork": "assets/uploads/gallery-cultures-languages-1783820815831-296hk.jpg",
       "roomName": "world language room",
       "themeColor": "#7b4c59",
       "quotes": [
@@ -158,8 +158,8 @@
       "id": "art",
       "name": "Art",
       "icon": "🎨",
-      "description": "Drawing, museums, techniques, and creative expression.",
-      "artwork": "assets/gallery-art-v353/art.jpg",
+      "description": "Drawing, museums, techniques, and creative expression. Visual art, theater, film, dance, and human expression",
+      "artwork": "assets/uploads/gallery-art-1783819899504-rbr2w.jpg",
       "roomName": "artist studio",
       "themeColor": "#874f43",
       "quotes": [
@@ -173,7 +173,7 @@
       "name": "Music",
       "icon": "🎼",
       "description": "Music theory, sound, rhythm, and composition.",
-      "artwork": "assets/gallery-art-v353/music.jpg",
+      "artwork": "assets/uploads/gallery-music-1783820590541-yvrtc.jpg",
       "roomName": "music hall",
       "themeColor": "#594474",
       "quotes": [
@@ -187,7 +187,7 @@
       "name": "Typing",
       "icon": "⌨️",
       "description": "Build speed, accuracy, and keyboard confidence.",
-      "artwork": "assets/gallery-art-v353/typing.jpg",
+      "artwork": "assets/uploads/gallery-typing-1783820604937-jyxll.jpg",
       "roomName": "typing studio",
       "themeColor": "#455e6c",
       "quotes": [
@@ -214,8 +214,8 @@
       "id": "finance",
       "name": "Economics & Finance",
       "icon": "💰",
-      "description": "Money, markets, budgeting, and financial literacy.",
-      "artwork": "assets/gallery-art-v353/finance.jpg",
+      "description": "Markets, money, budgeting, trade, entrepreneurship, accounting, investing, management, and personal finance.",
+      "artwork": "assets/uploads/gallery-economics-finance-1783820569308-yghyh.jpg",
       "roomName": "finance gallery",
       "themeColor": "#75652f",
       "quotes": [
@@ -229,7 +229,7 @@
       "name": "Life Skills",
       "icon": "🛠️",
       "description": "Everyday knowledge, career skills, and practical learning.",
-      "artwork": "assets/gallery-art-v353/life-skills.jpg",
+      "artwork": "assets/uploads/gallery-life-skills-1783820630434-86eqf.jpg",
       "roomName": "practical skills room",
       "themeColor": "#557261",
       "quotes": [
@@ -254,11 +254,11 @@
     },
     {
       "id": "videos",
-      "name": "Educational Videos",
-      "icon": "📺",
-      "description": "Curated channels that make complex ideas understandable.",
-      "artwork": "assets/gallery-art-v353/videos.jpg",
-      "roomName": "screening room",
+      "name": "Society, Government, and Law",
+      "icon": "👨‍⚖️",
+      "description": "Sociology, politics, civics, legal systems, public policy, international relations, and social issues.",
+      "artwork": "assets/uploads/gallery-society-government-and-law-1783820503621-xj40w.jpg",
+      "roomName": "Social Studies room",
       "themeColor": "#73464d",
       "quotes": [
         "A good explanation can turn confusion into possibility.",
@@ -268,10 +268,10 @@
     },
     {
       "id": "heart-studies",
-      "name": "Heart Studies",
+      "name": "Faith & Values",
       "icon": "❤️",
-      "description": "Thoughtful studies and resources for the heart and home.",
-      "artwork": "assets/gallery-art-v353/heart-studies.jpg",
+      "description": "Religion, spirituality, sacred texts, moral beliefs, character, ethics, traditions, and worship.",
+      "artwork": "assets/uploads/gallery-faith-values-1783820719776-sy5n9.jpg",
       "roomName": "quiet reflection room",
       "themeColor": "#85545b",
       "quotes": [
