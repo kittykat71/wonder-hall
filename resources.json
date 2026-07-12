@@ -1,12 +1,452 @@
 {
-  "galleries": [],
-  "resources": [],
-  "siteSettings": {
-    "welcome": "Welcome to",
-    "title": "Wonder Hall",
-    "tagline": "Step inside. Your next adventure is waiting.",
-    "featuredGallery": "space",
-    "featuredTitle": "Journey Through the Solar System",
-    "featuredDescription": "Explore NASA resources, watch planets in motion, visit the ISS, and discover the wonders beyond Earth."
-  }
+  "galleries": [
+    {
+      "id": "reading",
+      "name": "Reading & Literature",
+      "icon": "\ud83d\udcda",
+      "description": "Books, literature, comprehension, and writing.",
+      "artwork": "assets/gallery-art-v353/reading.jpg",
+      "roomName": "library",
+      "themeColor": "#6d3c24",
+      "quotes": [
+        "Every book is a doorway, and imagination is the key.",
+        "A story can take you farther than any road.",
+        "The more you read, the larger your world becomes."
+      ]
+    },
+    {
+      "id": "read-alouds",
+      "name": "Read Alouds",
+      "icon": "\ud83d\udcd6",
+      "description": "Stories and audiobooks to enjoy together or independently.",
+      "artwork": "assets/gallery-art-v353/read-alouds.jpg",
+      "roomName": "reading nook",
+      "themeColor": "#7b4b63",
+      "quotes": [
+        "A story shared aloud becomes a memory shared together.",
+        "Listening closely is another way of learning to see.",
+        "Words come alive when a voice gives them wings."
+      ]
+    },
+    {
+      "id": "math",
+      "name": "Math",
+      "icon": "\u2797",
+      "description": "Numbers, puzzles, problem-solving, and mathematical thinking.",
+      "artwork": "assets/gallery-art-v353/math.jpg",
+      "roomName": "geometry room",
+      "themeColor": "#2e5f50",
+      "quotes": [
+        "Every puzzle becomes clearer one step at a time.",
+        "Patterns are the quiet language of the universe.",
+        "A difficult problem is an invitation to think differently."
+      ]
+    },
+    {
+      "id": "science",
+      "name": "Science",
+      "icon": "\ud83d\udd2c",
+      "description": "Experiments, simulations, biology, chemistry, and physics.",
+      "artwork": "assets/gallery-art-v353/science.jpg",
+      "roomName": "laboratory",
+      "themeColor": "#1c5361",
+      "quotes": [
+        "Curiosity begins with a question and grows through discovery.",
+        "Look closely; the smallest detail may hold the biggest wonder.",
+        "Every experiment teaches us something, even when it surprises us."
+      ]
+    },
+    {
+      "id": "history",
+      "name": "History",
+      "icon": "\ud83c\udfdb\ufe0f",
+      "description": "People, places, documents, and stories from the past.",
+      "artwork": "assets/gallery-art-v353/history.jpg",
+      "roomName": "history hall",
+      "themeColor": "#735035",
+      "quotes": [
+        "The past leaves clues for those willing to look.",
+        "Understanding yesterday helps us choose tomorrow wisely.",
+        "Every ordinary life is part of a larger story."
+      ]
+    },
+    {
+      "id": "geography",
+      "name": "Geography",
+      "icon": "\ud83c\udf0e",
+      "description": "Maps, countries, cultures, and the world around us.",
+      "artwork": "assets/gallery-art-v353/geography.jpg",
+      "roomName": "map room",
+      "themeColor": "#31736b",
+      "quotes": [
+        "The world grows smaller when we learn how others live.",
+        "Every map is an invitation to explore.",
+        "A new place can teach us a new way to see."
+      ]
+    },
+    {
+      "id": "space",
+      "name": "Space",
+      "icon": "\ud83d\ude80",
+      "description": "Planets, stars, missions, and the wider universe.",
+      "artwork": "assets/gallery-art-v353/space.jpg",
+      "roomName": "observatory",
+      "themeColor": "#1d2e62",
+      "quotes": [
+        "Wonder begins wherever the known world ends.",
+        "The night sky reminds us how much remains to discover.",
+        "Big questions often begin by looking up."
+      ]
+    },
+    {
+      "id": "animals",
+      "name": "Animals",
+      "icon": "\ud83d\udc18",
+      "description": "Wildlife, habitats, live cams, and animal science.",
+      "artwork": "assets/gallery-art-v353/animals.jpg",
+      "roomName": "animal pavilion",
+      "themeColor": "#526d3e",
+      "quotes": [
+        "Every creature has something to teach the careful observer.",
+        "The wild world is full of stories without words.",
+        "Respect grows when we learn how other lives unfold."
+      ]
+    },
+    {
+      "id": "nature",
+      "name": "Nature",
+      "icon": "\ud83c\udf32",
+      "description": "Birds, plants, ecosystems, and outdoor discovery.",
+      "artwork": "assets/gallery-art-v353/nature.jpg",
+      "roomName": "conservatory",
+      "themeColor": "#356e4a",
+      "quotes": [
+        "Nature rewards the person who slows down enough to notice.",
+        "Small changes, given time, can shape an entire landscape.",
+        "There is always something new beneath an old tree."
+      ]
+    },
+    {
+      "id": "engineering",
+      "name": "Engineering",
+      "icon": "\ud83c\udfd7\ufe0f",
+      "description": "Design, build, invent, test, and improve.",
+      "artwork": "assets/gallery-art-v353/engineering.jpg",
+      "roomName": "inventor workshop",
+      "themeColor": "#6b5136",
+      "quotes": [
+        "Ideas become useful when we give them shape.",
+        "Build, test, adjust, and try again.",
+        "Every invention begins with someone imagining a better way."
+      ]
+    },
+    {
+      "id": "coding",
+      "name": "Coding & Technology",
+      "icon": "\ud83d\udcbb",
+      "description": "Programming, computer skills, and digital creativity.",
+      "artwork": "assets/gallery-art-v353/coding.jpg",
+      "roomName": "technology lab",
+      "themeColor": "#28496c",
+      "quotes": [
+        "A large creation is often built one small instruction at a time.",
+        "Mistakes are clues that help us improve the design.",
+        "Code turns careful thinking into something others can use."
+      ]
+    },
+    {
+      "id": "languages",
+      "name": "Languages",
+      "icon": "\ud83d\udde3\ufe0f",
+      "description": "Learn new languages and explore communication.",
+      "artwork": "assets/gallery-art-v353/languages.jpg",
+      "roomName": "world language room",
+      "themeColor": "#7b4c59",
+      "quotes": [
+        "Every language offers another window into the human world.",
+        "New words make room for new ideas.",
+        "Understanding grows when we learn how others express themselves."
+      ]
+    },
+    {
+      "id": "art",
+      "name": "Art",
+      "icon": "\ud83c\udfa8",
+      "description": "Drawing, museums, techniques, and creative expression.",
+      "artwork": "assets/gallery-art-v353/art.jpg",
+      "roomName": "artist studio",
+      "themeColor": "#874f43",
+      "quotes": [
+        "Art begins when you notice something worth expressing.",
+        "There is no single right way to make something meaningful.",
+        "Your imagination deserves a place in the world."
+      ]
+    },
+    {
+      "id": "music",
+      "name": "Music",
+      "icon": "\ud83c\udfbc",
+      "description": "Music theory, sound, rhythm, and composition.",
+      "artwork": "assets/gallery-art-v353/music.jpg",
+      "roomName": "music hall",
+      "themeColor": "#594474",
+      "quotes": [
+        "Music can say what ordinary words cannot.",
+        "A single note matters because of what surrounds it.",
+        "Listening is where music truly begins."
+      ]
+    },
+    {
+      "id": "typing",
+      "name": "Typing",
+      "icon": "\u2328\ufe0f",
+      "description": "Build speed, accuracy, and keyboard confidence.",
+      "artwork": "assets/gallery-art-v353/typing.jpg",
+      "roomName": "typing studio",
+      "themeColor": "#455e6c",
+      "quotes": [
+        "Confidence grows through patient practice.",
+        "Accuracy first; speed follows.",
+        "Every skill becomes easier through steady repetition."
+      ]
+    },
+    {
+      "id": "logic",
+      "name": "Logic & Critical Thinking",
+      "icon": "\ud83e\udde0",
+      "description": "Chess, reasoning, strategy, and brain challenges.",
+      "artwork": "assets/gallery-art-v353/logic.jpg",
+      "roomName": "strategy room",
+      "themeColor": "#5a6942",
+      "quotes": [
+        "Clear thinking begins with careful questions.",
+        "A puzzle is a path that has not yet revealed itself.",
+        "Reasoning helps us separate what seems true from what is true."
+      ]
+    },
+    {
+      "id": "finance",
+      "name": "Economics & Finance",
+      "icon": "\ud83d\udcb0",
+      "description": "Money, markets, budgeting, and financial literacy.",
+      "artwork": "assets/gallery-art-v353/finance.jpg",
+      "roomName": "finance gallery",
+      "themeColor": "#75652f",
+      "quotes": [
+        "Small choices repeated over time can create lasting change.",
+        "Wise planning gives future possibilities room to grow.",
+        "Money is a tool; understanding helps us use it well."
+      ]
+    },
+    {
+      "id": "life-skills",
+      "name": "Life Skills",
+      "icon": "\ud83d\udee0\ufe0f",
+      "description": "Everyday knowledge, career skills, and practical learning.",
+      "artwork": "assets/gallery-art-v353/life-skills.jpg",
+      "roomName": "practical skills room",
+      "themeColor": "#557261",
+      "quotes": [
+        "Independence is built through many small acts of practice.",
+        "Useful knowledge becomes confidence in action.",
+        "Learning how to care for daily life is a form of wisdom."
+      ]
+    },
+    {
+      "id": "college",
+      "name": "College-Level Learning",
+      "icon": "\ud83c\udf93",
+      "description": "Free courses and textbooks for advanced learners.",
+      "artwork": "assets/gallery-art-v353/college.jpg",
+      "roomName": "scholars hall",
+      "themeColor": "#455678",
+      "quotes": [
+        "Serious study begins with the courage to remain curious.",
+        "Knowledge deepens when we connect ideas across subjects.",
+        "The goal of learning is not only to know more, but to understand better."
+      ]
+    },
+    {
+      "id": "videos",
+      "name": "Educational Videos",
+      "icon": "\ud83d\udcfa",
+      "description": "Curated channels that make complex ideas understandable.",
+      "artwork": "assets/gallery-art-v353/videos.jpg",
+      "roomName": "screening room",
+      "themeColor": "#73464d",
+      "quotes": [
+        "A good explanation can turn confusion into possibility.",
+        "Watch actively, pause thoughtfully, and follow your questions.",
+        "Seeing an idea in motion can help it settle in the mind."
+      ]
+    },
+    {
+      "id": "heart-studies",
+      "name": "Heart Studies",
+      "icon": "\u2764\ufe0f",
+      "description": "Thoughtful studies and resources for the heart and home.",
+      "artwork": "assets/gallery-art-v353/heart-studies.jpg",
+      "roomName": "quiet reflection room",
+      "themeColor": "#85545b",
+      "quotes": [
+        "A thoughtful life is built from what we choose to value.",
+        "Character grows through the choices no one else sees.",
+        "The heart learns through reflection, practice, and care."
+      ]
+    },
+    {
+      "id": "futurescape",
+      "name": "Futurescape",
+      "icon": "\ud83c\udf05",
+      "description": "A space for future-focused exploration and discovery.",
+      "artwork": "assets/gallery-art-v353/futurescape.jpg",
+      "roomName": "future studies gallery",
+      "themeColor": "#3f517b",
+      "quotes": [
+        "The future is shaped by the questions we are brave enough to ask.",
+        "Imagination helps us prepare for possibilities that do not yet exist.",
+        "Tomorrow begins in the ideas we explore today."
+      ]
+    }
+  ],
+  "resources": [
+    {
+      "name": "NASA STEM Engagement",
+      "category": "science",
+      "description": "Hands-on STEM activities, lessons, and challenges from NASA.",
+      "url": "https://www.nasa.gov/stem/"
+    },
+    {
+      "name": "Smithsonian Learning Lab",
+      "category": "science",
+      "description": "Explore millions of Smithsonian resources and learning collections.",
+      "url": "https://learninglab.si.edu/"
+    },
+    {
+      "name": "PhET Interactive Simulations",
+      "category": "science",
+      "description": "Interactive math and science simulations from the University of Colorado Boulder.",
+      "url": "https://phet.colorado.edu/"
+    },
+    {
+      "name": "Mystery Science",
+      "category": "science",
+      "description": "Engaging science lessons and activities for children.",
+      "url": "https://mysteryscience.com/"
+    },
+    {
+      "name": "CK-12 Science",
+      "category": "science",
+      "description": "Free digital textbooks, simulations, and adaptive practice.",
+      "url": "https://www.ck12.org/student/"
+    },
+    {
+      "name": "Storyline Online",
+      "category": "read-alouds",
+      "description": "Children's books read aloud by celebrated actors.",
+      "url": "https://storylineonline.net/"
+    },
+    {
+      "name": "Unite for Literacy",
+      "category": "read-alouds",
+      "description": "A colorful digital library with narration in many languages.",
+      "url": "https://www.uniteforliteracy.com/"
+    },
+    {
+      "name": "LibriVox",
+      "category": "read-alouds",
+      "description": "Free public-domain audiobooks read by volunteers.",
+      "url": "https://librivox.org/"
+    },
+    {
+      "name": "San Diego Zoo Kids",
+      "category": "animals",
+      "description": "Animal facts, videos, stories, and activities.",
+      "url": "https://sdzwildlifeexplorers.org/"
+    },
+    {
+      "name": "Monterey Bay Aquarium Live Cams",
+      "category": "animals",
+      "description": "Watch sea otters, jellyfish, sharks, and other ocean life live.",
+      "url": "https://www.montereybayaquarium.org/animals/live-cams"
+    },
+    {
+      "name": "Explore.org Live Nature Cams",
+      "category": "animals",
+      "description": "Live wildlife and nature cameras from around the world.",
+      "url": "https://explore.org/livecams"
+    },
+    {
+      "name": "NASA STEM",
+      "category": "space",
+      "description": "Space science activities, missions, and learning resources.",
+      "url": "https://www.nasa.gov/stem/"
+    },
+    {
+      "name": "NASA Eyes",
+      "category": "space",
+      "description": "Interactive 3D visualizations of planets, spacecraft, and Earth.",
+      "url": "https://eyes.nasa.gov/"
+    },
+    {
+      "name": "ESA Kids",
+      "category": "space",
+      "description": "Space news, games, and learning from the European Space Agency.",
+      "url": "https://www.esa.int/kids/en/home"
+    },
+    {
+      "name": "iNaturalist",
+      "category": "nature",
+      "description": "Identify plants and animals and contribute to citizen science.",
+      "url": "https://www.inaturalist.org/"
+    },
+    {
+      "name": "Merlin Bird ID",
+      "category": "nature",
+      "description": "Identify birds by sight or sound with Cornell's free tools.",
+      "url": "https://merlin.allaboutbirds.org/"
+    },
+    {
+      "name": "Cornell Lab of Ornithology",
+      "category": "nature",
+      "description": "Bird science, live cams, identification, and learning resources.",
+      "url": "https://www.birds.cornell.edu/home/"
+    },
+    {
+      "name": "Tinkercad",
+      "category": "engineering",
+      "description": "Create 3D designs, circuits, and beginner-friendly engineering projects.",
+      "url": "https://www.tinkercad.com/"
+    },
+    {
+      "name": "Math Learning Center Bridges",
+      "category": "engineering",
+      "description": "Free math apps and manipulatives for visual problem-solving.",
+      "url": "https://www.mathlearningcenter.org/apps"
+    },
+    {
+      "name": "CK-12 Engineering",
+      "category": "engineering",
+      "description": "Free engineering concepts, lessons, and digital learning materials.",
+      "url": "https://www.ck12.org/"
+    },
+    {
+      "name": "Simple Joy Art",
+      "category": "art",
+      "description": "Art lessons and creative projects.",
+      "url": "https://www.simplejoyart.com/"
+    },
+    {
+      "name": "Libraries of Hope Rotation",
+      "category": "reading",
+      "description": "A rotating collection of literature and learning resources.",
+      "url": "https://www.librariesofhope.com/rotation"
+    },
+    {
+      "name": "Heart Studies Rotation",
+      "category": "heart-studies",
+      "description": "A rotating collection of heart-centered studies.",
+      "url": "https://www.fcbelmonde.com/rotation"
+    }
+  ]
 }
