@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=4312">
+  <link rel="stylesheet" href="style.css?v=4401">
 </head>
 <body>
   <a class="skip-link" href="#mainContent">Skip to content</a>
@@ -325,6 +325,10 @@
           <h3>Images</h3>
           <p>Gallery and resource images are managed inside their editors. This overview shows which items currently have custom artwork.</p>
         </div>
+        <div id="externalMediaStatus" class="external-media-status">
+          <strong>External Media Library</strong>
+          <span id="externalMediaStatusText">Checking staged media…</span>
+        </div>
         <div id="imageOverviewGrid" class="image-overview-grid"></div>
       </section>
 
@@ -481,6 +485,11 @@
             </form>
           </details>
 
+          <div id="externalMediaPublishStatus" class="external-media-status publish-media-status">
+            <strong>External Media Library</strong>
+            <span id="externalMediaPublishStatusText">No staged media detected.</span>
+          </div>
+
           <div class="publish-safety-box">
             <strong>Safe Publishing is active</strong>
             <p>Wonder Hall will block empty publishes, compare this copy with the live GitHub file, and download a safety copy before publishing.</p>
@@ -589,7 +598,7 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
-  <script src="app.js?v=4312"></script>
+  <script src="app.js?v=4401"></script>
 
   <div id="resourceLinkDialog" class="link-dialog" hidden>
     <div class="link-dialog-card">

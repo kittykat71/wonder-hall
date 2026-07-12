@@ -115,6 +115,8 @@ const directPublishError = document.getElementById("directPublishError");
 const directPublishErrorText = document.getElementById("directPublishErrorText");
 const publishedCommitLink = document.getElementById("publishedCommitLink");
 const downloadPublishSafetyCopyButton = document.getElementById("downloadPublishSafetyCopyButton");
+const externalMediaStatusText = document.getElementById("externalMediaStatusText");
+const externalMediaPublishStatusText = document.getElementById("externalMediaPublishStatusText");
 
 const createDeviceBackupButton = document.getElementById("createDeviceBackupButton");
 const downloadCurrentDataButton = document.getElementById("downloadCurrentDataButton");
@@ -150,6 +152,7 @@ let handlingBrowserHistory = false;
 let currentViewName = "home";
 let galleryBuilderSortable = null;
 let pendingUploads = [];
+const mediaObjectUrls = new Map();
 
 const FAVORITES_KEY = "wonderHallFavorites";
 const PASSPORT_KEY = "wonderHallPassport";
@@ -160,6 +163,259 @@ const MAX_DEVICE_BACKUPS = 12;
 const PARENT_HASH_KEY = "wonderHallParentHash";
 const GITHUB_SETTINGS_KEY = "wonderHallGithubSettings";
 const GITHUB_TOKEN_SESSION_KEY = "wonderHallGithubToken";
+const MEDIA_DB_NAME = "wonderHallExternalMedia";
+const MEDIA_DB_VERSION = 1;
+const MEDIA_STORE_NAME = "media";
+
+
+function openMediaDatabase() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(MEDIA_DB_NAME, MEDIA_DB_VERSION);
+
+    request.onupgradeneeded = () => {
+      const database = request.result;
+      if (!database.objectStoreNames.contains(MEDIA_STORE_NAME)) {
+        database.createObjectStore(MEDIA_STORE_NAME, { keyPath: "path" });
+      }
+    };
+
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error || new Error("The media library could not be opened."));
+  });
+}
+
+async function mediaStoreRequest(mode, operation) {
+  const database = await openMediaDatabase();
+  try {
+    return await new Promise((resolve, reject) => {
+      const transaction = database.transaction(MEDIA_STORE_NAME, mode);
+      const store = transaction.objectStore(MEDIA_STORE_NAME);
+      const request = operation(store);
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error || new Error("The media library operation failed."));
+      transaction.onerror = () => reject(transaction.error || new Error("The media library transaction failed."));
+    });
+  } finally {
+    database.close();
+  }
+}
+
+function getAllMediaRecords() {
+  return mediaStoreRequest("readonly", store => store.getAll());
+}
+
+function getMediaRecord(path) {
+  return mediaStoreRequest("readonly", store => store.get(path));
+}
+
+function putMediaRecord(record) {
+  return mediaStoreRequest("readwrite", store => store.put(record));
+}
+
+function deleteMediaRecord(path) {
+  return mediaStoreRequest("readwrite", store => store.delete(path));
+}
+
+function dataUrlToBlob(dataUrl) {
+  const [header, encoded] = dataUrl.split(",");
+  const mime = header.match(/data:([^;]+)/)?.[1] || "image/jpeg";
+  const binary = atob(encoded || "");
+  const bytes = new Uint8Array(binary.length);
+  for (let index = 0; index < binary.length; index++) bytes[index] = binary.charCodeAt(index);
+  return new Blob([bytes], { type: mime });
+}
+
+function makeMediaPath(kind, name, extension = ".jpg") {
+  const safeName = slugify(name || kind);
+  return `assets/uploads/${kind}-${safeName}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}${extension}`;
+}
+
+function extensionForMime(mime) {
+  if (mime === "image/webp") return ".webp";
+  if (mime === "image/png") return ".png";
+  if (mime === "image/gif") return ".gif";
+  return ".jpg";
+}
+
+async function stageMediaBlob(path, blob, metadata = {}) {
+  await putMediaRecord({
+    path,
+    blob,
+    mime: blob.type || metadata.mime || "application/octet-stream",
+    createdAt: new Date().toISOString(),
+    status: "pending",
+    ...metadata
+  });
+
+  const previous = mediaObjectUrls.get(path);
+  if (previous) URL.revokeObjectURL(previous);
+  mediaObjectUrls.set(path, URL.createObjectURL(blob));
+  await updateExternalMediaStatus();
+  return path;
+}
+
+async function hydrateMediaObjectUrls() {
+  const records = await getAllMediaRecords();
+  for (const record of records) {
+    if (!record?.blob || !record.path) continue;
+    const previous = mediaObjectUrls.get(record.path);
+    if (previous) URL.revokeObjectURL(previous);
+    mediaObjectUrls.set(record.path, URL.createObjectURL(record.blob));
+  }
+  await updateExternalMediaStatus(records);
+}
+
+async function updateExternalMediaStatus(existingRecords = null) {
+  let records = existingRecords;
+  try {
+    if (!records) records = await getAllMediaRecords();
+  } catch (error) {
+    console.warn("The external media status could not be read.", error);
+    records = [];
+  }
+
+  const count = records.length;
+  const message = count
+    ? `${count} image ${count === 1 ? "file is" : "files are"} staged safely outside browser localStorage and will upload with the next publish.`
+    : "No image files are waiting to upload.";
+
+  if (externalMediaStatusText) externalMediaStatusText.textContent = message;
+  if (externalMediaPublishStatusText) externalMediaPublishStatusText.textContent = message;
+}
+
+function isManagedMediaPath(value) {
+  return typeof value === "string" && value.startsWith("assets/uploads/");
+}
+
+async function migrateEmbeddedImagesToExternalMedia(sourceData) {
+  let changed = false;
+
+  for (const gallery of sourceData.galleries || []) {
+    if (!isDataImage(gallery.artwork)) continue;
+    const blob = dataUrlToBlob(gallery.artwork);
+    const path = makeMediaPath("gallery", gallery.id || gallery.name, extensionForMime(blob.type));
+    await stageMediaBlob(path, blob, { kind: "gallery-image", ownerId: gallery.id });
+    gallery.artwork = path;
+    changed = true;
+  }
+
+  for (let index = 0; index < (sourceData.resources || []).length; index++) {
+    const resource = sourceData.resources[index];
+    if (!isDataImage(resource.image)) continue;
+    const blob = dataUrlToBlob(resource.image);
+    const path = makeMediaPath("resource", resource.name || `resource-${index + 1}`, extensionForMime(blob.type));
+    await stageMediaBlob(path, blob, { kind: "resource-image", ownerId: resource.url || resource.name });
+    resource.image = path;
+    changed = true;
+  }
+
+  if (changed) {
+    localStorage.removeItem(DEVICE_BACKUPS_KEY);
+    localStorage.setItem(CUSTOM_DATA_KEY, JSON.stringify(sourceData));
+  }
+
+  return changed;
+}
+
+async function resizeImageToBlob(file, maxWidth = 900, maxHeight = 650) {
+  if (!file || !file.type.startsWith("image/")) {
+    throw new Error("Choose a PNG, JPEG, or WebP image.");
+  }
+
+  const sourceUrl = URL.createObjectURL(file);
+  try {
+    const image = await new Promise((resolve, reject) => {
+      const element = new Image();
+      element.onload = () => resolve(element);
+      element.onerror = () => reject(new Error("The image could not be opened."));
+      element.src = sourceUrl;
+    });
+
+    const scale = Math.min(1, maxWidth / image.width, maxHeight / image.height);
+    const width = Math.max(1, Math.round(image.width * scale));
+    const height = Math.max(1, Math.round(image.height * scale));
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    canvas.getContext("2d").drawImage(image, 0, 0, width, height);
+
+    return await new Promise((resolve, reject) => {
+      canvas.toBlob(
+        blob => blob ? resolve(blob) : reject(new Error("The optimized image could not be created.")),
+        "image/jpeg",
+        0.84
+      );
+    });
+  } finally {
+    URL.revokeObjectURL(sourceUrl);
+  }
+}
+
+async function githubFileSha(settings, path) {
+  const owner = encodeURIComponent(settings.owner);
+  const repo = encodeURIComponent(settings.repo);
+  const encodedPath = path.split("/").map(encodeURIComponent).join("/");
+  const branch = encodeURIComponent(settings.branch);
+  try {
+    const result = await githubRequest(
+      `https://api.github.com/repos/${owner}/${repo}/contents/${encodedPath}?ref=${branch}`
+    );
+    return result.sha || null;
+  } catch (error) {
+    if (error.status === 404) return null;
+    throw error;
+  }
+}
+
+async function uploadMediaRecordToGithub(record, settings, position, total) {
+  directPublishProgressText.textContent =
+    `Uploading image ${position} of ${total}: ${record.path.split("/").pop()}`;
+
+  const owner = encodeURIComponent(settings.owner);
+  const repo = encodeURIComponent(settings.repo);
+  const encodedPath = record.path.split("/").map(encodeURIComponent).join("/");
+  const arrayBuffer = await record.blob.arrayBuffer();
+  const bytes = new Uint8Array(arrayBuffer);
+  let binary = "";
+  for (let index = 0; index < bytes.length; index += 0x8000) {
+    binary += String.fromCharCode(...bytes.subarray(index, index + 0x8000));
+  }
+
+  const sha = await githubFileSha(settings, record.path);
+  const body = {
+    message: `Upload ${record.path.split("/").pop()} from Wonder Hall`,
+    content: btoa(binary),
+    branch: settings.branch
+  };
+  if (sha) body.sha = sha;
+
+  await githubRequest(
+    `https://api.github.com/repos/${owner}/${repo}/contents/${encodedPath}`,
+    {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    }
+  );
+}
+
+async function publishExternalMediaToGithub(settings) {
+  const records = await getAllMediaRecords();
+  for (let index = 0; index < records.length; index++) {
+    await uploadMediaRecordToGithub(records[index], settings, index + 1, records.length);
+  }
+  return records;
+}
+
+async function clearPublishedMediaRecords(records) {
+  for (const record of records || []) {
+    await deleteMediaRecord(record.path);
+    const objectUrl = mediaObjectUrls.get(record.path);
+    if (objectUrl) URL.revokeObjectURL(objectUrl);
+    mediaObjectUrls.delete(record.path);
+  }
+  await updateExternalMediaStatus();
+}
 
 function getStoredSet(key) {
   try { return new Set(JSON.parse(localStorage.getItem(key) || "[]")); }
@@ -246,36 +502,7 @@ function showGalleryImagePreview(source) {
 }
 
 function readAndResizeGalleryImage(file) {
-  return new Promise((resolve, reject) => {
-    if (!file || !file.type.startsWith("image/")) {
-      reject(new Error("Choose a PNG, JPEG, or WebP image."));
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onerror = () => reject(new Error("The image could not be read."));
-    reader.onload = () => {
-      const image = new Image();
-      image.onerror = () => reject(new Error("The image could not be opened."));
-      image.onload = () => {
-        const maxWidth = 900;
-        const maxHeight = 650;
-        const scale = Math.min(1, maxWidth / image.width, maxHeight / image.height);
-        const width = Math.max(1, Math.round(image.width * scale));
-        const height = Math.max(1, Math.round(image.height * scale));
-
-        const canvas = document.createElement("canvas");
-        canvas.width = width;
-        canvas.height = height;
-        const context = canvas.getContext("2d");
-        context.drawImage(image, 0, 0, width, height);
-
-        resolve(canvas.toDataURL("image/jpeg", 0.84));
-      };
-      image.src = reader.result;
-    };
-    reader.readAsDataURL(file);
-  });
+  return resizeImageToBlob(file);
 }
 
 
@@ -391,7 +618,9 @@ function safeAssetUrl(value, version = "358") {
 
   const trimmed = String(value).trim();
 
-  // Uploaded Parent Wing images are stored as data URLs.
+  if (mediaObjectUrls.has(trimmed)) return mediaObjectUrls.get(trimmed);
+
+  // Legacy embedded images and temporary object URLs must not receive query strings.
   // Adding a query string would corrupt them.
   if (
     trimmed.startsWith("data:") ||
@@ -504,11 +733,11 @@ function identifyResource(resource) {
 }
 
 function hasCustomGalleryImage(gallery) {
-  return typeof gallery?.artwork === "string" && gallery.artwork.startsWith("data:");
+  return isDataImage(gallery?.artwork) || isManagedMediaPath(gallery?.artwork);
 }
 
 function hasCustomResourceImage(resource) {
-  return typeof resource?.image === "string" && resource.image.startsWith("data:");
+  return isDataImage(resource?.image) || isManagedMediaPath(resource?.image);
 }
 
 function mergeWonderHallData(publishedData, localData) {
@@ -633,7 +862,7 @@ async function loadData() {
     let localData = null;
 
     try {
-      const response = await fetch(`resources.json?v=4312&t=${Date.now()}`, {
+      const response = await fetch(`resources.json?v=4401&t=${Date.now()}`, {
         cache: "no-store"
       });
       if (response.ok) publishedData = await response.json();
@@ -668,6 +897,9 @@ async function loadData() {
       throw new Error("No Wonder Hall data could be loaded.");
     }
 
+    // Move legacy embedded images out of localStorage before saving the working copy.
+    await migrateEmbeddedImagesToExternalMedia(data);
+
     try {
       localStorage.setItem(CUSTOM_DATA_KEY, JSON.stringify(data));
     } catch (error) {
@@ -678,6 +910,8 @@ async function loadData() {
         throw error;
       }
     }
+
+    await hydrateMediaObjectUrls();
 
     ensureSiteSettings();
     applySiteSettingsToPage();
@@ -1192,6 +1426,8 @@ async function publishDataDirectlyToGithub() {
 
   createDeviceBackup("Automatic backup before GitHub publish");
 
+  const publishedMediaRecords = await publishExternalMediaToGithub(settings);
+
   if (pendingUploads.length) {
     await publishPendingUploadsToGithub(settings);
     validatePublishData(data);
@@ -1223,6 +1459,7 @@ async function publishDataDirectlyToGithub() {
   });
 
   githubConnectionFileSha = result.content?.sha || null;
+  result.publishedMediaRecords = publishedMediaRecords;
   return result;
 }
 
@@ -1895,6 +2132,7 @@ publishDirectlyButton?.addEventListener("click", async () => {
 
   try {
     const result = await publishDataDirectlyToGithub();
+    await clearPublishedMediaRecords(result.publishedMediaRecords);
     const commitUrl = result.commit?.html_url || "";
 
     directPublishProgressText.textContent = "GitHub accepted the update.";
@@ -1959,6 +2197,11 @@ You do not need to open resources.json.
 
   const zip = new JSZip();
   const manualData = JSON.parse(JSON.stringify(data));
+
+  const externalMediaRecords = await getAllMediaRecords();
+  for (const media of externalMediaRecords) {
+    zip.file(media.path, media.blob);
+  }
 
   for (const upload of pendingUploads) {
     const extension = upload.file.name.includes(".")
@@ -2129,16 +2372,30 @@ resourceImageInput.addEventListener("change", async event => {
   if (!file) return;
 
   try {
-    pendingResourceImage = await readAndResizeResourceImage(file);
+    const blob = await readAndResizeResourceImage(file);
+    const path = makeMediaPath(
+      "resource",
+      resourceNameInput.value.trim() || "resource-image",
+      extensionForMime(blob.type)
+    );
+    await stageMediaBlob(path, blob, { kind: "resource-image" });
+    pendingResourceImage = path;
     removeCurrentResourceImage = false;
-    showResourceImagePreview(pendingResourceImage);
+    showResourceImagePreview(safeAssetUrl(path));
   } catch (error) {
     alert(error.message);
     event.target.value = "";
   }
 });
 
-removeResourceImageButton.addEventListener("click", () => {
+removeResourceImageButton.addEventListener("click", async () => {
+  if (pendingResourceImage && isManagedMediaPath(pendingResourceImage)) {
+    await deleteMediaRecord(pendingResourceImage);
+    const objectUrl = mediaObjectUrls.get(pendingResourceImage);
+    if (objectUrl) URL.revokeObjectURL(objectUrl);
+    mediaObjectUrls.delete(pendingResourceImage);
+    await updateExternalMediaStatus();
+  }
   pendingResourceImage = null;
   removeCurrentResourceImage = true;
   resourceImageInput.value = "";
@@ -2193,16 +2450,30 @@ galleryImageInput.addEventListener("change", async event => {
   if (!file) return;
 
   try {
-    pendingGalleryImage = await readAndResizeGalleryImage(file);
+    const blob = await readAndResizeGalleryImage(file);
+    const path = makeMediaPath(
+      "gallery",
+      galleryNameInput.value.trim() || "gallery-image",
+      extensionForMime(blob.type)
+    );
+    await stageMediaBlob(path, blob, { kind: "gallery-image" });
+    pendingGalleryImage = path;
     removeCurrentGalleryImage = false;
-    showGalleryImagePreview(pendingGalleryImage);
+    showGalleryImagePreview(safeAssetUrl(path));
   } catch (error) {
     alert(error.message);
     event.target.value = "";
   }
 });
 
-removeGalleryImageButton.addEventListener("click", () => {
+removeGalleryImageButton.addEventListener("click", async () => {
+  if (pendingGalleryImage && isManagedMediaPath(pendingGalleryImage)) {
+    await deleteMediaRecord(pendingGalleryImage);
+    const objectUrl = mediaObjectUrls.get(pendingGalleryImage);
+    if (objectUrl) URL.revokeObjectURL(objectUrl);
+    mediaObjectUrls.delete(pendingGalleryImage);
+    await updateExternalMediaStatus();
+  }
   pendingGalleryImage = null;
   removeCurrentGalleryImage = true;
   galleryImageInput.value = "";

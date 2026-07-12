@@ -2573,3 +2573,20 @@ main{
   border-radius:9px;
   font-weight:800;
 }
+
+
+/* Wonder Hall 4.4 Phase 1 — External Media Library */
+.external-media-status{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:8px 14px;
+  margin:14px 0 18px;
+  padding:14px 16px;
+  color:#315f32;
+  background:#edf6e9;
+  border:1px solid #8db47d;
+  border-radius:14px;
+}
+.external-media-status strong{color:var(--navy)}
+.publish-media-status{margin-top:0;text-align:left}
