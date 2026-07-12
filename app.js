@@ -374,17 +374,86 @@ async function githubFileSha(settings, path) {
   }
 }
 
-function mediaBlobToArrayBuffer(blob) {
+function dataUrlToBlob(dataUrl) {
+  const match = /^data:([^;,]+)?(;base64)?,(.*)$/s.exec(dataUrl || "");
+
+  if (!match) {
+    throw new Error("The staged image text is not a valid data URL.");
+  }
+
+  const mime = match[1] || "application/octet-stream";
+  const isBase64 = Boolean(match[2]);
+  const payload = match[3] || "";
+
+  const binary = isBase64
+    ? atob(payload.replace(/\s/g, ""))
+    : decodeURIComponent(payload);
+
+  const bytes = new Uint8Array(binary.length);
+
+  for (let index = 0; index < binary.length; index++) {
+    bytes[index] = binary.charCodeAt(index);
+  }
+
+  return new Blob([bytes], { type: mime });
+}
+
+function unwrapStagedMedia(value) {
+  if (!value) return null;
+
+  if (value instanceof Blob) return value;
+  if (value instanceof ArrayBuffer) return new Blob([value]);
+
+  if (ArrayBuffer.isView(value)) {
+    return new Blob([
+      value.buffer.slice(
+        value.byteOffset,
+        value.byteOffset + value.byteLength
+      )
+    ]);
+  }
+
+  if (typeof value === "string") {
+    if (value.startsWith("data:")) return dataUrlToBlob(value);
+    return null;
+  }
+
+  if (typeof value === "object") {
+    const candidates = [
+      value.blob,
+      value.file,
+      value.data,
+      value.bytes,
+      value.buffer,
+      value.value,
+      value.payload
+    ];
+
+    for (const candidate of candidates) {
+      const unwrapped = unwrapStagedMedia(candidate);
+      if (unwrapped) return unwrapped;
+    }
+  }
+
+  return null;
+}
+
+function mediaBlobToArrayBuffer(mediaValue) {
+  const blob = unwrapStagedMedia(mediaValue);
+
   if (!blob) {
-    return Promise.reject(new Error("A staged media file is missing its image data."));
+    return Promise.reject(
+      new Error(
+        "A staged image could not be recovered from browser storage. " +
+        "Please remove and reselect only this one image."
+      )
+    );
   }
 
   if (typeof blob.arrayBuffer === "function") {
     return blob.arrayBuffer();
   }
 
-  // Compatibility path for browsers whose IndexedDB Blob objects do not
-  // expose Blob.arrayBuffer(), even though they remain valid Blob objects.
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
 
@@ -397,8 +466,8 @@ function mediaBlobToArrayBuffer(blob) {
     } catch (error) {
       reject(
         new Error(
-          "A staged image is in an unsupported browser format. " +
-          "Please remove and reselect that image."
+          "A staged image could not be recovered from browser storage. " +
+          "Please remove and reselect only this one image."
         )
       );
     }
@@ -412,7 +481,21 @@ async function uploadMediaRecordToGithub(record, settings, position, total) {
   const owner = encodeURIComponent(settings.owner);
   const repo = encodeURIComponent(settings.repo);
   const encodedPath = record.path.split("/").map(encodeURIComponent).join("/");
-  const arrayBuffer = await mediaBlobToArrayBuffer(record.blob);
+  const arrayBuffer = await mediaBlobToArrayBuffer(record);
+  const recoveredBlob = unwrapStagedMedia(record);
+
+  if (recoveredBlob && !(record.blob instanceof Blob)) {
+    try {
+      await putMediaRecord({
+        ...record,
+        blob: recoveredBlob,
+        mime: recoveredBlob.type || record.mime || "application/octet-stream"
+      });
+    } catch (error) {
+      console.warn("Recovered media could not be normalized in IndexedDB.", error);
+    }
+  }
+
   const bytes = new Uint8Array(arrayBuffer);
   let binary = "";
   for (let index = 0; index < bytes.length; index += 0x8000) {
@@ -875,7 +958,7 @@ async function loadData() {
     let localData = null;
 
     try {
-      const response = await fetch(`resources.json?v=442&t=${Date.now()}`, {
+      const response = await fetch(`resources.json?v=443&t=${Date.now()}`, {
         cache: "no-store"
       });
       if (response.ok) publishedData = await response.json();
