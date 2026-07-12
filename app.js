@@ -114,6 +114,7 @@ const directPublishSuccessText = document.getElementById("directPublishSuccessTe
 const directPublishError = document.getElementById("directPublishError");
 const directPublishErrorText = document.getElementById("directPublishErrorText");
 const publishedCommitLink = document.getElementById("publishedCommitLink");
+const downloadPublishSafetyCopyButton = document.getElementById("downloadPublishSafetyCopyButton");
 
 const createDeviceBackupButton = document.getElementById("createDeviceBackupButton");
 const downloadCurrentDataButton = document.getElementById("downloadCurrentDataButton");
@@ -173,10 +174,33 @@ function saveCustomData() {
   if (previousRaw) {
     try {
       createDeviceBackup("Automatic backup before edit", JSON.parse(previousRaw));
-    } catch {}
+    } catch (error) {
+      console.warn("The automatic edit backup could not be created.", error);
+    }
   }
 
-  localStorage.setItem(CUSTOM_DATA_KEY, JSON.stringify(data));
+  const serialized = JSON.stringify(data);
+
+  try {
+    localStorage.setItem(CUSTOM_DATA_KEY, serialized);
+    return true;
+  } catch (error) {
+    if (error?.name !== "QuotaExceededError") throw error;
+
+    // Backups are expendable; the current working copy is not.
+    localStorage.removeItem(DEVICE_BACKUPS_KEY);
+
+    try {
+      localStorage.setItem(CUSTOM_DATA_KEY, serialized);
+      return true;
+    } catch (retryError) {
+      alert(
+        "Wonder Hall could not save this edit because browser storage is full. " +
+        "Download Current Data before making more changes. Your existing saved copy was not intentionally erased."
+      );
+      throw retryError;
+    }
+  }
 }
 function slugify(value) {
   return value.toLowerCase().trim()
@@ -395,11 +419,61 @@ function getDeviceBackups() {
   }
 }
 
+function stripEmbeddedImagesForCompactBackup(sourceData) {
+  const compact = cloneData(sourceData);
+
+  compact.galleries = (compact.galleries || []).map(gallery => ({
+    ...gallery,
+    artwork: typeof gallery.artwork === "string" && gallery.artwork.startsWith("data:")
+      ? ""
+      : gallery.artwork
+  }));
+
+  compact.resources = (compact.resources || []).map(resource => ({
+    ...resource,
+    image: typeof resource.image === "string" && resource.image.startsWith("data:")
+      ? ""
+      : resource.image
+  }));
+
+  compact.backupNotice =
+    "Embedded custom images were omitted because browser storage was full.";
+
+  return compact;
+}
+
 function saveDeviceBackups(backups) {
-  localStorage.setItem(
-    DEVICE_BACKUPS_KEY,
-    JSON.stringify(backups.slice(0, MAX_DEVICE_BACKUPS))
-  );
+  let candidates = backups.slice(0, MAX_DEVICE_BACKUPS);
+
+  while (candidates.length) {
+    try {
+      localStorage.setItem(DEVICE_BACKUPS_KEY, JSON.stringify(candidates));
+      return true;
+    } catch (error) {
+      if (error?.name !== "QuotaExceededError") throw error;
+      candidates.pop();
+    }
+  }
+
+  const newest = backups[0];
+  if (!newest) return false;
+
+  try {
+    const compactBackup = {
+      ...newest,
+      reason: `${newest.reason} (compact — images omitted)`,
+      data: stripEmbeddedImagesForCompactBackup(newest.data)
+    };
+
+    localStorage.setItem(
+      DEVICE_BACKUPS_KEY,
+      JSON.stringify([compactBackup])
+    );
+    return true;
+  } catch (error) {
+    console.warn("Wonder Hall could not store a device backup.", error);
+    return false;
+  }
 }
 
 function createDeviceBackup(reason = "Manual backup", sourceData = data) {
@@ -416,8 +490,8 @@ function createDeviceBackup(reason = "Manual backup", sourceData = data) {
   };
 
   backups.unshift(backup);
-  saveDeviceBackups(backups);
-  return backup;
+  const stored = saveDeviceBackups(backups);
+  return stored ? backup : null;
 }
 
 function identifyGallery(gallery) {
@@ -559,7 +633,7 @@ async function loadData() {
     let localData = null;
 
     try {
-      const response = await fetch(`resources.json?v=4311&t=${Date.now()}`, {
+      const response = await fetch(`resources.json?v=4312&t=${Date.now()}`, {
         cache: "no-store"
       });
       if (response.ok) publishedData = await response.json();
@@ -574,17 +648,36 @@ async function loadData() {
       console.warn("Local data could not be read.", error);
     }
 
-    if (localData) {
-      createDeviceBackup("Automatic backup before startup merge", localData);
-    }
+    const localLooksEmpty =
+      localData &&
+      (!Array.isArray(localData.galleries) || localData.galleries.length === 0) &&
+      (!Array.isArray(localData.resources) || localData.resources.length === 0);
 
-    data = mergeWonderHallData(publishedData, localData);
+    const publishedHasContent =
+      publishedData &&
+      Array.isArray(publishedData.galleries) &&
+      publishedData.galleries.length > 0 &&
+      Array.isArray(publishedData.resources) &&
+      publishedData.resources.length > 0;
+
+    data = localLooksEmpty && publishedHasContent
+      ? cloneData(publishedData)
+      : mergeWonderHallData(publishedData, localData);
 
     if (!data) {
       throw new Error("No Wonder Hall data could be loaded.");
     }
 
-    localStorage.setItem(CUSTOM_DATA_KEY, JSON.stringify(data));
+    try {
+      localStorage.setItem(CUSTOM_DATA_KEY, JSON.stringify(data));
+    } catch (error) {
+      if (error?.name === "QuotaExceededError") {
+        localStorage.removeItem(DEVICE_BACKUPS_KEY);
+        localStorage.setItem(CUSTOM_DATA_KEY, JSON.stringify(data));
+      } else {
+        throw error;
+      }
+    }
 
     ensureSiteSettings();
     applySiteSettingsToPage();
@@ -1001,34 +1094,122 @@ async function testGithubConnection() {
   githubSetupDetails.open = false;
 }
 
-async function publishDataDirectlyToGithub() {
-  createDeviceBackup("Automatic backup before GitHub publish");
-  localStorage.setItem(LAST_PUBLISHED_SNAPSHOT_KEY, JSON.stringify(data));
 
+function downloadPublishSafetyCopy() {
+  const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+  downloadJsonFile(
+    `wonder-hall-safety-copy-${timestamp}.json`,
+    data
+  );
+}
+
+function decodeGithubBase64Json(content) {
+  const binary = atob((content || "").replace(/\n/g, ""));
+  const bytes = Uint8Array.from(binary, character => character.charCodeAt(0));
+  return JSON.parse(new TextDecoder().decode(bytes));
+}
+
+function validatePublishData(candidate) {
+  if (!candidate || !Array.isArray(candidate.galleries) || !Array.isArray(candidate.resources)) {
+    throw new Error(
+      "Publishing was blocked because the Wonder Hall data is incomplete."
+    );
+  }
+
+  if (candidate.galleries.length === 0 || candidate.resources.length === 0) {
+    throw new Error(
+      "Publishing was blocked because Wonder Hall contains zero galleries or zero resources. " +
+      "Restore the published data before trying again."
+    );
+  }
+}
+
+function requiresDestructivePublishConfirmation(liveData, candidate) {
+  if (!liveData) return false;
+
+  const liveGalleries = liveData.galleries?.length || 0;
+  const liveResources = liveData.resources?.length || 0;
+  const newGalleries = candidate.galleries?.length || 0;
+  const newResources = candidate.resources?.length || 0;
+
+  const largeGalleryDrop =
+    liveGalleries > 0 &&
+    (liveGalleries - newGalleries >= 3 || newGalleries < liveGalleries * 0.75);
+
+  const largeResourceDrop =
+    liveResources > 0 &&
+    (liveResources - newResources >= 5 || newResources < liveResources * 0.75);
+
+  return largeGalleryDrop || largeResourceDrop;
+}
+
+async function publishDataDirectlyToGithub() {
   if (!githubConnected) {
     throw new Error("Connect GitHub before publishing.");
   }
 
+  validatePublishData(data);
+
+  // This is a real file download and does not consume browser storage.
+  downloadPublishSafetyCopy();
+
   const settings = saveGithubSettings();
   const contentUrl = buildGithubContentsUrl(settings);
 
-  if (pendingUploads.length) {
-    await publishPendingUploadsToGithub(settings);
-  }
+  directPublishProgressText.textContent =
+    "Comparing this copy with the live Wonder Hall website…";
 
-  directPublishProgressText.textContent = "Checking the latest GitHub version…";
   const currentFile = await githubRequest(contentUrl);
   githubConnectionFileSha = currentFile.sha;
 
-  directPublishProgressText.textContent = "Uploading the Wonder Hall changes…";
+  let liveData = null;
+  try {
+    liveData = decodeGithubBase64Json(currentFile.content);
+  } catch (error) {
+    console.warn("The live resources.json could not be compared.", error);
+  }
 
-  const message = githubCommitMessageInput.value.trim() || "Update Wonder Hall from Parent Wing";
+  if (requiresDestructivePublishConfirmation(liveData, data)) {
+    const liveGalleryCount = liveData?.galleries?.length || 0;
+    const liveResourceCount = liveData?.resources?.length || 0;
+    const message =
+      `Safety warning:
+
+` +
+      `Live website: ${liveGalleryCount} galleries and ${liveResourceCount} resources
+` +
+      `This publish: ${data.galleries.length} galleries and ${data.resources.length} resources
+
+` +
+      `This would remove a substantial amount of content. Click OK only if those deletions are intentional.`;
+
+    if (!confirm(message)) {
+      throw new Error(
+        "Publishing was cancelled. No GitHub files were changed."
+      );
+    }
+  }
+
+  createDeviceBackup("Automatic backup before GitHub publish");
+
+  if (pendingUploads.length) {
+    await publishPendingUploadsToGithub(settings);
+    validatePublishData(data);
+  }
+
+  directPublishProgressText.textContent =
+    "Uploading the Wonder Hall changes…";
+
+  const message =
+    githubCommitMessageInput.value.trim() ||
+    "Update Wonder Hall from Parent Wing";
+
   const content = encodeUtf8ToBase64(JSON.stringify(data, null, 2));
-
   const owner = encodeURIComponent(settings.owner);
   const repo = encodeURIComponent(settings.repo);
   const path = settings.path.split("/").map(encodeURIComponent).join("/");
-  const putUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+  const putUrl =
+    `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
 
   const result = await githubRequest(putUrl, {
     method: "PUT",
@@ -1693,6 +1874,12 @@ githubConnectionForm?.addEventListener("submit", async event => {
     publishDirectlyButton.disabled = true;
 
     let message = error.message;
+
+    if (error?.name === "QuotaExceededError") {
+      message =
+        "Browser storage became full. Publishing was stopped before GitHub was changed. " +
+        "A downloaded safety copy should be in your Downloads folder.";
+    }
     if (error.status === 401) message = "GitHub rejected the token. Check that it was copied correctly and has not expired.";
     if (error.status === 403) message = "The token does not have permission to update this repository. Grant Contents: Read and write.";
     if (error.status === 404) message = "The repository, branch, or resources.json path could not be found.";
@@ -2159,6 +2346,11 @@ history.replaceState(
   window.location.href
 );
 
+
+downloadPublishSafetyCopyButton?.addEventListener(
+  "click",
+  downloadPublishSafetyCopy
+);
 
 createDeviceBackupButton?.addEventListener("click", () => {
   createDeviceBackup("Manual backup");
