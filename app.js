@@ -238,6 +238,13 @@ function extensionForMime(mime) {
 }
 
 async function stageMediaBlob(path, blob, metadata = {}) {
+  if (!(blob instanceof Blob)) {
+    throw new Error(
+      "The selected image could not be converted into a media file. " +
+      "Please choose the image again."
+    );
+  }
+
   await putMediaRecord({
     path,
     blob,
@@ -532,43 +539,7 @@ function showResourceImagePreview(source) {
 }
 
 function readAndResizeResourceImage(file) {
-  return new Promise((resolve, reject) => {
-    if (!file || !file.type.startsWith("image/")) {
-      reject(new Error("Choose a PNG, JPEG, or WebP image."));
-      return;
-    }
-
-    const reader = new FileReader();
-
-    reader.onerror = () => reject(new Error("The image could not be read."));
-
-    reader.onload = () => {
-      const image = new Image();
-
-      image.onerror = () => reject(new Error("The image could not be opened."));
-
-      image.onload = () => {
-        const maxWidth = 900;
-        const maxHeight = 650;
-        const scale = Math.min(1, maxWidth / image.width, maxHeight / image.height);
-        const width = Math.max(1, Math.round(image.width * scale));
-        const height = Math.max(1, Math.round(image.height * scale));
-
-        const canvas = document.createElement("canvas");
-        canvas.width = width;
-        canvas.height = height;
-
-        const context = canvas.getContext("2d");
-        context.drawImage(image, 0, 0, width, height);
-
-        resolve(canvas.toDataURL("image/jpeg", 0.84));
-      };
-
-      image.src = reader.result;
-    };
-
-    reader.readAsDataURL(file);
-  });
+  return resizeImageToBlob(file);
 }
 
 
@@ -862,7 +833,7 @@ async function loadData() {
     let localData = null;
 
     try {
-      const response = await fetch(`resources.json?v=4401&t=${Date.now()}`, {
+      const response = await fetch(`resources.json?v=441&t=${Date.now()}`, {
         cache: "no-store"
       });
       if (response.ok) publishedData = await response.json();
