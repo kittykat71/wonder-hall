@@ -265,6 +265,14 @@
         "Character grows through the choices no one else sees.",
         "The heart learns through reflection, practice, and care."
       ]
+    },
+    {
+      "id": "broad-range-of-knowledge",
+      "name": "Broad Range of Knowledge",
+      "icon": "✨",
+      "description": "Resources that cover many topics",
+      "roomName": "Many disiplines",
+      "artwork": "assets/uploads/gallery-broad-range-of-knowledge-1784222726754-7us9u.jpg"
     }
   ],
   "resources": [
@@ -272,142 +280,365 @@
       "name": "NASA STEM",
       "category": "space",
       "description": "Space science activities, missions, and learning resources.",
-      "url": "https://www.nasa.gov/stem/"
+      "url": "https://www.nasa.gov/stem/",
+      "image": "assets/uploads/resource-nasa-stem-1784219038703-h3qmi.jpg"
     },
     {
       "name": "Smithsonian Learning Lab",
       "category": "science",
       "description": "Explore millions of Smithsonian resources and learning collections.",
-      "url": "https://learninglab.si.edu/"
+      "url": "https://learninglab.si.edu/",
+      "image": "assets/uploads/resource-smithsonian-learning-lab-1784219300427-c37sx.jpg"
     },
     {
       "name": "PhET Interactive Simulations",
       "category": "science",
       "description": "Interactive math and science simulations from the University of Colorado Boulder.",
-      "url": "https://phet.colorado.edu/"
-    },
-    {
-      "name": "Mystery Science",
-      "category": "science",
-      "description": "Engaging science lessons and activities for children.",
-      "url": "https://mysteryscience.com/"
-    },
-    {
-      "name": "CK-12 Science",
-      "category": "science",
-      "description": "Free digital textbooks, simulations, and adaptive practice.",
-      "url": "https://www.ck12.org/student/"
+      "url": "https://phet.colorado.edu/",
+      "image": "assets/uploads/resource-phet-interactive-simulations-1784219342232-mtuhs.jpg"
     },
     {
       "name": "Storyline Online",
       "category": "read-alouds",
       "description": "Children's books read aloud by celebrated actors.",
-      "url": "https://storylineonline.net/"
+      "url": "https://storylineonline.net/",
+      "image": "assets/uploads/resource-storyline-online-1784219484462-qbqi2.jpg"
     },
     {
       "name": "Unite for Literacy",
       "category": "read-alouds",
       "description": "A colorful digital library with narration in many languages.",
-      "url": "https://www.uniteforliteracy.com/"
+      "url": "https://www.uniteforliteracy.com/",
+      "image": "assets/uploads/resource-unite-for-literacy-1784219500815-tp8kq.jpg"
     },
     {
       "name": "LibriVox",
       "category": "read-alouds",
       "description": "Free public-domain audiobooks read by volunteers.",
-      "url": "https://librivox.org/"
+      "url": "https://librivox.org/",
+      "image": "assets/uploads/resource-librivox-1784219514706-541jt.jpg"
     },
     {
       "name": "San Diego Zoo Kids",
       "category": "nature",
       "description": "Animal facts, videos, stories, and activities.",
       "url": "https://sdzwildlifeexplorers.org/",
-      "image": ""
+      "image": "assets/uploads/resource-san-diego-zoo-kids-1784219526137-a4e9v.jpg"
     },
     {
       "name": "Monterey Bay Aquarium Live Cams",
       "category": "nature",
       "description": "Watch sea otters, jellyfish, sharks, and other ocean life live.",
       "url": "https://www.montereybayaquarium.org/animals/live-cams",
-      "image": ""
+      "image": "assets/uploads/resource-monterey-bay-aquarium-live-cams-1784219545900-0hx5s.jpg"
     },
     {
       "name": "Explore.org Live Nature Cams",
       "category": "nature",
       "description": "Live wildlife and nature cameras from around the world.",
       "url": "https://explore.org/livecams",
-      "image": ""
-    },
-    {
-      "name": "NASA STEM",
-      "category": "space",
-      "description": "Space science activities, missions, and learning resources.",
-      "url": "https://www.nasa.gov/stem/"
+      "image": "assets/uploads/resource-explore-org-live-nature-cams-1784219558564-adln3.jpg"
     },
     {
       "name": "NASA Eyes",
       "category": "space",
       "description": "Interactive 3D visualizations of planets, spacecraft, and Earth.",
-      "url": "https://eyes.nasa.gov/"
+      "url": "https://eyes.nasa.gov/",
+      "image": "assets/uploads/resource-nasa-eyes-1784219590118-pf28p.jpg"
     },
     {
       "name": "ESA Kids",
       "category": "space",
       "description": "Space news, games, and learning from the European Space Agency.",
-      "url": "https://www.esa.int/kids/en/home"
-    },
-    {
-      "name": "iNaturalist",
-      "category": "nature",
-      "description": "Identify plants and animals and contribute to citizen science.",
-      "url": "https://www.inaturalist.org/"
-    },
-    {
-      "name": "Merlin Bird ID",
-      "category": "nature",
-      "description": "Identify birds by sight or sound with Cornell's free tools.",
-      "url": "https://merlin.allaboutbirds.org/"
+      "url": "https://www.esa.int/kids/en/home",
+      "image": "assets/uploads/resource-esa-kids-1784219605506-xkrka.jpg"
     },
     {
       "name": "Cornell Lab of Ornithology",
       "category": "nature",
       "description": "Bird science, live cams, identification, and learning resources.",
-      "url": "https://www.birds.cornell.edu/home/"
+      "url": "https://www.allaboutbirds.org/news/?__hstc=161696355.b28cb721287167f792a80b3cac2cb757.1783737384017.1783739709763.1784219787339.3&__hssc=161696355.1.1784219787339&__hsfp=42e06f866a54d9e81c4d441af0c38f40&_gl=1*1jgvzh1*_gcl_au*NzA0NjUwMTk5LjE3ODM3MzczMzk.*_ga*MTM0MDE5MTEzOS4xNzgzNzM3MzM5*_ga_QR4NVXZ8BM*czE3ODQyMTk3ODQkbzMkZzAkdDE3ODQyMTk3ODQkajYwJGwwJGgyMDc2NTAyMTk1",
+      "image": "assets/uploads/resource-cornell-lab-of-ornithology-1784219775897-djy1i.jpg"
     },
     {
       "name": "Tinkercad",
       "category": "engineering",
       "description": "Create 3D designs, circuits, and beginner-friendly engineering projects.",
-      "url": "https://www.tinkercad.com/"
+      "url": "https://www.tinkercad.com/",
+      "image": "assets/uploads/resource-tinkercad-1784219860686-pppib.jpg"
     },
     {
       "name": "Math Learning Center Bridges",
-      "category": "engineering",
+      "category": "math",
       "description": "Free math apps and manipulatives for visual problem-solving.",
-      "url": "https://www.mathlearningcenter.org/apps"
-    },
-    {
-      "name": "CK-12 Engineering",
-      "category": "engineering",
-      "description": "Free engineering concepts, lessons, and digital learning materials.",
-      "url": "https://www.ck12.org/"
+      "url": "https://www.mathlearningcenter.org/apps",
+      "image": "assets/uploads/resource-math-learning-center-bridges-1784219881787-yss2x.jpg"
     },
     {
       "name": "Simple Joy Art",
       "category": "art",
       "description": "Art lessons and creative projects.",
-      "url": "https://www.simplejoyart.com/"
+      "url": "https://www.simplejoyart.com/",
+      "image": "assets/uploads/resource-simple-joy-art-1784219990037-1o1kn.jpg"
     },
     {
       "name": "Libraries of Hope Rotation",
       "category": "reading",
       "description": "A rotating collection of literature and learning resources.",
-      "url": "https://www.librariesofhope.com/rotation"
+      "url": "https://www.librariesofhope.com/rotation",
+      "image": "assets/uploads/resource-libraries-of-hope-rotation-1784220111826-dbiu0.jpg"
     },
     {
       "name": "Heart Studies Rotation",
+      "category": "read-alouds",
+      "description": "Come join us at \"Grandma's House\" as Marlene reads some of the stories from the golden age of storytelling. Stories are arranged according to the WEH Rotation schedule",
+      "url": "https://www.fcbelmonde.com/rotation",
+      "image": "assets/uploads/resource-heart-studies-rotation-1784220196322-vxzi8.jpg"
+    },
+    {
+      "name": "Khan Academy- Courses for everything",
+      "url": "https://www.khanacademy.org/login",
+      "category": "broad-range-of-knowledge",
+      "description": "Our mission is to provide a free, world-class education to anyone, anywhere.",
+      "image": "assets/uploads/resource-khan-academy-courses-for-everything-1784220493707-wc05x.jpg"
+    },
+    {
+      "name": "Beast Academy Playground",
+      "url": "https://beastacademy.com/playground",
+      "category": "math",
+      "description": "Playground helps kids build numerical literacy and problem-solving confidence.\n\nExplore our growing collection of free tabletop math activities.",
+      "image": "assets/uploads/resource-beast-academy-playground-1784220678720-n3xdg.jpg"
+    },
+    {
+      "name": "Enrich Maths",
+      "url": "https://nrich.maths.org/students",
+      "category": "math",
+      "description": "Our collection of activities are designed to challenge you to work and think like a mathematician.",
+      "image": "assets/uploads/resource-enrich-maths-1784220774067-g0arx.jpg"
+    },
+    {
+      "name": "CTC Math",
+      "url": "https://www.mathsonline.com.au/login?countryId=8",
+      "category": "math",
+      "description": "Online Math Curriculum",
+      "image": "assets/uploads/resource-ctc-math-1784220856327-qem1k.jpg"
+    },
+    {
+      "name": "Math is Fun",
+      "url": "https://www.mathsisfun.com/",
+      "category": "math",
+      "description": "Math is Fun online games and simulations",
+      "image": "assets/uploads/resource-math-is-fun-1784220929507-d7rhj.jpg"
+    },
+    {
+      "name": "Project Gutenberg books",
+      "url": "https://www.gutenberg.org/",
+      "category": "reading",
+      "description": "Choose among free eBooks to download or read online. You will find the world's great literature here, with focus on older works for which U.S. copyright has expired. Thousands of volunteers digitized and proofread the eBooks, for you to enjoy.",
+      "image": "assets/uploads/resource-project-gutenberg-books-1784221070797-ie3fw.jpg"
+    },
+    {
+      "name": "Library of Congress",
+      "url": "https://www.loc.gov/classroom-materials",
+      "category": "reading",
+      "description": "The Library of Congress offers classroom materials and professional development to help people effectively use primary sources from the Library's vast digital collections in their teaching.",
+      "image": "assets/uploads/resource-library-of-congress-1784221180420-5p1vk.jpg"
+    },
+    {
+      "name": "Docs Teach",
+      "url": "https://docsteach.org/primary-sources/historical-eras/",
+      "category": "history",
+      "description": "A National Archives Foundation educational resource using primary sources from the National Archives",
+      "image": "assets/uploads/resource-resource-image-1784221249764-91hpc.jpg"
+    },
+    {
+      "name": "BBC interactive history",
+      "url": "https://www.bbc.co.uk/history/interactive/",
+      "category": "history",
+      "description": "Bring history to life with animated maps, movies, games, picture galleries, virtual 3D tours and programme clips.",
+      "image": "assets/uploads/resource-resource-image-1784221298674-0y6qa.jpg"
+    },
+    {
+      "name": "BBC History for kids",
+      "url": "https://www.bbc.co.uk/history/forkids/index.shtml",
+      "category": "reading",
+      "description": "Enter ancient worlds, meet famous people and discover fascinating facts by exploring a wide selection of historical games and activities.",
+      "image": "assets/uploads/resource-bbc-history-for-kids-1784221371457-yr6fm.jpg"
+    },
+    {
+      "name": "Chess.com",
+      "url": "https://www.chess.com/learn",
+      "category": "math",
+      "description": "Play and learn chess online",
+      "image": "assets/uploads/resource-resource-image-1784221384845-h270m.jpg"
+    },
+    {
+      "name": "Chrome Music Lab",
+      "url": "https://musiclab.chromeexperiments.com/",
+      "category": "music",
+      "description": "Chrome Music Lab is a website that makes learning music more accessible through fun, hands-on experiments.",
+      "image": "assets/uploads/resource-resource-image-1784221451811-31jpy.jpg"
+    },
+    {
+      "name": "Google Arts and Cluture",
+      "url": "https://artsandculture.google.com/",
+      "category": "art",
+      "description": "Google Arts & Culture works with cultural institutions and artists around the world. Together, our mission is to preserve and bring the world’s art and culture online so it’s accessible to anyone, anywhere.",
+      "image": "assets/uploads/resource-resource-image-1784221502933-063p2.jpg"
+    },
+    {
+      "name": "Google Earth Tours",
+      "url": "https://www.google.com/earth/about/gallery/",
+      "category": "geography",
+      "description": "Take a guided tour around the globe with some of the world’s leading storytellers, scientists and nonprofits. Explore stories and maps about sustainability, environment and cultural preservation.",
+      "image": "assets/uploads/resource-resource-image-1784221577523-5glyh.jpg"
+    },
+    {
+      "name": "Topics and Questions Church of Jesus Christ of Latter-Day Saints",
+      "url": "https://www.churchofjesuschrist.org/study/manual/gospel-topics?lang=eng",
       "category": "heart-studies",
-      "description": "A rotating collection of heart-centered studies.",
-      "url": "https://www.fcbelmonde.com/rotation"
+      "description": "This is an alphabetized list of topics and answers. “Asking questions isn’t a sign of weakness; it’s a precursor of growth.” The articles in this resource offer several suggestions that can help you find peace as you seek answers to your questions.",
+      "image": "assets/uploads/resource-gospel-library-1784221671763-lncp4.jpg"
+    },
+    {
+      "name": "Gospel Library",
+      "url": "https://www.churchofjesuschrist.org/study?lang=eng&platform=web",
+      "category": "heart-studies",
+      "description": "Find, study, apply, and share Church teachings from the full digital Gospel Library. Discover gospel principles and explore teachings to enrich your life and the lives of those you love.",
+      "image": "assets/uploads/resource-resource-image-1784221784951-yu6w5.jpg"
+    },
+    {
+      "name": "Futurescape",
+      "url": "https://futurescape.britebound.org/",
+      "category": "life-skills",
+      "description": "Explore Future Careers Based On Your Personality And Passions",
+      "image": "assets/uploads/resource-resource-image-1784221834691-rw5sr.jpg"
+    },
+    {
+      "name": "History Matters",
+      "url": "https://www.youtube.com/@HistoryMatters",
+      "category": "history",
+      "description": "History Matters is a history-focused channel with short introductions to multiple topics;  for people who are simply interested in World History. Videos will also focus on the lesser-known parts of history too and dive deep into questions that many people ask but aren't often answered.",
+      "image": "assets/uploads/resource-resource-image-1784221906507-nwn71.jpg"
+    },
+    {
+      "name": "icivics games",
+      "url": "https://ed.icivics.org/games?_gl=1*7xc2di*_gcl_au*MjM3ODQ2MzA2LjE3ODM3NDA4NzM.&_ga=2.33854823.771383463.1784222025-1499817272.1783740873",
+      "category": "videos",
+      "description": "Civic learning empowers young people to own the past, take the helm, and chart a course toward the future. We welcome students to form their own opinions, contributing important and unique voices to the public conversation about civic education in the United States.",
+      "image": "assets/uploads/resource-resource-image-1784222005037-bmgi1.jpg"
+    },
+    {
+      "name": "Language Transfer",
+      "url": "https://www.languagetransfer.org/courses",
+      "category": "languages",
+      "description": "Language Transfer Introduction and Complete audio courses capture real life learning experiences in which you can participate fully, wherever you are in the world!  \n\nJust engage, pause, think and answer out loud, the rest will take care of itself!",
+      "image": "assets/uploads/resource-resource-image-1784222168448-0bj1m.jpg"
+    },
+    {
+      "name": "Life Help Church of Jesus Christ of Latter-Day Saints",
+      "url": "https://www.churchofjesuschrist.org/life?lang=eng",
+      "category": "life-skills",
+      "description": "Life presents challenges, trials, and obstacles on our journey here on earth. Regardless of your circumstances, the Lord loves you and wants to help you. The Church offers resources to help you navigate these challenges.",
+      "image": "assets/uploads/resource-resource-image-1784222270083-juomz.jpg"
+    },
+    {
+      "name": "Metropolitan Museum of Art Kids",
+      "url": "https://archived.metmuseum.org/art/online-features/metkids/",
+      "category": "art",
+      "description": "Made for, with, and by kids",
+      "image": "assets/uploads/resource-resource-image-1784222306041-9tkim.jpg"
+    },
+    {
+      "name": "Miacademy videos",
+      "url": "https://www.youtube.com/@MiaLearningChannelK-12/playlists",
+      "category": "broad-range-of-knowledge",
+      "description": "A broad selection of learning videos for K-12. We hope you are enjoying them!",
+      "image": "assets/uploads/resource-resource-image-1784222378414-8c1bs.jpg"
+    },
+    {
+      "name": "Music Theory.net",
+      "url": "https://www.musictheory.net/",
+      "category": "music",
+      "description": "a popular, free educational website offering interactive music theory lessons, exercises, and calculators. It provides animated tutorials that break down everything from the basics of note reading to advanced chords and progressions, alongside highly customizable practice exercises",
+      "image": "assets/uploads/resource-resource-image-1784222794228-29chf.jpg"
+    },
+    {
+      "name": "National Geographic kids",
+      "url": "https://kids.nationalgeographic.com/",
+      "category": "nature",
+      "description": "photography, engaging articles, and interactive features centered around animals, science, history, and nature",
+      "image": "assets/uploads/resource-resource-image-1784222949554-yni9n.jpg"
+    },
+    {
+      "name": "Nitrotype",
+      "url": "https://www.nitrotype.com",
+      "category": "typing",
+      "description": "Nitro Type's engaging, competitive format rapidly builds speed and accuracy through repeated practice.",
+      "image": "assets/uploads/resource-resource-image-1784223027068-emu5m.jpg"
+    },
+    {
+      "name": "Numberphile",
+      "url": "https://www.youtube.com/@numberphile",
+      "category": "math",
+      "description": "Videos about numbers and mathematics.",
+      "image": "assets/uploads/resource-resource-image-1784223095170-tgury.jpg"
+    },
+    {
+      "name": "Music Library Church of Jesus Christ of Latter-Day Saints",
+      "url": "https://www.churchofjesuschrist.org/media/music?lang=eng",
+      "category": "music",
+      "description": "The largest collection of music provided by The Church of Jesus Christ of Latter-day Saints for worship including hymns, songs, music for youth, choir, instrumentalists, and more.",
+      "image": "assets/uploads/resource-resource-image-1784223138741-7bxk8.jpg"
+    },
+    {
+      "name": "Scishow kids",
+      "url": "https://www.youtube.com/user/scishowkids",
+      "category": "science",
+      "description": "Join host Jessi, her robot rat friend Squeaks, and all their friends at the Fort as they explain fun, complex science concepts for young, curious minds. Whether conducting experiments, researching new questions, or talking with experts, there’s always something new to discover with SciShow Kids, no matter what your age!",
+      "image": "assets/uploads/resource-resource-image-1784223193483-880va.jpg"
+    },
+    {
+      "name": "Scishow Psych",
+      "url": "https://www.youtube.com/channel/UCUdettijNYvLAm4AixZv4RA",
+      "category": "college",
+      "description": "Your brain is endlessly fascinating. SciShow Psych is all about exploring the human mind using the hardcore research you know and love from SciShow. Join us every week to learn about our super complicated brains!",
+      "image": "assets/uploads/resource-resource-image-1784223243442-huomh.jpg"
+    },
+    {
+      "name": "Scratch Coding",
+      "url": "https://scratch.mit.edu/",
+      "category": "coding",
+      "description": "Scratch is the world’s largest creative learning community for kids, where young people bring their stories, games, and animations to life and share them with peers around the world in a safe, moderated online community",
+      "image": "assets/uploads/resource-resource-image-1784223300349-klga5.jpg"
+    },
+    {
+      "name": "Seterra Geography games",
+      "url": "https://www.geoguessr.com/quiz/seterra",
+      "category": "geography",
+      "description": "Become a geography expert and have fun at the same time! Seterra is an entertaining and educational geography game that gives you access to over 400 customizable quizzes. Seterra will challenge you with quizzes about countries, capitals, flags, oceans, lakes and more! Introduced in 1997 and available in more than 40 different languages, Seterra has helped millions of people study geography and learn about their world.",
+      "image": "assets/uploads/resource-resource-image-1784223340466-n6b4z.jpg"
+    },
+    {
+      "name": "Smarter Every Day",
+      "url": "https://www.youtube.com/@smartereveryday",
+      "category": "science",
+      "description": "I explore the world using science.  That's pretty much all there is to it.  Watch 2 videos. If you learn something AWESOME",
+      "image": "assets/uploads/resource-resource-image-1784223374813-t391i.jpg"
+    },
+    {
+      "name": "Typing.com",
+      "url": "https://www.typing.com/student/login",
+      "category": "typing",
+      "description": "online typing tutor, and digital literacy platform",
+      "image": "assets/uploads/resource-resource-image-1784223423644-ijcoy.jpg"
+    },
+    {
+      "name": "Veritasium",
+      "url": "https://www.youtube.com/@veritasium",
+      "category": "broad-range-of-knowledge",
+      "description": "Videos about science, education, and anything else we find interesting.",
+      "image": "assets/uploads/resource-resource-image-1784223468218-pj34o.jpg"
     }
   ],
   "siteSettings": {
